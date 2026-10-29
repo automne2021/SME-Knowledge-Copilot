@@ -1,0 +1,50 @@
+[project]
+name = "sme-copilot-backend"
+version = "0.1.0"
+description = "Backend cho SME AI Operations Copilot"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "sqlalchemy>=2.0.36",
+    "psycopg[binary]>=3.2",
+    "alembic>=1.14",
+    "pydantic-settings>=2.6",
+    "python-multipart>=0.0.18",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "httpx>=0.28",
+    "ruff>=0.8",
+]
+# Cài riêng khi làm worker STT (nặng, cần model weights).
+stt = [
+    "faster-whisper>=1.1",
+]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Migration do Alembic sinh ra có thể có dòng dài không tách được.
+"alembic/versions/*" = ["E501"]
+
+[tool.ruff.lint.isort]
+# Thư mục migration cũng tên "alembic"; báo cho ruff đây là thư viện bên ngoài.
+known-third-party = ["alembic"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

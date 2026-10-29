@@ -1,0 +1,29 @@
+/** Lỗi từ backend theo body chuẩn {code, message, request_id} (spec mục 8). */
+export class ApiError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly code: string,
+    message: string,
+    public readonly requestId?: string,
+  ) {
+    super(message);
+  }
+}
+
+export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`/api/v1${path}`, {
+    ...init,
+    headers: { Accept: "application/json", ...init?.headers },
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new ApiError(
+      response.status,
+      body?.code ?? "http_error",
+      body?.message ?? response.statusText,
+      body?.request_id,
+    );
+  }
+  return response.json() as Promise<T>;
+}

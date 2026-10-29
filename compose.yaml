@@ -1,0 +1,39 @@
+services:
+  db:
+    # Image có sẵn pgvector cho M2; M1 chưa dùng extension này.
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-copilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-copilot_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-copilot}
+    ports:
+      # Cổng 5433 trên máy host để tránh trùng với PostgreSQL cài sẵn.
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-copilot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-copilot}:${POSTGRES_PASSWORD:-copilot_dev_password}@db:5432/${POSTGRES_DB:-copilot}
+      STORAGE_DIR: /app/storage
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # worker: thêm khi có app/workers/job_worker.py (cùng image với backend).
+
+volumes:
+  db_data:
