@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import AliasChoices, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,9 +12,14 @@ class Settings(BaseSettings):
     database_url: str
     test_database_url: str | None = None
 
-    storage_dir: Path = Path("storage")
-    max_upload_mb: int = 25
+    storage_dir: Path = Field(
+        default=Path("storage"), validation_alias=AliasChoices("FILE_STORAGE_DIR", "STORAGE_DIR")
+    )
+    max_upload_mb: int = Field(default=20, gt=0)
     app_timezone: str = "Asia/Ho_Chi_Minh"
+
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_collection: str = "knowledge_e5_small_v1"
 
     llm_base_url: str | None = None
     llm_model: str | None = None

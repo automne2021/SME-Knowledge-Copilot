@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "corpus_version": "synthetic-sme-v1",
+  "notice": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+  "documents": [
+    {
+      "document_id": "leave", "version": 1, "file_name": "quy_dinh_nghi_phep.docx", "title": "Quy định nghỉ phép mẫu",
+      "blocks": [
+        {"id": "annual", "text": "Trong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm."},
+        {"id": "carry", "text": "Được chuyển tối đa 5 ngày phép chưa dùng sang năm sau và phải sử dụng trước ngày 31/03."},
+        {"id": "notice", "text": "Đơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc."},
+        {"id": "urgent", "text": "Nghỉ đột xuất phải thông báo cho quản lý trong vòng 24 giờ kể từ khi bắt đầu nghỉ."},
+        {"id": "approver", "text": "Quản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường."}
+      ]
+    },
+    {
+      "document_id": "security", "version": 1, "file_name": "huong_dan_bao_mat.txt", "title": "Hướng dẫn bảo mật mẫu",
+      "blocks": [
+        {"id": "password", "text": "Mật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự."},
+        {"id": "lost_device", "text": "Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện."},
+        {"id": "sharing", "text": "Không được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ."}
+      ]
+    },
+    {
+      "document_id": "support", "version": 1, "file_name": "faq_ho_tro.md", "title": "FAQ hỗ trợ nội bộ mẫu",
+      "blocks": [
+        {"id": "ticket", "text": "Yêu cầu hỗ trợ gửi qua cổng helpdesk nội bộ, kèm mô tả lỗi, thời điểm xảy ra và ảnh chụp đã che dữ liệu nhạy cảm."},
+        {"id": "hours", "text": "Bộ phận hỗ trợ làm việc từ 09:00 đến 18:00, thứ Hai đến thứ Sáu; ngoài giờ chỉ tiếp nhận phiếu, không cam kết xử lý ngay."}
+      ]
+    },
+    {
+      "document_id": "discount_v1", "version": 1, "file_name": "chiet_khau_ban_A.pdf", "title": "Chính sách chiết khấu mẫu — bản A",
+      "blocks": [
+        {"id": "base", "text": "Theo bản A, nhân viên kinh doanh chỉ được đề xuất chiết khấu thông thường tối đa 3%.", "page": 1},
+        {"id": "effectivity", "text": "Bản A không ghi ngày hiệu lực hoặc thông tin xác nhận ban hành.", "page": 1}
+      ]
+    },
+    {
+      "document_id": "discount_v2", "version": 2, "file_name": "chiet_khau_ban_B.md", "title": "Chính sách chiết khấu mẫu — bản B",
+      "blocks": [
+        {"id": "base", "text": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%."},
+        {"id": "manager", "text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt."},
+        {"id": "director", "text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng."},
+        {"id": "stacking", "text": "Không cộng dồn chiết khấu hợp đồng với ưu đãi khuyến mại khác trong cùng một giao dịch."},
+        {"id": "effectivity", "text": "Bản B không ghi ngày hiệu lực hoặc thông tin xác nhận thay thế bản A."}
+      ]
+    },
+    {
+      "document_id": "approvals", "version": 1, "file_name": "quy_trinh_duyet.docx", "title": "Quy trình duyệt ngoại lệ mẫu",
+      "blocks": [
+        {"id": "form", "text": "Đề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ."},
+        {"id": "sla", "text": "Người có thẩm quyền phản hồi hồ sơ ngoại lệ trong 2 ngày làm việc kể từ khi nhận đủ thông tin."},
+        {"id": "missing", "text": "Hồ sơ thiếu thông tin được trả lại để bổ sung; chưa bắt đầu tính thời hạn phản hồi."}
+      ]
+    },
+    {
+      "document_id": "onboarding", "version": 1, "file_name": "onboarding.docx", "title": "Hướng dẫn onboarding mẫu",
+      "blocks": [
+        {"id": "mentor", "text": "Mỗi nhân viên mới có một mentor hỗ trợ trong 5 ngày làm việc đầu tiên."},
+        {"id": "review", "text": "Buổi đánh giá thử việc nội bộ đầu tiên được tổ chức vào ngày thứ 45 kể từ ngày bắt đầu làm việc."},
+        {"id": "account", "text": "IT chuẩn bị tài khoản làm việc trước ngày nhân viên mới bắt đầu, sau khi nhận yêu cầu từ nhân sự."},
+        {"id": "equipment", "text": "Việc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02."}
+      ]
+    },
+    {
+      "document_id": "acceptance", "version": 1, "file_name": "nghiem_thu_dich_vu.pdf", "title": "Quy trình nghiệm thu dịch vụ mẫu",
+      "blocks": [
+        {"id": "window", "text": "Khách hàng có 5 ngày làm việc để phản hồi hồ sơ nghiệm thu kể từ lúc nhận đầy đủ hồ sơ.", "page": 1},
+        {"id": "critical", "text": "Lỗi mức nghiêm trọng C1 phải được khắc phục trước khi ký biên bản nghiệm thu.", "page": 1},
+        {"id": "bundle", "text": "Hồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.", "page": 2},
+        {"id": "form", "text": "Kết quả nghiệm thu được ghi trên BM-09 và cần xác nhận của đại diện khách hàng.", "page": 2}
+      ]
+    },
+    {
+      "document_id": "expenses", "version": 1, "file_name": "thanh_toan_chi_phi.txt", "title": "Hướng dẫn thanh toán chi phí mẫu",
+      "blocks": [
+        {"id": "receipt", "text": "Khoản chi từ 200.000 đồng phải có hóa đơn hoặc chứng từ hợp lệ trong hồ sơ hoàn ứng."},
+        {"id": "deadline", "text": "Nhân viên nộp hồ sơ hoàn ứng trong vòng 7 ngày làm việc sau khi kết thúc chuyến công tác."},
+        {"id": "meal", "text": "Mức thanh toán tiền ăn công tác tối đa là 150.000 đồng mỗi người mỗi ngày."},
+        {"id": "booking", "text": "Chi phí vé và phòng ở phải được quản lý phê duyệt trước khi đặt dịch vụ."}
+      ]
+    },
+    {
+      "document_id": "forms", "version": 1, "file_name": "danh_muc_bieu_mau.md", "title": "Danh mục biểu mẫu nội bộ mẫu",
+      "blocks": [
+        {"id": "bm07", "text": "BM-07 là phiếu đề nghị duyệt ngoại lệ chiết khấu, gồm giá trị hợp đồng, tỷ lệ đề xuất và lý do."},
+        {"id": "bm09", "text": "BM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng."},
+        {"id": "ts02", "text": "TS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao."}
+      ]
+    }
+  ]
+}

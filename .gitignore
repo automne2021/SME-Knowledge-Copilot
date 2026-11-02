@@ -3,6 +3,8 @@
 
 # Python
 .venv/
+.venv.legacy-*/
+.cache/
 __pycache__/
 *.pyc
 .pytest_cache/

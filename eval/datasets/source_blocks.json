@@ -1,0 +1,422 @@
+[
+  {
+    "ref": "leave.annual",
+    "document_id": "leave",
+    "document_version": 1,
+    "source_block_id": "leave:author-v1:annual",
+    "text": "Trong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 2,
+      "block_end": 2
+    }
+  },
+  {
+    "ref": "leave.carry",
+    "document_id": "leave",
+    "document_version": 1,
+    "source_block_id": "leave:author-v1:carry",
+    "text": "Được chuyển tối đa 5 ngày phép chưa dùng sang năm sau và phải sử dụng trước ngày 31/03.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 3,
+      "block_end": 3
+    }
+  },
+  {
+    "ref": "leave.notice",
+    "document_id": "leave",
+    "document_version": 1,
+    "source_block_id": "leave:author-v1:notice",
+    "text": "Đơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 4,
+      "block_end": 4
+    }
+  },
+  {
+    "ref": "leave.urgent",
+    "document_id": "leave",
+    "document_version": 1,
+    "source_block_id": "leave:author-v1:urgent",
+    "text": "Nghỉ đột xuất phải thông báo cho quản lý trong vòng 24 giờ kể từ khi bắt đầu nghỉ.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 5,
+      "block_end": 5
+    }
+  },
+  {
+    "ref": "leave.approver",
+    "document_id": "leave",
+    "document_version": 1,
+    "source_block_id": "leave:author-v1:approver",
+    "text": "Quản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 6,
+      "block_end": 6
+    }
+  },
+  {
+    "ref": "security.password",
+    "document_id": "security",
+    "document_version": 1,
+    "source_block_id": "security:author-v1:password",
+    "text": "Mật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 5,
+      "line_end": 5
+    }
+  },
+  {
+    "ref": "security.lost_device",
+    "document_id": "security",
+    "document_version": 1,
+    "source_block_id": "security:author-v1:lost_device",
+    "text": "Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 7,
+      "line_end": 7
+    }
+  },
+  {
+    "ref": "security.sharing",
+    "document_id": "security",
+    "document_version": 1,
+    "source_block_id": "security:author-v1:sharing",
+    "text": "Không được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 9,
+      "line_end": 9
+    }
+  },
+  {
+    "ref": "support.ticket",
+    "document_id": "support",
+    "document_version": 1,
+    "source_block_id": "support:author-v1:ticket",
+    "text": "Yêu cầu hỗ trợ gửi qua cổng helpdesk nội bộ, kèm mô tả lỗi, thời điểm xảy ra và ảnh chụp đã che dữ liệu nhạy cảm.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 5,
+      "line_end": 5
+    }
+  },
+  {
+    "ref": "support.hours",
+    "document_id": "support",
+    "document_version": 1,
+    "source_block_id": "support:author-v1:hours",
+    "text": "Bộ phận hỗ trợ làm việc từ 09:00 đến 18:00, thứ Hai đến thứ Sáu; ngoài giờ chỉ tiếp nhận phiếu, không cam kết xử lý ngay.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 7,
+      "line_end": 7
+    }
+  },
+  {
+    "ref": "discount_v1.base",
+    "document_id": "discount_v1",
+    "document_version": 1,
+    "source_block_id": "discount_v1:author-v1:base",
+    "text": "Theo bản A, nhân viên kinh doanh chỉ được đề xuất chiết khấu thông thường tối đa 3%.",
+    "location": {
+      "kind": "pdf_page",
+      "page_start": 1,
+      "page_end": 1
+    }
+  },
+  {
+    "ref": "discount_v1.effectivity",
+    "document_id": "discount_v1",
+    "document_version": 1,
+    "source_block_id": "discount_v1:author-v1:effectivity",
+    "text": "Bản A không ghi ngày hiệu lực hoặc thông tin xác nhận ban hành.",
+    "location": {
+      "kind": "pdf_page",
+      "page_start": 1,
+      "page_end": 1
+    }
+  },
+  {
+    "ref": "discount_v2.base",
+    "document_id": "discount_v2",
+    "document_version": 2,
+    "source_block_id": "discount_v2:author-v1:base",
+    "text": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 5,
+      "line_end": 5
+    }
+  },
+  {
+    "ref": "discount_v2.manager",
+    "document_id": "discount_v2",
+    "document_version": 2,
+    "source_block_id": "discount_v2:author-v1:manager",
+    "text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 7,
+      "line_end": 7
+    }
+  },
+  {
+    "ref": "discount_v2.director",
+    "document_id": "discount_v2",
+    "document_version": 2,
+    "source_block_id": "discount_v2:author-v1:director",
+    "text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 9,
+      "line_end": 9
+    }
+  },
+  {
+    "ref": "discount_v2.stacking",
+    "document_id": "discount_v2",
+    "document_version": 2,
+    "source_block_id": "discount_v2:author-v1:stacking",
+    "text": "Không cộng dồn chiết khấu hợp đồng với ưu đãi khuyến mại khác trong cùng một giao dịch.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 11,
+      "line_end": 11
+    }
+  },
+  {
+    "ref": "discount_v2.effectivity",
+    "document_id": "discount_v2",
+    "document_version": 2,
+    "source_block_id": "discount_v2:author-v1:effectivity",
+    "text": "Bản B không ghi ngày hiệu lực hoặc thông tin xác nhận thay thế bản A.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 13,
+      "line_end": 13
+    }
+  },
+  {
+    "ref": "approvals.form",
+    "document_id": "approvals",
+    "document_version": 1,
+    "source_block_id": "approvals:author-v1:form",
+    "text": "Đề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 2,
+      "block_end": 2
+    }
+  },
+  {
+    "ref": "approvals.sla",
+    "document_id": "approvals",
+    "document_version": 1,
+    "source_block_id": "approvals:author-v1:sla",
+    "text": "Người có thẩm quyền phản hồi hồ sơ ngoại lệ trong 2 ngày làm việc kể từ khi nhận đủ thông tin.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 3,
+      "block_end": 3
+    }
+  },
+  {
+    "ref": "approvals.missing",
+    "document_id": "approvals",
+    "document_version": 1,
+    "source_block_id": "approvals:author-v1:missing",
+    "text": "Hồ sơ thiếu thông tin được trả lại để bổ sung; chưa bắt đầu tính thời hạn phản hồi.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 4,
+      "block_end": 4
+    }
+  },
+  {
+    "ref": "onboarding.mentor",
+    "document_id": "onboarding",
+    "document_version": 1,
+    "source_block_id": "onboarding:author-v1:mentor",
+    "text": "Mỗi nhân viên mới có một mentor hỗ trợ trong 5 ngày làm việc đầu tiên.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 2,
+      "block_end": 2
+    }
+  },
+  {
+    "ref": "onboarding.review",
+    "document_id": "onboarding",
+    "document_version": 1,
+    "source_block_id": "onboarding:author-v1:review",
+    "text": "Buổi đánh giá thử việc nội bộ đầu tiên được tổ chức vào ngày thứ 45 kể từ ngày bắt đầu làm việc.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 3,
+      "block_end": 3
+    }
+  },
+  {
+    "ref": "onboarding.account",
+    "document_id": "onboarding",
+    "document_version": 1,
+    "source_block_id": "onboarding:author-v1:account",
+    "text": "IT chuẩn bị tài khoản làm việc trước ngày nhân viên mới bắt đầu, sau khi nhận yêu cầu từ nhân sự.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 4,
+      "block_end": 4
+    }
+  },
+  {
+    "ref": "onboarding.equipment",
+    "document_id": "onboarding",
+    "document_version": 1,
+    "source_block_id": "onboarding:author-v1:equipment",
+    "text": "Việc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02.",
+    "location": {
+      "kind": "docx_block",
+      "block_start": 5,
+      "block_end": 5
+    }
+  },
+  {
+    "ref": "acceptance.window",
+    "document_id": "acceptance",
+    "document_version": 1,
+    "source_block_id": "acceptance:author-v1:window",
+    "text": "Khách hàng có 5 ngày làm việc để phản hồi hồ sơ nghiệm thu kể từ lúc nhận đầy đủ hồ sơ.",
+    "location": {
+      "kind": "pdf_page",
+      "page_start": 1,
+      "page_end": 1
+    }
+  },
+  {
+    "ref": "acceptance.critical",
+    "document_id": "acceptance",
+    "document_version": 1,
+    "source_block_id": "acceptance:author-v1:critical",
+    "text": "Lỗi mức nghiêm trọng C1 phải được khắc phục trước khi ký biên bản nghiệm thu.",
+    "location": {
+      "kind": "pdf_page",
+      "page_start": 1,
+      "page_end": 1
+    }
+  },
+  {
+    "ref": "acceptance.bundle",
+    "document_id": "acceptance",
+    "document_version": 1,
+    "source_block_id": "acceptance:author-v1:bundle",
+    "text": "Hồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.",
+    "location": {
+      "kind": "pdf_page",
+      "page_start": 2,
+      "page_end": 2
+    }
+  },
+  {
+    "ref": "acceptance.form",
+    "document_id": "acceptance",
+    "document_version": 1,
+    "source_block_id": "acceptance:author-v1:form",
+    "text": "Kết quả nghiệm thu được ghi trên BM-09 và cần xác nhận của đại diện khách hàng.",
+    "location": {
+      "kind": "pdf_page",
+      "page_start": 2,
+      "page_end": 2
+    }
+  },
+  {
+    "ref": "expenses.receipt",
+    "document_id": "expenses",
+    "document_version": 1,
+    "source_block_id": "expenses:author-v1:receipt",
+    "text": "Khoản chi từ 200.000 đồng phải có hóa đơn hoặc chứng từ hợp lệ trong hồ sơ hoàn ứng.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 5,
+      "line_end": 5
+    }
+  },
+  {
+    "ref": "expenses.deadline",
+    "document_id": "expenses",
+    "document_version": 1,
+    "source_block_id": "expenses:author-v1:deadline",
+    "text": "Nhân viên nộp hồ sơ hoàn ứng trong vòng 7 ngày làm việc sau khi kết thúc chuyến công tác.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 7,
+      "line_end": 7
+    }
+  },
+  {
+    "ref": "expenses.meal",
+    "document_id": "expenses",
+    "document_version": 1,
+    "source_block_id": "expenses:author-v1:meal",
+    "text": "Mức thanh toán tiền ăn công tác tối đa là 150.000 đồng mỗi người mỗi ngày.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 9,
+      "line_end": 9
+    }
+  },
+  {
+    "ref": "expenses.booking",
+    "document_id": "expenses",
+    "document_version": 1,
+    "source_block_id": "expenses:author-v1:booking",
+    "text": "Chi phí vé và phòng ở phải được quản lý phê duyệt trước khi đặt dịch vụ.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 11,
+      "line_end": 11
+    }
+  },
+  {
+    "ref": "forms.bm07",
+    "document_id": "forms",
+    "document_version": 1,
+    "source_block_id": "forms:author-v1:bm07",
+    "text": "BM-07 là phiếu đề nghị duyệt ngoại lệ chiết khấu, gồm giá trị hợp đồng, tỷ lệ đề xuất và lý do.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 5,
+      "line_end": 5
+    }
+  },
+  {
+    "ref": "forms.bm09",
+    "document_id": "forms",
+    "document_version": 1,
+    "source_block_id": "forms:author-v1:bm09",
+    "text": "BM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 7,
+      "line_end": 7
+    }
+  },
+  {
+    "ref": "forms.ts02",
+    "document_id": "forms",
+    "document_version": 1,
+    "source_block_id": "forms:author-v1:ts02",
+    "text": "TS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao.",
+    "location": {
+      "kind": "line_range",
+      "line_start": 9,
+      "line_end": 9
+    }
+  }
+]

@@ -1,21 +1,45 @@
 services:
   db:
-    # Image có sẵn pgvector cho M2; M1 chưa dùng extension này.
-    image: pgvector/pgvector:pg16
+    # Reuse the existing PostgreSQL 16 image; RAG vectors live in Qdrant.
+    image: pgvector/pgvector:pg16@sha256:0dd3149a06e4579a0d70d8fef9945636cd514005e7237deb27f9b67886f8dc4f
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-copilot}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-copilot_dev_password}
       POSTGRES_DB: ${POSTGRES_DB:-copilot}
     ports:
       # Cổng 5433 trên máy host để tránh trùng với PostgreSQL cài sẵn.
-      - "5433:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-copilot}"]
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s
       timeout: 5s
       retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:v1.20.0@sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2
+    environment:
+      QDRANT__TELEMETRY_DISABLED: "true"
+    ports:
+      - "127.0.0.1:6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      # The image has bash; do not assume curl/wget is installed.
+      test:
+        - CMD
+        - bash
+        - -ec
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/6333;
+          printf 'GET /readyz HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3;
+          read -r status <&3;
+          [[ "$$status" == *" 200 "* ]]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   backend:
     build: ./backend
@@ -25,15 +49,20 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-copilot}:${POSTGRES_PASSWORD:-copilot_dev_password}@db:5432/${POSTGRES_DB:-copilot}
       STORAGE_DIR: /app/storage
+      FILE_STORAGE_DIR: /app/storage
+      QDRANT_URL: http://qdrant:6333
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ./storage:/app/storage
     depends_on:
       db:
+        condition: service_healthy
+      qdrant:
         condition: service_healthy
 
   # worker: thêm khi có app/workers/job_worker.py (cùng image với backend).
 
 volumes:
   db_data:
+  qdrant_data:

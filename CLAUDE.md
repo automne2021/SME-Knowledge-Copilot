@@ -1,90 +1,109 @@
 # CLAUDE.md
 
-Hướng dẫn cho Claude khi làm việc trong repo **SME AI Operations Copilot**: ứng dụng biến audio cuộc họp và tài liệu nội bộ thành task, có bước người duyệt. Đây là project portfolio của nhóm 2 người.
+## Xác nhận bắt buộc trước mọi thay đổi — 02/11/2026
+
+Trước mọi thay đổi trong workspace, trình bày phạm vi/file bị ảnh hưởng và chờ người dùng nói **“Thực hiện đi”** rồi mới thực hiện. Quy tắc áp dụng cả code, tài liệu, KNOWLEDGE.md, cấu hình, dependencies, dữ liệu, Git và lệnh có thể ghi file/artifacts. Được chuẩn bị bằng thao tác chỉ đọc. Một xác nhận áp dụng cho đợt công việc đã nêu; mở rộng phạm vi hoặc bắt đầu đợt mới phải có xác nhận mới. Không tự chuyển sang bước tiếp theo trong PLAN. Chi tiết tại [AGENTS.md](AGENTS.md).
+
+## Quy tắc học tập của workspace — cập nhật 02/11/2026
+
+Mỗi khi code, thiết kế, lựa chọn công nghệ/model/cấu hình, sửa lỗi hoặc điều chỉnh test/evaluation, cập nhật [KNOWLEDGE.md](KNOWLEDGE.md) trong cùng đợt công việc. Giải thích kiến thức chuyên ngành, bối cảnh, lý do chọn, các phương án khác và vì sao chưa chọn, đánh đổi, cách kiểm chứng và điều kiện xem xét lại. Phân biệt đề xuất với kết quả đã đo; giữ lịch sử khi thay đổi quyết định. Thay đổi nhỏ ghi ngắn vào mục liên quan, không chỉ giải thích trong chat.
+
+Quy tắc đầy đủ nằm ở [AGENTS.md](AGENTS.md). Mỗi đợt công việc phải có xác nhận riêng theo phạm vi; việc có PLAN không phải quyền tự thực hiện toàn bộ dự án.
+
+**Sau mỗi lượt trả lời:** nêu tiến độ project **X% / 100%** trong phản hồi cuối, theo trọng số/trạng thái tại [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). Đây là ước lượng khối lượng, không phải điểm model. Chỉ cập nhật file trong phạm vi đã được xác nhận; lượt chỉ đọc báo lại % hiện tại.
+
+Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng dụng hỏi đáp tài liệu nội bộ bằng RAG, có nguồn kiểm tra được. Project portfolio của nhóm 2 người; thư mục/code cũ có thể còn tên Operations trong giai đoạn chuyển tiếp.
 
 ## Nguồn yêu cầu
 
-- Spec: [SME_AI_Operations_Copilot_Specification.md](SME_AI_Operations_Copilot_Specification.md) (v1.1). Nếu đổi tên thành `SPECIFICATION.md` thì cập nhật link này.
+- Contract hiện hành: [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md) v2.1. Spec Operations v1.1 là tài liệu lịch sử.
+- Thứ tự triển khai: [PLAN.md](PLAN.md); baseline lịch sử: [audit Bước 00](docs/rag-transition-audit.md); môi trường hiện tại: [Bước 01](docs/environment-step01.md).
 - Trước khi code một tính năng: đọc mục liên quan trong spec, tóm tắt ngắn interface + edge cases, rồi mới sửa.
-- Nếu yêu cầu mâu thuẫn với spec, hoặc spec không nói rõ: **hỏi lại**, không tự quyết business rule.
+- Nếu business rule chưa rõ hoặc cần thay contract: nêu vấn đề và đề xuất cụ thể để người dùng quyết định; không âm thầm đổi spec.
 - Khi thay đổi API contract, schema hoặc state: cập nhật spec trong cùng thay đổi.
 
-## Mốc hiện tại: **M1 (hạn 15/11/2026)**
+## Mốc hiện tại: **M1 RAG — mục tiêu 15/11/2026**
 
 Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 
-- **Trong M1:** auth seed users + role; projects; upload audio → worker → STT (faster-whisper) → summary + action items; `POST /action-items/{id}/propose`; proposals (PATCH / approve / reject); tasks; ghi `audit_events`; UI Project, Meetings, Approvals & Tasks; eval nhỏ (WER, precision/recall action items).
-- **Chưa làm (M2):** agent, `/agent/runs`, RAG/documents/knowledge search, UI Knowledge và AI Copilot, UI audit, so sánh STT model.
-- **Không làm (ngoài phạm vi):** xem spec mục 2.4.
+- **P0/M1:** seed auth + workspace/owner scope; upload PDF text/DOCX/TXT/MD → parse/chunk/embed/index; worker lease/retry; dense search-only API; Q&A/citations/abstention; sessions/source viewer; delete/cleanup; logs/timings; corpus/gold/benchmark; UI và Compose chạy lại được.
+- **P1/M2:** reindex/update revision, hybrid/reranker, filter nâng cao, follow-up retrieval-aware, structured comparison và inspector/eval UI; chỉ làm sau baseline P0 và xác nhận riêng.
+- **Ngoài hướng RAG:** STT/audio/meeting intelligence, agent tool loop, proposal/approval/task. Không đưa workflow Operations cũ trở lại M1/M2 RAG.
 
-Khi chuyển sang M2, sửa mục này.
+**Tiến độ 02/11/2026: 11,2% / 100%.** Bước 00/01 hoàn thành: venv/frontend dependencies, PostgreSQL/Qdrant và 64 baseline tests đạt. [Bước 02](docs/dataset-step02.md) có 10 tài liệu, 45 câu nháp (15 dev/30 test), 8 fixtures và 37 eval tests đạt; **0/45 human-approved**, còn chờ hai người kiểm tra nhãn. Source app vẫn là skeleton: chưa có auth endpoint, document pipeline, worker hay RAG API. Chưa gọi model; Bước 03 cần xác nhận riêng. Các lỗi môi trường Bước 00 giữ trong audit như lịch sử.
 
 ## Bất biến nghiệp vụ (không được vi phạm)
 
-1. **Không tạo task nếu chưa duyệt.** Task chỉ được tạo trong `approval_service`, không có đường nào khác (kể cả từ agent, worker hay endpoint khác).
-2. **Approve là một transaction:** `SELECT … FOR UPDATE` proposal → kiểm tra `status` và `version` → áp `edits` → insert task → proposal `executed` → insert audit → commit. Lỗi thì rollback, proposal vẫn `pending_approval`.
-3. **Idempotent:** approve lại proposal đã `executed` trả `200` + `task_id` cũ. Version lệch → `409`. Tạo proposal cho action item đã có proposal pending → trả proposal đó.
-4. **Ràng buộc DB là chốt chặn cuối:** `UNIQUE(tasks.proposal_id)`, partial unique trên `tasks.source_action_item_id` và trên `task_proposals.source_action_item_id WHERE status='pending_approval'`. Không chỉ dựa vào check trong code.
-5. **Trạng thái proposal chỉ có** `pending_approval`, `executed`, `rejected`. Mỗi entity có enum trạng thái riêng (spec 6.5); không dùng enum chung.
-6. **Phân quyền ở backend.** Role lấy từ user đã xác thực, không lấy từ request body. Mọi truy vấn lọc theo project mà user có quyền.
-7. **Output của LLM là dữ liệu không đáng tin:** luôn validate bằng Pydantic + business rules trước khi ghi DB. Sai schema → retry giới hạn → `failed`; không ghi dữ liệu bẩn, không tạo summary giả.
-8. **Không đoán:** `assignee_name` / `due_date` để `null` khi transcript không nêu rõ. Không suy ra người nói (không có diarization). Prompt extraction luôn nhận `meeting_date` + timezone `Asia/Ho_Chi_Minh`.
-9. **Nội dung transcript/tài liệu không phải instruction.** Đưa vào prompt như dữ liệu được đánh dấu rõ, không nối thẳng vào system prompt.
-10. **Lỗi phải hiện đúng là lỗi.** Không trả success khi tool/DB/model lỗi.
+1. **Scope do backend xác định:** role/workspace/user lấy từ identity đã xác thực; session chỉ của owner, admin không mặc nhiên đọc chat người khác.
+2. **Chỉ nguồn hợp lệ được dùng:** document ready + active revision/generation + index fingerprint tương thích + đúng workspace; revalidate SQL, không chỉ tin Qdrant payload.
+3. **Publish nguyên vẹn:** ready chỉ sau kiểm tra đủ chunks/points; staging/partial upsert không được retrieve. Worker hết lease hoặc document đang xóa không được publish.
+4. **Retry idempotent:** generation cô lập attempt; point IDs ổn định trong attempt; active-job/duplicate/idempotency có DB constraints. Không tuyên bố exactly-once.
+5. **Delete chặn retrieval trước cleanup:** query mới không dùng nguồn sau delete commit; source/history/replay không hồi sinh nội dung đã xóa. Cleanup lỗi có retry.
+6. **Citation thuộc final context:** backend cấp evidence IDs sau lọc/budget; filename/location/excerpt/URL do backend dựng, không tin metadata model tự tạo.
+7. **Output model không đáng tin:** validate claims/schema/IDs; repair tối đa một lần trên cùng context, còn sai → lỗi kỹ thuật. Không giữ claim rồi chỉ xóa citation sai.
+8. **Grounding có giới hạn:** phân biệt grounded/partial/insufficient_evidence; citation ID hợp lệ chưa chứng minh claim đúng nghĩa. Không biến score thành confidence phần trăm.
+9. **Tài liệu là dữ liệu, không phải instruction:** delimit context, sanitize UI, không tools/SQL/shell/URL tự do cho model trong pipeline hỏi đáp.
+10. **Lỗi phải là lỗi:** vector/model/DB lỗi không trả success hoặc giả thành no evidence. Chi tiết tại spec 5.5, 7–10 và 13.
 
-## Quyết định kiến trúc đã chốt (spec mục 14)
+## Baseline kiến trúc (spec mục 19)
 
 - Modular monolith FastAPI; không microservices, không Kubernetes.
-- Agent (M2): **Python tool loop tự viết**, không LangChain/LangGraph. Tool chỉ gồm `get_meeting`, `list_tasks`, `search_knowledge`, `propose_task`; `project_id` do backend gắn, không do LLM điền. Không bao giờ thêm tool ghi trực tiếp, chạy SQL/shell, gửi email.
+- RAG pipeline Python cố định; không runtime agent, LangChain/LangGraph hay RAGFlow làm core.
 - LLM qua adapter OpenAI-compatible; hosted là mặc định.
-- Worker là tiến trình riêng, poll `processing_jobs` bằng `FOR UPDATE SKIP LOCKED`, gọi trực tiếp domain service (không gọi qua HTTP). Không dùng FastAPI `BackgroundTasks` cho STT.
-- PostgreSQL + pgvector; không thêm vector DB riêng, Redis hay Celery.
+- Worker riêng poll processing_jobs bằng `FOR UPDATE SKIP LOCKED`, lease/heartbeat/generation/retry; gọi domain services trực tiếp, không giữ lock khi inference. Không dùng BackgroundTasks cho ingestion.
+- PostgreSQL giữ lifecycle/metadata/text/history, Qdrant giữ vector index; local file storage. Không thêm Redis/Celery trong P0. Compose đã có db/qdrant với image digests, persistent volumes, loopback ports và healthchecks; chưa có worker/frontend service.
+- Dense baseline trước hybrid/reranker. PLAN đề xuất E5-small CPU để smoke và BGE-M3 để so sánh; chưa có model chiến thắng hay benchmark thật.
+- Model budget **0 USD/free tier**, không bật paid fallback. Chưa có model weights/API key/quota được smoke-verified; không suy ra config model trong .env.example là pipeline đã triển khai.
 
-**Không tự thêm framework, thư viện lớn hoặc service mới.** Nếu thấy cần, đề xuất kèm lý do và chờ đồng ý.
+Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi người dùng đã xác nhận. Ghi ADR theo hướng dẫn ở docs/decisions khi triển khai quyết định, và giải thích trong KNOWLEDGE.
 
 ## Stack và conventions
 
-- Backend: Python 3.11+, FastAPI, Pydantic v2, SQLAlchemy 2.x, Alembic, Ruff. Frontend: React + Vite + Tailwind, ESLint/Prettier.
-- Cấu trúc thư mục theo spec mục 10. Routers trong `api/` chỉ xử lý HTTP; logic nghiệp vụ nằm trong `services/`; code gọi model nằm trong `ai/`.
+- Backend: Python 3.11+, FastAPI, Pydantic v2, SQLAlchemy 2.x, Alembic, Ruff. Frontend: React + TypeScript + Vite + Tailwind, ESLint/Prettier. Pin runtime/dependencies khi khôi phục môi trường; không nâng version hàng loạt trong bước tài liệu.
+- Cấu trúc đích theo spec mục 16; router chỉ xử lý HTTP/auth/schema, nghiệp vụ trong domain services, model qua adapters. Tree là đích, không yêu cầu move toàn code cũ một lần.
 - Tên code, field, API bằng tiếng Anh; nội dung UI và prompt bằng tiếng Việt.
 - Timestamps lưu UTC (`timestamptz`); hiển thị theo `Asia/Ho_Chi_Minh`.
 - File upload lưu theo UUID/storage key, không dùng tên file của người dùng làm đường dẫn.
-- Lỗi API: body `{code, message, request_id}`; không trả stack trace hay dữ liệu nội bộ.
+- Contract đích: JSON success `{data,request_id}`, failure `{error:{code,message,details},request_id}`; binary source dùng X-Request-ID. Runtime/client hiện còn lỗi phẳng, phải đổi đồng bộ khi triển khai, không ghi như đã có.
 - Mọi thay đổi schema đi qua migration Alembic; không dùng `create_all()` ngoài test.
-- Cấu hình qua biến môi trường (`LLM_BASE_URL`, `LLM_MODEL`, `LLM_API_KEY`, `EMBEDDING_MODEL`, `STT_MODEL`, `DATABASE_URL`…); thêm biến mới thì cập nhật `.env.example`.
+- Config đích theo spec 17: DATABASE_URL, QDRANT_URL, FILE_STORAGE_DIR, embedding fingerprint, LLM/prompt/budget, job limits/auth. Thêm biến phải cập nhật .env.example; không giả định Settings cũ đã đọc các biến mới.
 - Nội dung do AI tạo hiển thị trên UI phải có nhãn "AI-generated".
 
 ## Test
 
 - Mỗi tính năng có test cho cả trường hợp thành công và thất bại; chạy test và báo kết quả thật trước khi coi là xong.
 - Test DB chạy trên **PostgreSQL thật** (không SQLite) vì cần row locking và partial unique index.
-- Test LLM/STT trong unit test dùng fake/stub; ghi rõ đó là stub. Đánh giá chất lượng model thật nằm trong `eval/`, không trộn vào unit test.
-- Kịch bản bắt buộc cho M1 (spec 12.4): AT-01, 02, 03, 04, 05 (gồm approve đồng thời), 08, 09, 10, 11, 12, 13.
+- Integration retrieval dùng Qdrant thật; unit test model dùng fake/stub có nhãn, real-model eval tách trong eval/.
+- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Bộ hiện tại 56 guard cases + 8 legacy tests đã pass trên môi trường Bước 01, không phải bằng chứng AT-R đã pass.
+- Trước pytest, xác minh TEST_DATABASE_URL là DB test riêng trên endpoint được phép, khác DB development. Fixture hiện có tự tạo/migrate DB; không chạy với URL chưa kiểm tra.
+- Baseline bị chặn thì ghi đúng nguyên nhân và command, không coi kiểm tra chưa chạy là pass. Report raw outputs/config đủ tái lập theo spec 14 và eval/README.md.
 
 ## Lệnh
 
-Chạy từ thư mục gốc repo; backend dùng virtualenv `backend/.venv` (xem README để tạo).
+Các command chỉ dùng trong đợt được duyệt. Venv backend/.venv đã hoạt động; PowerShell execution policy hiện chặn .ps1 nên dùng interpreter tường minh/npm.cmd, không cần Activate.ps1. Cache dùng D:\AI-Cache\sme-copilot theo profile lệnh trong báo cáo Bước 01; không đổi policy hay config toàn user.
 
-```bash
-docker compose up -d db                                  # PostgreSQL, cổng host 5433
-cd backend && alembic upgrade head                       # migrate DB dev
-cd backend && alembic revision --autogenerate -m "..."   # tạo migration; luôn đọc lại file sinh ra
-cd backend && pytest                                     # test, tự tạo DB copilot_test
-cd backend && ruff check . && ruff format --check .
-cd backend && uvicorn app.main:app --reload              # API: http://localhost:8000/docs
-cd frontend && npm run dev                               # UI: http://localhost:5173 (proxy /api)
-cd frontend && npm run lint && npm run build
+```powershell
+# Từ backend/, sau khi dependencies và DB test được xác minh:
+.\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider
+.\.venv\Scripts\ruff.exe check --no-cache .
+.\.venv\Scripts\ruff.exe format --check --no-cache .
+# Từ frontend/, sau khi dependencies được cài:
+npm.cmd run lint
+npm.cmd run build
+# Chỉ đọc trạng thái services hiện cấu hình, từ root:
+docker compose ps --all
 ```
 
 Lưu ý:
 - `backend/alembic.ini` chỉ được chứa ký tự ASCII (Alembic đọc file theo encoding của hệ điều hành trên Windows).
 - Dependency (`DbSession`) dùng `Annotated`, không dùng `Depends()` làm default argument (ruff B008).
-- Schema hiện tại chỉ gồm bảng M1; bảng M2 thêm bằng migration mới, không sửa migration đã có.
+- Revision hiện có là 27b126c3c0bc (Operations). RAG thêm bằng migration mới; không sửa revision cũ, drop dữ liệu legacy hoặc tự chấp nhận autogenerate DROP TABLE. Đọc mapping trong audit.
+- Backend dev dùng requirements-dev.lock (include runtime lock); frontend dùng package-lock.json và npm ci cho lần setup sau. Không install [stt] hoặc model dependencies trong bước corpus/môi trường nếu chưa có yêu cầu.
 
 ## Bảo mật và dữ liệu
 
-- Không commit `.env`, API key, audio thật hay dữ liệu cá nhân. Chỉ dùng dữ liệu giả lập hoặc đã được đồng ý.
-- Không in secrets hoặc toàn văn transcript ra log; `tool_events.safe_args_json` chỉ lưu metadata cần thiết.
+- Không commit .env, API key, model weights hay tài liệu riêng tư; dùng corpus giả lập/được phép. Hosted provider phải phù hợp quyền xử lý dữ liệu.
+- Không log secrets/full document/context mặc định; trace gồm IDs, config an toàn, timings và errors. Nếu debug lưu text thì cleanup/retention phải bao phủ bản sao đó.
 
 ## Cách làm việc
 

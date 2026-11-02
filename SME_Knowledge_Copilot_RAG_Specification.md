@@ -2,14 +2,16 @@
 
 > **Software Requirements Specification (SRS) & Technical Design — RAG-first**  
 > **Version:** 2.1 — đặc tả triển khai chi tiết cho hướng RAG thuần  
-> **Updated:** 01/11/2026  
+> **Updated:** 02/11/2026 — đồng bộ trạng thái sau Bước 00 và guard DB test<br>
 > **Project type:** AI Engineering learning project / portfolio  
 > **Development context:** 02 thành viên; Claude hỗ trợ phát triển phần mềm  
 > **Mốc hướng tới:** bản demo và kết quả kỹ thuật trước hoặc vào **15/11/2026**  
 > **Career objective:** củng cố năng lực AI Engineering từ nền tảng Software Engineering để ứng tuyển **VNG AI Builder Residency**  
 > **Document status:** đề xuất kỹ thuật để triển khai; các tham số chưa benchmark được đánh dấu là *giá trị khởi đầu*, không phải kết quả đã xác nhận.
 
-**Quan hệ với tài liệu cũ:** tài liệu này xác định yêu cầu cho hướng sản phẩm mới. [Spec Operations v1.1](SME_AI_Operations_Copilot_Specification.md) là mẫu về độ chi tiết và tài liệu lịch sử; các yêu cầu audio, agent, proposal, approval và task không được kế thừa vào MVP RAG. [CLAUDE.md](CLAUDE.md) hiện mô tả hướng Operations và cần được đồng bộ trước khi giao triển khai RAG; xem mục 18.3. Bản cập nhật này đặc tả thiết kế, không xác nhận code hiện tại đã đáp ứng.
+**Quan hệ với tài liệu cũ:** tài liệu này xác định yêu cầu cho hướng sản phẩm mới. [Spec Operations v1.1](SME_AI_Operations_Copilot_Specification.md) là mẫu về độ chi tiết và tài liệu lịch sử; các yêu cầu audio, agent, proposal, approval và task không được kế thừa vào MVP RAG. [CLAUDE.md](CLAUDE.md) và hướng dẫn repository đã đồng bộ sang RAG trong Bước 00 ngày 02/11/2026; hiện trạng code và các giới hạn kiểm chứng được ghi trong [audit chuyển tiếp](docs/rag-transition-audit.md). Spec vẫn là thiết kế đích, không xác nhận pipeline RAG đã triển khai.
+
+**Tiến độ triển khai 02/11/2026: 11,2% / 100%** theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). [Bước 01](docs/environment-step01.md) hoàn thành môi trường/baseline. [Bước 02](docs/dataset-step02.md) có 10 tài liệu/45 câu nháp, 8 fixtures, 37 tests đạt; **0/45 human-approved**, chờ hai người kiểm tra nhãn. Chưa có model benchmark hoặc pipeline RAG. Ngân sách **0 USD/free tier**, không tự chuyển paid tier khi hết quota. Tỷ lệ là khối lượng kế hoạch, không phải accuracy.
 
 **Cách đọc:** mục 3 xác định phạm vi; mục 5 là yêu cầu chức năng và bất biến; mục 7–10 là contract triển khai; mục 14–15 xác định cách đo và nghiệm thu. `P0/M1` là bắt buộc cho demo, `P1/M2` là nâng cao; các giá trị cấu hình khởi đầu có thể thay đổi nhưng phải lưu cùng kết quả đo.
 
@@ -1419,6 +1421,7 @@ Các mã `AT-Rxx` thuộc spec RAG, độc lập với `AT-xx` của spec Operat
 
 - Unit tests dùng fixtures nhỏ cho parsing/chunking/location, source-span matching, citation schema, budget và metric math. Fake embedding/LLM phải có nhãn rõ, không dùng số này như benchmark chất lượng.
 - Integration tests dùng **PostgreSQL và Qdrant thật**, dữ liệu test riêng; kiểm tra constraints, locks, concurrent requests, vector filtering và partial failures. Không dùng SQLite để chứng minh hành vi PostgreSQL.
+- Trước khi fixture kết nối/tạo/migrate DB, phải validate TEST_DATABASE_URL: driver PostgreSQL/psycopg đã hỗ trợ, host loopback hoặc Compose db, tên ASCII lowercase kết thúc `_test` không trùng tên DB development, không query/fragment ghi đè kết nối. Tên DB được dựng như SQL identifier an toàn. Unit tests cho guard được chạy độc lập mà không khởi tạo app/DB; integration DB thật vẫn là bước kiểm chứng riêng.
 - Fault injection đặt ở ranh giới adapter/transaction; dùng barrier có kiểm soát để tái tạo worker stale/delete race, không chỉ gọi tuần tự rồi tuyên bố đã test concurrency.
 - Real-model eval tách khỏi CI unit tests. AT-R11/12/14 có hai lớp: fixture model để chứng minh code contract, model thật để báo chất lượng/nguy cơ; không suy diễn stub pass thành model an toàn.
 - E2E kiểm tra luồng upload → ready → chat → click source → delete → query lại; smoke trên dữ liệu giả lập và cấu hình dùng quay demo.
@@ -1576,6 +1579,8 @@ Mẫu local trên là ví dụ cấu hình, không bắt buộc dùng LLM local 
 
 **Validation cấu hình:** `0 ≤ overlap < chunk_size`; token budget phải hợp context window; `candidate_k ≥ final_k ≥ 1`; heartbeat nhỏ hơn lease; timeout/retry/concurrency phải dương; dimension và fingerprint phải khớp collection. `RETRIEVAL_SCORE_THRESHOLD` rỗng nghĩa là tắt cutoff. API key có thể rỗng chỉ khi local adapter được cấu hình cho phép; không in secrets trong logs/config reports.
 
+**Hiện trạng Bước 01:** Settings mới tiêu thụ config DB, Qdrant, upload và storage cùng các trường LLM scaffold; FILE_STORAGE_DIR ưu tiên hơn alias legacy STORAGE_DIR. Candidate profile E5/384/CPU/chunk350 trong .env.example chưa phải kết quả chọn model và chưa được toàn bộ model/chunk adapters tiêu thụ. Ví dụ BGE ở trên vẫn là một cấu hình thí nghiệm khác cần collection/fingerprint riêng. Budget 0 USD được áp dụng khi chọn tài khoản/free tier trước Bước 03; chưa có API calls hoặc quota thực đã kiểm chứng.
+
 ### 17.1. Cấu hình thí nghiệm phải được lưu cùng kết quả
 
 - Corpus snapshot và document revisions.
@@ -1643,11 +1648,11 @@ Output:
 | Agent tools và approve transaction | Không đưa vào RAG answer service; approval không phải bước cần thiết cho hỏi đáp chỉ đọc |
 | pgvector của spec Operations | Spec RAG giữ lựa chọn Qdrant + PostgreSQL từ bản 2.0; cần migration/index loader riêng, không giả định embeddings đã tương thích |
 | `processing_jobs`/users/workspaces hiện có | So sánh schema thực trước reuse; thêm enum/column/FK bằng migration mới, không sửa migration đã áp dụng |
-| README và `CLAUDE.md` | Đồng bộ tên sản phẩm, nguồn spec, scope M1/M2, invariants, stack, commands và acceptance IDs khi bắt đầu chuyển code |
+| README và `CLAUDE.md` | Đã đồng bộ tên sản phẩm, nguồn spec, scope M1/M2, invariants, stack, commands và acceptance IDs ở Bước 00; tiếp tục cập nhật khi code/test thay đổi |
 
 Thứ tự triển khai khuyến nghị theo dependency: identity/storage/schema → ingestion worker + recovery → search-only + nguồn → answering/citation/session → eval + E2E/demo; không phải lịch phân công. Mỗi bước cần chạy được độc lập trước mở rộng bước tiếp theo.
 
-**Nguồn yêu cầu:** với việc chuyển hướng được yêu cầu ở bản này, dùng spec RAG cho yêu cầu sản phẩm mới. Các ràng buộc STT/agent/approval trong `CLAUDE.md` cần được thay đồng bộ khi chuyển code; coding conventions về secrets, migrations và báo cáo test trung thực vẫn hữu ích. Không tự xóa dữ liệu/bảng cũ chỉ vì nằm ngoài phạm vi RAG. Việc chỉnh spec không thực hiện migration, đổi deployment hoặc chứng nhận code cũ đã đáp ứng spec mới.
+**Nguồn yêu cầu:** dùng spec RAG cho yêu cầu sản phẩm mới. CLAUDE.md đã thay ràng buộc STT/agent/approval bằng invariants RAG trong Bước 00; conventions về secrets, migrations và báo cáo test trung thực được giữ lại. Không tự xóa dữ liệu/bảng cũ chỉ vì nằm ngoài phạm vi RAG. Việc đồng bộ tài liệu và vá test fixture không thực hiện migration, đổi deployment hoặc chứng nhận code cũ đã đáp ứng spec mới. Mọi đợt thay đổi tiếp theo vẫn cần xác nhận “Thực hiện đi” theo AGENTS.md.
 
 ---
 
@@ -1754,4 +1759,4 @@ Các liên kết dưới đây là tài liệu kỹ thuật tham khảo; nên ki
 | Acceptance | 26 kịch bản AT-Rxx liên kết FR/NFR; DoD cho feature/M1/M2 |
 | Delivery | UI states, config validation, runbook, ADR baseline và hướng chuyển từ code/spec cũ |
 
-**Chưa thực hiện trong lần cập nhật tài liệu:** chuyển code, migration dữ liệu, cài Qdrant/model, chạy benchmark hoặc sửa các tài liệu nguồn cũ. Mọi kết quả hiệu năng/chất lượng vẫn phải được đo khi triển khai.
+**Lịch sử triển khai:** khi mở rộng spec ngày 01/11/2026 chưa chuyển code, migrate dữ liệu, cài Qdrant/model hoặc chạy benchmark. Bước 00 ngày 02/11 đã đồng bộ hướng dẫn repository; đợt hậu kiểm tiếp theo vá guard test fixture và bổ sung unit tests độc lập. Chưa triển khai pipeline RAG hay kiểm thử DB thật trong các đợt này. Mọi kết quả hiệu năng/chất lượng vẫn phải đo khi triển khai; xem audit để phân biệt baseline lịch sử và kết quả mới.

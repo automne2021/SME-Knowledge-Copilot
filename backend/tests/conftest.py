@@ -1,63 +1,106 @@
 """Test chạy trên PostgreSQL thật (cần row locking, partial unique index).
 
-Database test lấy từ TEST_DATABASE_URL, được tạo nếu chưa có và migrate lên head.
+Database test lấy từ TEST_DATABASE_URL, kiểm tra an toàn trước khi tạo/migrate.
 Mỗi test chạy trong một transaction và rollback khi kết thúc.
 """
 
+from __future__ import annotations
+
 from collections.abc import Iterator
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-from alembic import command
-from alembic.config import Config
-from fastapi.testclient import TestClient
-from sqlalchemy import Engine, create_engine, text
-from sqlalchemy.engine import make_url
-from sqlalchemy.orm import Session
 
-from app.core.config import get_settings
-from app.core.db import get_db
-from app.main import app
+from tests.database_safety import SafeDatabaseTarget, validate_test_database_url
+
+if TYPE_CHECKING:
+    from fastapi.testclient import TestClient
+    from sqlalchemy import Engine
+    from sqlalchemy.engine import URL
+    from sqlalchemy.orm import Session
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 
 
-def _ensure_database(url: str) -> None:
-    db_name = make_url(url).database
-    admin_engine = create_engine(
-        make_url(url).set(database="postgres"), isolation_level="AUTOCOMMIT"
+def _connection_url(target: SafeDatabaseTarget) -> URL:
+    from sqlalchemy.engine import URL
+
+    # Rebuild from validated components, including an explicit port. No libpq
+    # query options or second parser may override the target we validated.
+    return URL.create(
+        "postgresql+psycopg",
+        username=target.username,
+        password=target.password,
+        host=target.host,
+        port=target.port,
+        database=target.database,
     )
-    with admin_engine.connect() as conn:
-        exists = conn.execute(
-            text("SELECT 1 FROM pg_database WHERE datname = :name"), {"name": db_name}
-        ).scalar()
-        if not exists:
-            conn.execute(text(f'CREATE DATABASE "{db_name}"'))
-    admin_engine.dispose()
 
 
-def _migrate(url: str) -> None:
+def _ensure_database(url: str | None, development_url: str) -> None:
+    target = validate_test_database_url(url, development_url)
+
+    from psycopg import sql
+    from sqlalchemy import create_engine, text
+
+    admin_engine = create_engine(
+        _connection_url(target).set(database="postgres"),
+        isolation_level="AUTOCOMMIT",
+        connect_args={"connect_timeout": 5},
+    )
+    try:
+        with admin_engine.connect() as conn:
+            exists = conn.execute(
+                text("SELECT 1 FROM pg_database WHERE datname = :name"),
+                {"name": target.database},
+            ).scalar()
+            if not exists:
+                statement = sql.SQL("CREATE DATABASE {}").format(sql.Identifier(target.database))
+                conn.exec_driver_sql(statement.as_string(conn.connection.driver_connection))
+    finally:
+        admin_engine.dispose()
+
+
+def _migrate(url: str | None, development_url: str) -> None:
+    target = validate_test_database_url(url, development_url)
+
+    from alembic import command
+    from alembic.config import Config
+
     cfg = Config(str(BACKEND_DIR / "alembic.ini"))
     cfg.set_main_option("script_location", str(BACKEND_DIR / "alembic"))
     # configparser coi % là ký tự nội suy.
-    cfg.set_main_option("sqlalchemy.url", url.replace("%", "%%"))
+    cfg.set_main_option(
+        "sqlalchemy.url",
+        _connection_url(target).render_as_string(hide_password=False).replace("%", "%%"),
+    )
     command.upgrade(cfg, "head")
 
 
 @pytest.fixture(scope="session")
 def db_engine() -> Iterator[Engine]:
-    url = get_settings().test_database_url
-    if not url:
-        raise RuntimeError("Chưa cấu hình TEST_DATABASE_URL (xem .env.example)")
-    _ensure_database(url)
-    _migrate(url)
-    engine = create_engine(url)
-    yield engine
-    engine.dispose()
+    from app.core.config import get_settings
+
+    settings = get_settings()
+    url = settings.test_database_url
+    target = validate_test_database_url(url, settings.database_url)
+    _ensure_database(url, settings.database_url)
+    _migrate(url, settings.database_url)
+
+    from sqlalchemy import create_engine
+
+    engine = create_engine(_connection_url(target), connect_args={"connect_timeout": 5})
+    try:
+        yield engine
+    finally:
+        engine.dispose()
 
 
 @pytest.fixture
 def db_session(db_engine: Engine) -> Iterator[Session]:
+    from sqlalchemy.orm import Session
+
     connection = db_engine.connect()
     transaction = connection.begin()
     session = Session(bind=connection, join_transaction_mode="create_savepoint")
@@ -69,6 +112,11 @@ def db_session(db_engine: Engine) -> Iterator[Session]:
 
 @pytest.fixture
 def client(db_session: Session) -> Iterator[TestClient]:
+    from fastapi.testclient import TestClient
+
+    from app.core.db import get_db
+    from app.main import app
+
     app.dependency_overrides[get_db] = lambda: db_session
     with TestClient(app) as test_client:
         yield test_client

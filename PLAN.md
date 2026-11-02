@@ -1,10 +1,26 @@
 # PLAN — SME Knowledge Copilot
 
-> **Phiên bản:** 1.0 — 01/11/2026  
+> **Phiên bản:** 1.4 — Bước 02 có artifacts kỹ thuật, chờ human review, 02/11/2026 (lập kế hoạch 01/11/2026)<br>
 > **Nguồn yêu cầu:** [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md), v2.1  
 > **Mục tiêu:** hoàn thành project RAG thuần có demo, test và benchmark tái lập; hướng tới M1 ngày 15/11/2026.  
 > **Nhân sự:** 2 người. Kế hoạch theo thứ tự phụ thuộc; thời lượng là ước lượng, không phải cam kết.  
-> **Trạng thái:** kế hoạch triển khai, chưa thực thi các bước bên dưới. Khảo sát code/phần cứng đã thực hiện; chưa tải model, gọi inference trả phí hay chạy benchmark.
+> **Trạng thái:** hoàn thành Bước 00/01; Bước 02 đạt 6/7 đầu việc, chờ hai người kiểm tra nhãn; Bước 03–12 chưa thực hiện. Chưa tải model, gọi inference hoặc chạy benchmark chất lượng.<br>
+
+**Tiến độ hiện tại: 11,2% / 100%.** [Bước 02](docs/dataset-step02.md) đã có 10 tài liệu giả lập, 45 câu nháp (15 dev/30 test, 6 unanswerable), 8 fixtures và 37 eval tests đạt; **0/45 câu được hai người duyệt**, chưa có human gold/benchmark. [Bước 01](docs/environment-step01.md) hoàn thành baseline 64 tests và môi trường. [Audit Bước 00](docs/rag-transition-audit.md) giữ lịch sử; [KNOWLEDGE.md](KNOWLEDGE.md) ghi lý do/kết quả. Ngân sách **0 USD/free tier**. Không tự bắt đầu Bước 03 khi chưa có xác nhận đợt riêng.
+
+### Quy ước báo tiến độ project
+
+Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/11/2026. Dùng midpoint person-hours của bảng Bước 00–12 làm trọng số cố định ban đầu: `1,5; 4; 7; 5; 8; 12; 10; 10; 10; 10; 12; 8; 5`, tổng **102,5**. Công thức `100 × Σ(trọng số bước × tỷ lệ đầu việc đã xác minh) / 102,5`; làm tròn một chữ số thập phân. Sửa trọng số cần ghi lý do và phiên bản, không đổi để làm % đẹp hơn.
+
+| Bước | Trọng số | Phần đã ghi nhận | Đóng góp quy đổi |
+|---|---:|---:|---:|
+| 00 | 1,5 | 100% — audit/hướng dẫn | 1,5 |
+| 01 | 4 | 100% — môi trường/baseline, quota thật là gate trước smoke | 4 |
+| 02 | 7 | 6/7 đầu việc; mục 5 chờ gán/kiểm tra chéo bởi hai người | 6 |
+| 03–12 | 90 | 0% | 0 |
+| Tổng | 102,5 | `(1,5 + 4 + 6) / 102,5` | **11,2% / 100%** |
+
+Đầu việc đang làm/chưa xác minh không tính hoàn thành; đóng gate còn cần các điều kiện của từng bước. Cách chia đều đầu việc trong một bước là ước lượng quản lý, không phải giờ thực tế đã tiêu hay độ chính xác AI. Nếu chỉ giải thích/đọc, giữ nguyên %; chỉ ghi file tiến độ trong đợt thay đổi đã xác nhận. Bước 02 đủ 7/7 sẽ đưa tổng lên khoảng 12,2%, nhưng hiện chưa đạt.
 
 ## 1. Phương án khởi đầu
 
@@ -41,7 +57,7 @@ Khảo sát ngày 01/11/2026 cho thấy repo vẫn là skeleton của hướng O
 
 Không coi bảng `users` có `password_hash` là bằng chứng auth đã hoạt động. Không coi image PostgreSQL có pgvector là đã có retrieval. Chỉ đánh dấu tính năng hoàn thành sau test tương ứng.
 
-Trong lần tạo kế hoạch này chỉ thêm `PLAN.md`; các file khác là đầu việc tương lai. Spec là nguồn business rules; PLAN quy định thứ tự, lựa chọn thí nghiệm và cách kiểm chứng.
+Tại thời điểm lập v1.0 chỉ thêm PLAN.md. Trong Bước 00 ngày 02/11/2026 đã đồng bộ CLAUDE/AGENTS/README/eval/ADR instructions, thêm audit và cập nhật KNOWLEDGE; code/schema/dependencies/hạ tầng vẫn giữ baseline cũ. Bảng khảo sát 01/11 ở trên là dữ liệu lịch sử; trạng thái hiện tại xem audit. Spec là nguồn business rules; PLAN quy định thứ tự, lựa chọn thí nghiệm và cách kiểm chứng.
 
 ## 3. Cấu hình máy và cách bố trí tài nguyên
 
@@ -182,7 +198,7 @@ Hosted stable ID có thể không pin được toàn bộ weights: ghi ngày ch�
 
 ## 5. Ngân sách API và giới hạn thí nghiệm
 
-**Trần lập kế hoạch đề xuất: 5–10 USD cho smoke tests, vài vòng dev eval và demo M1.** Đây là số tiền dự phòng để nhóm quyết định, không phải chi phí đã chi hoặc bảo đảm tổng hóa đơn.
+**Ngân sách đã được người dùng chọn ngày 02/11/2026: 0 USD, chỉ dùng free tier.** Không tự bật billing, paid model/tier hoặc paid fallback; hết quota thì dừng/hoãn model run. API key/quota của tài khoản thật chưa được xác minh, cần chuẩn bị trước Bước 03. Ví dụ tính phí bên dưới chỉ để học cách dự toán, không phải quyền chi tiêu hoặc kế hoạch dùng paid tier.
 
 Giá Standard đọc ngày 01/11/2026 cho Gemini 3.5 Flash-Lite: **0,30 USD/1M input tokens**, **2,50 USD/1M output tokens, gồm thinking**. Kiểm tra lại trước trả phí; free tier/quota không phải cam kết đủ cho benchmark. [Bảng giá chính thức](https://ai.google.dev/gemini-api/docs/pricing).
 
@@ -198,7 +214,7 @@ Quy tắc kiểm soát chi phí của project:
 
 - Bắt đầu 5–10 câu smoke, sau đó 15–20 câu dev; chỉ chạy test đầy đủ khi đã freeze cấu hình.
 - Đo retrieval không gọi LLM. Dùng oracle context để so LLM mà không re-embed corpus nhiều lần.
-- Ghi calls/tokens/cost theo run; usage thiếu thì `null`, không ghi 0. Cảnh báo khi đạt 70% trần nội bộ; dừng batch mới khi chạm trần đã chọn.
+- Ghi calls/tokens/cost theo run; usage thiếu thì `null`, không ghi 0. Với ngân sách đã chọn 0 USD, không thực hiện paid calls; xác minh free-tier project/quota trước model run, không coi chi phí chưa biết là miễn phí.
 - Giới hạn 1 request đang chạy trong benchmark đầu, backoff có giới hạn khi 429; không spam retry và không chuyển API key để né quota.
 - Một query tối đa hai calls tính cả repair; timeout bị mất response vẫn có khả năng phát sinh usage, không giả định miễn phí.
 - Ragas/LLM-as-judge tạo thêm calls; để P1. Human review tập nhỏ là baseline M1.
@@ -256,6 +272,19 @@ Tổng khoảng **82–123 person-hours**, chưa cộng thời gian chờ tải 
 **Đầu ra:** backlog P0 theo spec, danh sách reuse/migration và tài liệu hướng dẫn thống nhất.  
 **Gate:** không còn rule “RAG chỉ thuộc M2” chi phối công việc mới; không xóa bảng/dữ liệu cũ tùy tiện.
 
+**Kết quả 02/11/2026 — hoàn thành phạm vi Bước 00:**
+
+- [x] Đồng bộ hướng dẫn sang RAG, giữ quy tắc xác nhận và ghi kiến thức.
+- [x] Liệt kê đủ 23 FR P0, phần reuse/migration và tiêu chí AT-Rxx trong audit.
+- [x] Ghi mốc HEAD `53879bfa96f082489cf74a1c0dc4c41acebc493f`, working-tree ban đầu và checksum migration; chưa tạo commit/tag.
+- [x] Chạy kiểm tra nền bằng công cụ có sẵn: Ruff pass; ghi đúng pytest/frontend/DB blockers, không trình bày như tests pass.
+- [x] Ghi lý do/kiến thức và việc kiểm chứng trong KNOWLEDGE K-012–K-014.
+- [ ] Pytest và frontend lint/build thành công: chuyển thành đầu việc khôi phục môi trường Bước 01, chưa được chứng minh ở Bước 00.
+
+Không có migration, cài dependencies/model, start service hoặc code RAG trong đợt này. Baseline bị chặn là giới hạn đã ghi, không phải bằng chứng lỗi ứng dụng hay chất lượng RAG. Chi tiết: [rag-transition-audit.md](docs/rag-transition-audit.md).
+
+**Hậu kiểm được xác nhận riêng, 02/11/2026:** đã thêm guard DB test nội bộ, safe SQL identifier, tách imports fixture để chạy unit độc lập và cập nhật trạng thái trong spec. `tests/test_database_safety.py`: 56 cases pass; lint/format pass. Kết quả này không thay cho 8 tests legacy/integration hoặc AT-R01–23. Xem audit mục 7 và KNOWLEDGE K-015–K-016. Ở thời điểm hậu kiểm setup/lockfiles chưa thực hiện; kết quả khôi phục sau đó được ghi ở Bước 01 bên dưới.
+
 ### Bước 01 — Dựng môi trường có ngân sách tài nguyên
 
 1. Thực hiện các kiểm tra cache/ổ đĩa ở mục 3; xác nhận đường dẫn và storage riêng cho dev/test.
@@ -264,6 +293,22 @@ Tổng khoảng **82–123 person-hours**, chưa cộng thời gian chờ tải 
 4. Cấu hình API/worker đọc đúng DB/vector URLs, storage và env; giữ secrets ngoài Git.
 5. Tạo tài khoản API/key phù hợp nếu chọn hosted; kiểm tra quota/pricing trước smoke test. Chưa đăng ký GPU/server dài hạn.
 6. Ghi idle RAM/CPU, dung lượng đĩa và config máy trước load model.
+
+**Bổ sung từ audit Bước 00:** khôi phục virtualenv đúng Python trên máy hiện tại, cài frontend dependencies/tạo lockfile, xác minh DB test riêng và chạy lại pytest/lint/build trước coi môi trường sẵn sàng. Virtualenv hiện trỏ Python 3.13 ở máy cũ; system Python 3.12.8 không có đủ app dependencies. Không sửa đường dẫn pyvenv.cfg rồi coi môi trường đã tái lập.
+
+Guard hiện chỉ nhận URL PostgreSQL/psycopg với host local/Compose, DB name lowercase ASCII kết thúc `_test` khác DB development, không query/fragment. Khi khôi phục môi trường, pin cả dev tool dependencies (pytest/httpx/Ruff), tạo frontend lockfile và kiểm chứng đường tạo/migrate trên PostgreSQL thật; đừng coi 56 guard unit cases là full backend pass.
+
+**Kết quả 02/11/2026 — hoàn thành Bước 01:**
+
+- [x] Venv mới Python 3.12.8; giữ backup venv cũ, thêm dev lock và frontend package-lock.
+- [x] Caches pip/npm/HF dự kiến trên D; HF cache rỗng, chưa tải weights. Không đổi PowerShell execution policy hoặc Docker disk location.
+- [x] PostgreSQL 16.15 và Qdrant 1.20.0 healthy, image digests cố định, volumes bền vững; kết nối từ host và persistence qua recreate đã kiểm chứng.
+- [x] 64 cases pass (56 guard + 8 legacy); frontend lint/build, pip check và Ruff đạt; một backend deprecation warning được ghi rõ.
+- [x] Config Qdrant/storage/upload, .env.example và .env riêng đã cập nhật có giữ credentials; secrets/cache/runtime artifacts được ignore.
+- [x] Người dùng chọn free tier, trần 0 USD; chưa gọi API và chưa kiểm chứng key/quota. Việc đó là điều kiện trước smoke Bước 03.
+- [x] Resource snapshot, commands và giới hạn còn lại ghi tại [environment-step01.md](docs/environment-step01.md); kiến thức K-017–K-021.
+
+C free cuối snapshot ~10,96 GiB, host free RAM ~3,2 GiB; chỉ coi đủ cho baseline đã kiểm tra, chưa cam kết chạy model lớn. Đây là snapshot kết thúc Bước 01; kết quả corpus sau đó ghi ở Bước 02.
 
 **Đầu ra:** môi trường DB/Qdrant hoạt động, env mẫu, resource snapshot và giới hạn chi phí nhóm chọn.  
 **Gate:** kết nối thật tới hai storage, không đầy C khi cài dependencies; môi trường test tách biệt.
@@ -280,6 +325,18 @@ Tổng khoảng **82–123 person-hours**, chưa cộng thời gian chờ tải 
 
 **Đầu ra:** corpus manifest, dev/test JSONL, answer rubric và human review notes.  
 **Gate:** với từng câu, người đọc xác minh được đúng/không có đáp án; chưa phụ thuộc random chunk UUID. Không dùng output model làm gold.
+
+**Kết quả 02/11/2026 — phần kỹ thuật xong, human gate còn mở:**
+
+- [x] Mục 1: 10 tài liệu giả lập, đủ PDF text/DOCX/TXT/MD và 35 canonical author blocks.
+- [x] Mục 2: 8 fixtures riêng, có scan/blank/mixed/encrypted, malformed/spoofed/adversarial inputs.
+- [x] Mục 3: 45 câu có đáp án/evidence **nháp**, 15 dev/30 test và 6 unanswerable.
+- [x] Mục 4: đủ các nhóm câu; partial cho điều kiện chưa biết và xung đột hiệu lực.
+- [ ] Mục 5: **0/45 human-approved**. Người A cần gán/xác nhận nhãn từ nguồn; người B kiểm tra độc lập. Không dùng bản nháp do trợ lý soạn như human gold.
+- [x] Mục 6: chia theo family, kiểm tra cả source block không rò rỉ dev/test.
+- [x] Mục 7: manifest/SHA-256/version/rubric/ledger, validator và metric primitives; **37 tests pass**, Ruff/pip check đạt.
+
+Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), [báo cáo Bước 02](docs/dataset-step02.md). `author-v1` chưa phải parser version; remap spans sau Bước 05. `--require-reviewed` hiện từ chối đúng vì nhãn chưa duyệt; cần snapshot reviewed trước final benchmark. Không gọi model/API, không benchmark hoặc triển khai Bước 03 trong đợt này. Đợt smoke sau cần xác nhận riêng, kiểm tra quota free tier và tài nguyên theo trần 0 USD.
 
 ### Bước 03 — Smoke test models trước xây toàn bộ pipeline
 
@@ -468,9 +525,9 @@ Gate M2: AT-R24–26 cho enhancement tương ứng, so sánh trên cùng dataset
 
 ### Việc làm ngay ở phiên triển khai đầu tiên
 
-- [ ] Đồng bộ `CLAUDE.md`/README với spec RAG; xác nhận không triển khai STT/agent.
-- [ ] Quyết định vị trí cache/dependencies/Docker data phù hợp chỗ trống; chưa mua GPU.
-- [ ] Xác nhận hosted provider/quota và trần chi phí thực tế của nhóm.
+- [x] Đồng bộ `CLAUDE.md`/README với spec RAG; xác nhận không triển khai STT/agent — hoàn thành Bước 00 ngày 02/11/2026.
+- [x] Chọn cache D, giữ venv/repo và Docker disk location, kiểm chứng dung lượng cho baseline; chưa mua GPU — Bước 01.
+- [x] Chốt trần model 0 USD/free tier — người dùng 02/11/2026. Provider/key/quota thật còn phải xác minh trước Bước 03.
 - [ ] Chuẩn bị 2 tài liệu nhỏ + 5 câu có gold evidence để smoke test.
 - [ ] Chạy embedding CPU và một LLM request thật, lưu model/config/resource report.
 - [ ] Điều chỉnh lịch sau khi biết inference/setup thực tế mất bao lâu.
