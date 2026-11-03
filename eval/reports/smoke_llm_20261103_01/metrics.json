@@ -1,0 +1,10 @@
+{
+  "status": "failed",
+  "stage": "llm_compatibility",
+  "api_calls_attempted": 5,
+  "technical_errors": 1,
+  "api_cost_usd": null,
+  "billing_verification": "manual_free_tier_attestation",
+  "semantic_correctness": "requires_human_scoring",
+  "e2e_rag": "not_run"
+}

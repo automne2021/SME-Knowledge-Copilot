@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from eval.build_dataset import put
+from eval.publish_reviewed import publish
 from eval.validate_dataset import (
     inspect_corpus,
     normalized,
@@ -31,8 +32,18 @@ def labels():
     return questions, blocks, docs
 
 
-def test_frozen_dataset_is_structurally_valid_but_not_human_reviewed():
-    result = validate(DATASET)
+def test_draft_requires_independent_review(tmp_path):
+    root = tmp_path / "draft"
+    shutil.copytree(DATASET, root, ignore=shutil.ignore_patterns("~$*"))
+    path = root / "human_review.csv"
+    rows = list(csv.DictReader(io.StringIO(path.read_text(encoding="utf-8"))))
+    for row in rows:
+        row.update(status="pending", annotator="", reviewer="")
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    result = validate(root)
     assert (result["documents"], result["fixtures"], result["questions"]) == (10, 8, 45)
     assert result["splits"] == {"dev": 15, "test": 30}
     assert result["unanswerable"] == 6
@@ -40,7 +51,53 @@ def test_frozen_dataset_is_structurally_valid_but_not_human_reviewed():
     assert result["label_status"] == "draft_pending_independent_human_review"
     assert result["model_benchmark"] == "not_run"
     with pytest.raises(ValueError, match="human review is incomplete"):
-        validate(DATASET, require_reviewed=True)
+        validate(root, require_reviewed=True)
+
+
+def test_publish_requires_complete_review_and_preserves_source(tmp_path):
+    source = tmp_path / "draft"
+    shutil.copytree(DATASET, source, ignore=shutil.ignore_patterns("~$*"))
+    # Controlled synthetic reviewer identities for the publication contract test.
+    path = source / "human_review.csv"
+    rows = list(csv.DictReader(io.StringIO(path.read_text(encoding="utf-8"))))
+    for row in rows:
+        row.update(status="approved", annotator="Test A", reviewer="Test B")
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    before = (source / "corpus_manifest.json").read_bytes()
+    output = tmp_path / "reviewed"
+    assert publish(source, output)["human_approved"] == 45
+    assert (source / "corpus_manifest.json").read_bytes() == before
+    frozen = (output / "corpus_manifest.json").read_bytes()
+    publish(source, output)
+    assert (output / "corpus_manifest.json").read_bytes() == frozen
+    with path.open("ab") as stream:
+        stream.write(b"\n")
+    with pytest.raises(ValueError, match="Existing reviewed snapshot differs"):
+        publish(source, output)
+    assert (output / "corpus_manifest.json").read_bytes() == frozen
+    with (output / "human_review.csv").open("ab") as stream:
+        stream.write(b"\n")
+    with pytest.raises(ValueError, match="Frozen human review checksum"):
+        validate(output, require_reviewed=True)
+
+
+def test_publish_rejects_pending_review_before_creating_output(tmp_path):
+    source = tmp_path / "draft"
+    shutil.copytree(DATASET, source, ignore=shutil.ignore_patterns("~$*"))
+    path = source / "human_review.csv"
+    rows = list(csv.DictReader(io.StringIO(path.read_text(encoding="utf-8"))))
+    rows[0]["status"] = "pending"
+    with path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    output = tmp_path / "reviewed"
+    with pytest.raises(ValueError, match="Human review is incomplete"):
+        publish(source, output)
+    assert not output.exists()
 
 
 @pytest.mark.parametrize(

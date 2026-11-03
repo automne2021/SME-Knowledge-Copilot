@@ -11,7 +11,7 @@
 
 **Quan hệ với tài liệu cũ:** tài liệu này xác định yêu cầu cho hướng sản phẩm mới. [Spec Operations v1.1](SME_AI_Operations_Copilot_Specification.md) là mẫu về độ chi tiết và tài liệu lịch sử; các yêu cầu audio, agent, proposal, approval và task không được kế thừa vào MVP RAG. [CLAUDE.md](CLAUDE.md) và hướng dẫn repository đã đồng bộ sang RAG trong Bước 00 ngày 02/11/2026; hiện trạng code và các giới hạn kiểm chứng được ghi trong [audit chuyển tiếp](docs/rag-transition-audit.md). Spec vẫn là thiết kế đích, không xác nhận pipeline RAG đã triển khai.
 
-**Tiến độ triển khai 02/11/2026: 11,2% / 100%** theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). [Bước 01](docs/environment-step01.md) hoàn thành môi trường/baseline. [Bước 02](docs/dataset-step02.md) có 10 tài liệu/45 câu nháp, 8 fixtures, 37 tests đạt; **0/45 human-approved**, chờ hai người kiểm tra nhãn. Chưa có model benchmark hoặc pipeline RAG. Ngân sách **0 USD/free tier**, không tự chuyển paid tier khi hết quota. Tỷ lệ là khối lượng kế hoạch, không phải accuracy.
+**Tiến độ triển khai 03/11/2026: 56,1% / 100%** theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). Bước 00–07 hoàn thành theo phạm vi; [Bước 07](docs/search-retrieval-step07.md) có search/source APIs, active-gen SQL revalidation và dev retrieval E5 thật: 13 answerable/2 unknown, Recall@5=1/MRR@5≈0,923/0 technical errors. **222 backend + 86 eval tests đạt**, Ruff/pip check đạt. Đây là corpus nhỏ, chưa answering accuracy/held-out result. Freeze dense config/cutoff None/BGE hoãn; chưa answering/delete/UI. Reviewed/mapping/reports cũ bất biến, không LLM calls/tải model/UI ở Bước 07. Bước 08 cần xác nhận riêng; trước code UI nhắc/chờ xác nhận. Tỷ lệ là khối lượng, không phải accuracy.
 
 **Cách đọc:** mục 3 xác định phạm vi; mục 5 là yêu cầu chức năng và bất biến; mục 7–10 là contract triển khai; mục 14–15 xác định cách đo và nghiệm thu. `P0/M1` là bắt buộc cho demo, `P1/M2` là nâng cao; các giá trị cấu hình khởi đầu có thể thay đổi nhưng phải lưu cùng kết quả đo.
 
@@ -717,6 +717,7 @@ erDiagram
 |---|---|---|
 | `workspaces` | `id`, `name`, `created_at` | Phạm vi dữ liệu |
 | `users` | `id`, `workspace_id`, `username`, `role`, `display_name`, `password_hash`, `is_active` | Identity seed; username unique, không trả password hash qua API |
+| `auth_tokens` | `id`, `user_id`, `token_hash`, `expires_at`, `revoked_at`, `created_at` | Implementation P0: opaque bearer ngẫu nhiên, chỉ giữ digest và thời hạn |
 | `documents` | `id`, `workspace_id`, `created_by`, `filename`, `mime`, `size_bytes`, `sha256`, `status`, `active_revision_id`, `active_generation_id`, `lifecycle_version`, `warnings_json`, `created_at`, `deleted_at` | Identity, lifecycle và concurrency |
 | `document_revisions` | `id`, `document_id`, `version`, `status`, `storage_key`, `parser_version`, `chunking_config`, `embedding_fingerprint`, `index_version`, `collection_name`, `expected_chunk_count`, `created_at` | Config immutable trong một lần index; revision 1 ở P0 |
 | `source_blocks` | `id`, `revision_id`, `generation_id`, `block_index`, `raw_text`, `normalized_text`, `location_json` | Source spans tái lập được |
@@ -787,6 +788,8 @@ IDs runtime dùng UUID; các giá trị `doc_123`, `demo-workspace`, `E1` trong 
 
 Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa cả `content` và `structured_answer_json` của answer bị ảnh hưởng; `retrieval_trace_json` mặc định chỉ có IDs, scores, config/timings, không chứa full context hoặc draft LLM. Nếu bật chế độ debug lưu text thì phải đưa phần đó vào cùng chính sách cleanup, không để một bản sao ngoài kiểm soát.
 
+**Implementation Bước 04:** migration `20261103_rag04` giữ bảng/ID/role/email legacy. Username cũ backfill theo UUID, user có sẵn inactive để review, không map approver/demo_admin thành knowledge_admin. CHECK VARCHAR giữ role legacy nhưng RAG auth chỉ nhận active member/knowledge_admin. `processing_jobs` thêm document_id/kind/revision/lease và discriminator; legacy generic jobs giữ state cũ, RAG jobs chỉ nhận states mục 7.4. Worker RAG sau này phải lọc document/kind, không claim generic jobs. Các CHECK/partial indexes/composite FKs đã qua PostgreSQL integration; worker concurrency/publish/cleanup còn cần kiểm chứng ở bước sau. [ADR RAG-06](docs/decisions/0006-identity-and-rag-schema.md).
+
 ### 9.5. Index manifest và reindex P1
 
 `embedding_fingerprint` gồm provider/model ID/revision, dimension, query/document preprocessing và normalization. `index_version` gồm fingerprint + parser/chunker version + chunk parameters. Model trả sai chiều hoặc collection không khớp → startup/readiness lỗi; không tự cắt/pad vector.
@@ -831,6 +834,8 @@ Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa c
 | `GET` | `/evaluations/runs/{id}` | P1 | Metrics/artifacts |
 
 **Authentication:** P0 dùng bearer access token của tài khoản seed theo mục 2.5. Login trả `access_token`, `token_type`, `expires_in`; `POST /auth/login` nhận `{username,password}`. Token hết hạn trả `401`; UI yêu cầu đăng nhập lại. Không có refresh token/SSO trong P0. Trước khi public còn cần HTTPS, rate limiting và cấu hình triển khai phù hợp; không gọi auth demo là bảo mật doanh nghiệp.
+
+**Implementation Bước 04:** login JSON, username lowercase ASCII/case-normalized, extra fields bị từ chối. Password Argon2id; token opaque 256-bit, DB chỉ lưu SHA-256, expiry mặc định 3.600 giây và trạng thái revoke; identity/role được đọc lại từ SQL mỗi request. Dev seed demo.admin/demo.member lấy mật khẩu riêng từ .env, seed lại không reset hoặc nâng quyền. Login/me, read document/job, owner session create/list/history và run status đã có; full upload/content/search/chat generation/delete APIs chưa triển khai. Error/success envelopes và frontend helper đã đồng bộ. [Chi tiết/checks/giới hạn](docs/schema-identity-step04.md).
 
 ### 10.2. Upload response
 

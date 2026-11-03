@@ -61,7 +61,8 @@ services:
       qdrant:
         condition: service_healthy
 
-  # worker: thêm khi có app/workers/job_worker.py (cùng image với backend).
+  # CPU worker runs on the Windows host: backend/.venv/Scripts/python.exe -B -m app.worker
+  # requirements-worker-cpu.lock pins the Windows wheel; do not reuse it in a Linux image.
 
 volumes:
   db_data:

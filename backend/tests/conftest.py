@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 import pytest
 
 from tests.database_safety import SafeDatabaseTarget, validate_test_database_url
+from tests.worker_support import worker_env  # noqa: F401
 
 if TYPE_CHECKING:
     from fastapi.testclient import TestClient
@@ -121,3 +122,36 @@ def client(db_session: Session) -> Iterator[TestClient]:
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def people(db_session):
+    """Shared identities for auth and upload contracts; rolled back after each test."""
+    from app.core.security import hash_password
+    from app.models import User, Workspace
+    from app.models.enums import UserRole
+
+    first, other = Workspace(name="Workspace A"), Workspace(name="Workspace B")
+    db_session.add_all([first, other])
+    db_session.flush()
+    result = {}
+    encoded = hash_password("test-only-password-42")
+    for name, role, space in [
+        ("member", UserRole.MEMBER, first),
+        ("admin", UserRole.KNOWLEDGE_ADMIN, first),
+        ("other", UserRole.MEMBER, other),
+        ("legacy", UserRole.APPROVER, first),
+    ]:
+        user = User(
+            username="test." + name,
+            email=name + "@example.invalid",
+            workspace_id=space.id,
+            display_name=name,
+            role=role,
+            password_hash=encoded,
+            is_active=True,
+        )
+        db_session.add(user)
+        result[name] = user
+    db_session.flush()
+    return result

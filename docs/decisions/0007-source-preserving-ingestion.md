@@ -1,0 +1,15 @@
+# ADR RAG-07 — Source-preserving upload, parsing và E5 chunking
+
+Ngày 03/11/2026. **Đã triển khai/kiểm chứng ở Bước 05**, chưa có worker hoặc retrieval benchmark. Liên quan [report](../parsing-upload-step05.md), [spec 7.3](../../SME_Knowledge_Copilot_RAG_Specification.md), [KNOWLEDGE K-043–048](../../KNOWLEDGE.md).
+
+Chọn streaming size/hash và server UUID storage keys, PostgreSQL partial unique index làm nguồn quyết định dedup; tạo document/revision/job trong một transaction. File storage chỉ có compensating cleanup; giữ source khi commit chưa xác minh được. Không dùng filename làm key hoặc check-then-insert đơn thuần vì không xử lý race và không bảo vệ traversal. Object storage/transactional outbox cân nhắc khi deploy nhiều nodes; local storage phù hợp portfolio một máy.
+
+Chọn PyMuPDF/python-docx đã có trong bộ corpus, promote sang runtime pins; parser subprocess có hard timeout. Giữ raw/normalized/source location riêng, không dùng text splitter làm mất provenance. pypdf/pdfplumber là lựa chọn thay thế nếu cần đổi footprint/license/layout; OCR, layout model và parser SaaS hoãn vì corpus text đơn giản, CPU/RAM và ngân sách 0 USD. PyMuPDF có dual license AGPL/commercial: tham khảo thông tin nhà cung cấp trước thay đổi cách phân phối; chưa mua commercial license. Không suy ra model miễn phí nghĩa mọi library không có điều kiện sử dụng.
+
+Chọn E5-small tokenizer JSON từ cache revision cố định qua tokenizers; không load model weights để chia đoạn. Budget toàn input 350/512, overlap 50 khi phải tách block dài; structure/page/context boundaries ưu tiên overlap. Heading/table header có provenance/context role. Không đếm token bằng số ký tự, không truncation để giấu chunk quá dài. LangChain/LlamaIndex splitters chưa cần vì yêu cầu mapping rõ, ít định dạng và core pipeline cần tự giải thích. Thay tokenizer/chunk config phải version mapping/index và re-evaluate, không đổi tên model tại chỗ.
+
+Mapping mới nối author-v1 với parser-v1 bằng hash/quote/location, fail closed khi missing/ambiguous; reviewed snapshot giữ bất biến. Không dùng chunk UUID làm gold cố định. Cả dev/test corpus được kiểm tra extraction compatibility, chưa dùng kết quả retrieval trên test để tune.
+
+Kiểm chứng: 166 backend + 76 eval tests ở hai suites riêng; đủ 45 câu/47 references, real DB race và faults. AT-R01–05 còn phần worker ready/terminal ở Bước 06. Xem lại khi tài liệu thật có bảng phức tạp/header footer/OCR, khi budget/model đổi, hoặc cần orphan recovery sau process crash/multi-node.
+
+Nguồn chính thức: [PyMuPDF extraction/tables](https://pymupdf.readthedocs.io/en/latest/page.html), [license](https://pymupdf.readthedocs.io/en/latest/about.html#license-and-copyright), [python-docx body iteration](https://python-docx.readthedocs.io/en/latest/api/document.html), [E5 model card](https://huggingface.co/intfloat/multilingual-e5-small), [Starlette multipart/body limits](https://starlette.dev/requests/). Tài liệu được đọc 03/11/2026; lựa chọn hiện tại là baseline kỹ thuật, chưa chứng minh model tốt nhất.

@@ -3,6 +3,8 @@
 **Ngày:** 02/11/2026.<br>
 **Kết quả:** hoàn thành phần chuẩn bị kỹ thuật; **chưa đóng gate Bước 02 vì thiếu gán nhãn/kiểm tra chéo của hai người**. Chưa bắt đầu Bước 03.
 
+**Cập nhật 03/11/2026:** hai người đã duyệt 45/45; đã publish [reviewed-v1](../eval/snapshots/reviewed-v1/corpus_manifest.json) và strict validation đạt, Bước 02 hoàn thành. [Bước 03](model-smoke-step03.md) đạt gate embedding/Gemini smoke thật; phần bên dưới giữ nguyên kết quả lịch sử ngày 02/11 trước human review. Tiến độ hiện tại **17,1% / 100%**.
+
 ## Deliverables đã có
 
 | Thành phần | Kết quả thật |

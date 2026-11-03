@@ -11,6 +11,12 @@ dependencies = [
     "alembic>=1.14",
     "pydantic-settings>=2.6",
     "python-multipart>=0.0.18",
+    "argon2-cffi>=25.1,<26",
+    "PyMuPDF>=1.28,<2",
+    "python-docx>=1.2,<2",
+    "tokenizers>=0.22,<0.23",
+    "huggingface-hub>=0.36,<0.37",
+    "httpx>=0.28,<0.29",
 ]
 
 [project.optional-dependencies]
@@ -19,10 +25,17 @@ dev = [
     "httpx>=0.28",
     "ruff>=0.8",
 ]
-# Offline corpus generation/inspection; not a production ingestion implementation.
-corpus = [
-    "PyMuPDF>=1.26,<2",
-    "python-docx>=1.2,<2",
+# Compatibility extra: parser dependencies are runtime dependencies since Step 05.
+corpus = []
+# Standalone model smoke tools; CPU wheel is pinned separately in requirements-ai-cpu.lock.
+ai-smoke = [
+    "torch>=2.9,<3",
+    "transformers>=4.57,<5",
+    "psutil>=7,<8",
+]
+# Install exact CPU versions through requirements-worker-cpu.lock on Windows.
+worker = [
+    "torch>=2.9,<3", "transformers>=4.57,<5", "psutil>=7,<8",
 ]
 # Cài riêng khi làm worker STT (nặng, cần model weights).
 stt = [

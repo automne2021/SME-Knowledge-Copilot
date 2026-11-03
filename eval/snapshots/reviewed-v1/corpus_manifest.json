@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "corpus_version": "synthetic-sme-v1",
+  "dataset_version": "reviewed-v1",
+  "synthetic": true,
+  "label_status": "human_reviewed",
+  "source_block_namespace": "author-v1",
+  "parser_span_mapping": "pending_step05",
+  "generation": {
+    "PyMuPDF": "1.28.2",
+    "python-docx": "1.2.0",
+    "font_sha256": "b3658eadae55e682b5f69eb64c439c1ecc8f196c0bb8d4756d145d13bc86476a",
+    "corpus_seed_sha256": "a2aa49a182dba32ae311ebb992589cf79c332ebf1a74cb624001b2d1700728a6",
+    "question_seed_sha256": "e77f167f3780b80020cd31728c4a95ac641b34570e06e32586f5c7b451d22707"
+  },
+  "documents": [
+    {
+      "document_id": "leave",
+      "version": 1,
+      "path": "corpus/quy_dinh_nghi_phep.docx",
+      "format": "docx",
+      "sha256": "c8666bb1a76562ff627c04d1873d67a01d66acbbb4b8ec36336c7e66a7c335f3",
+      "block_count": 5
+    },
+    {
+      "document_id": "security",
+      "version": 1,
+      "path": "corpus/huong_dan_bao_mat.txt",
+      "format": "txt",
+      "sha256": "e959a680436a68e59b44be0f5e9aa0c7ec5f3e30498069217bf7a73eb979ba8e",
+      "block_count": 3
+    },
+    {
+      "document_id": "support",
+      "version": 1,
+      "path": "corpus/faq_ho_tro.md",
+      "format": "md",
+      "sha256": "30a1fff8cc0ab02b32a217c75498473c70361c94d4c6962ff60d486a0c7e2597",
+      "block_count": 2
+    },
+    {
+      "document_id": "discount_v1",
+      "version": 1,
+      "path": "corpus/chiet_khau_ban_A.pdf",
+      "format": "pdf",
+      "sha256": "068d5f487f0396949b814f7a45a64acdc0b43edc58b25d1e77d8103c20111bec",
+      "block_count": 2
+    },
+    {
+      "document_id": "discount_v2",
+      "version": 2,
+      "path": "corpus/chiet_khau_ban_B.md",
+      "format": "md",
+      "sha256": "e743a778c22f73c3543bf4482df29205b6d3b669ddca4be7855e08428eb4b642",
+      "block_count": 5
+    },
+    {
+      "document_id": "approvals",
+      "version": 1,
+      "path": "corpus/quy_trinh_duyet.docx",
+      "format": "docx",
+      "sha256": "66f047aa37a81533bbf07914e26af0529161408082acfe0c14d5fceb25dc52b8",
+      "block_count": 3
+    },
+    {
+      "document_id": "onboarding",
+      "version": 1,
+      "path": "corpus/onboarding.docx",
+      "format": "docx",
+      "sha256": "df38711f9bc3aecb6e271b0fee393502ff4c6cd0893141b99bf2fc58dd6c9a2f",
+      "block_count": 4
+    },
+    {
+      "document_id": "acceptance",
+      "version": 1,
+      "path": "corpus/nghiem_thu_dich_vu.pdf",
+      "format": "pdf",
+      "sha256": "dd8f13dc81f5603b289e1d4cb866a4d5632fee55d129f5f09c177c0bb6830966",
+      "block_count": 4
+    },
+    {
+      "document_id": "expenses",
+      "version": 1,
+      "path": "corpus/thanh_toan_chi_phi.txt",
+      "format": "txt",
+      "sha256": "80c59434827b1c447a35f407ce4b974e99ecb9c1f3e42d6208200c1b04788475",
+      "block_count": 4
+    },
+    {
+      "document_id": "forms",
+      "version": 1,
+      "path": "corpus/danh_muc_bieu_mau.md",
+      "format": "md",
+      "sha256": "6358c044f8f7b7642c174bc4057e7c7c56969c2b9d80fc3c81f429bb0e255fb1",
+      "block_count": 3
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "fixtures/scan.pdf",
+      "sha256": "6fbafd8ea6eed8cac69246905733b882a43c78c5cc8141fb49db7063edacbb64",
+      "expected_behavior": "needs_ocr",
+      "skipped_pages": []
+    },
+    {
+      "path": "fixtures/blank.pdf",
+      "sha256": "f0d63eb8211d8013997ee6cf7fb4b6c6f1f4657c9aa7a09c26513d90dab5d0ba",
+      "expected_behavior": "no_extractable_text",
+      "skipped_pages": []
+    },
+    {
+      "path": "fixtures/mixed.pdf",
+      "sha256": "2b1ea5779409b01ba63cad436e3da8c8913c7d746a84cc4f750afdaaba1a3f1e",
+      "expected_behavior": "partial_text_extraction",
+      "skipped_pages": [
+        2
+      ]
+    },
+    {
+      "path": "fixtures/encrypted.pdf",
+      "sha256": "d03e2042c16aaf506b3e2ed88dec75bfa5b8ac1e440e3358fc135b409bb0c732",
+      "expected_behavior": "encrypted_document",
+      "skipped_pages": []
+    },
+    {
+      "path": "fixtures/malformed.pdf",
+      "sha256": "5c4ed2cc21fd6acefdb72b2488905d492ac68c813ee071614dcc89798ca21bd2",
+      "expected_behavior": "parse_failed",
+      "skipped_pages": []
+    },
+    {
+      "path": "fixtures/spoofed.pdf",
+      "sha256": "bfe5b48e6d0901625228e30e96b9eece02626d79593e88d7c990abe5b1076fae",
+      "expected_behavior": "unsupported_file_type",
+      "skipped_pages": []
+    },
+    {
+      "path": "fixtures/malformed.docx",
+      "sha256": "9b5038010062b87e2a222159c043002beb27299f4af3ba5f1a368fee8d4b4c2f",
+      "expected_behavior": "parse_failed",
+      "skipped_pages": []
+    },
+    {
+      "path": "fixtures/prompt_injection.txt",
+      "sha256": "01dd413995ee663b931fcbc05d1a4df04b4423fa60e947fee83db642cb612752",
+      "expected_behavior": "adversarial_untrusted_data",
+      "skipped_pages": []
+    }
+  ],
+  "source_blocks_sha256": "8c4365947738b6a9f6896a9fb5a5d3a80a9d7063138e9843b639413a318ebeae",
+  "questions_sha256": "48926e7705990879fb1e82ffc8df411f75f4e701ba7d149102800fafc354287a",
+  "question_count": 45,
+  "parent_dataset_version": "draft-v1",
+  "parent_manifest_sha256": "a4263ce9ab06d4c00845aa88e3a02ec2fbcb2c187ac924ea212651b2c9d869cb",
+  "human_review_sha256": "bcbed96ff3dbb1a05c1af7a20aa174a2c68ccb704dc918adb075a0d6438578fc",
+  "published_at": "2026-11-03T05:44:09.698974+00:00"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "not_run",
+  "stage": "llm_compatibility",
+  "reasons": [
+    "llm_free_tier_confirmed_required",
+    "llm_quota_confirmed_required"
+  ],
+  "api_calls_attempted": 0,
+  "api_cost_usd": 0
+}

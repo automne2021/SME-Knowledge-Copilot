@@ -1,0 +1,9 @@
+Hướng dẫn bảo mật mẫu
+
+TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.
+
+Mật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự.
+
+Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.
+
+Không được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ.

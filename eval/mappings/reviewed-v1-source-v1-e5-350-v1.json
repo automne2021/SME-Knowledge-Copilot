@@ -1,0 +1,3174 @@
+{
+  "mapping_version": "reviewed-v1-source-v1-e5-350-v1",
+  "dataset_version": "reviewed-v1",
+  "parent_manifest_sha256": "efccfaeaf67e9e49035d08771977982ccd34df83d12128a4835948738f2c6b26",
+  "questions_sha256": "48926e7705990879fb1e82ffc8df411f75f4e701ba7d149102800fafc354287a",
+  "human_review_sha256": "bcbed96ff3dbb1a05c1af7a20aa174a2c68ccb704dc918adb075a0d6438578fc",
+  "parser_version": "source-v1-nfc-ws-shy-pymupdf1.28.2-docx1.2.0",
+  "chunker_version": "structure-e5-v1",
+  "tokenizer": {
+    "model": "intfloat/multilingual-e5-small",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "prefix": "passage: ",
+    "special_tokens": true
+  },
+  "chunk_config": {
+    "size_tokens": 350,
+    "overlap_tokens": 50,
+    "max_chunks": 5000
+  },
+  "documents": {
+    "leave": {
+      "sha256": "c8666bb1a76562ff627c04d1873d67a01d66acbbb4b8ec36336c7e66a7c335f3",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 1,
+            "block_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "Trong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm.",
+          "normalized_text": "Trong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 2,
+            "block_end": 2
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Được chuyển tối đa 5 ngày phép chưa dùng sang năm sau và phải sử dụng trước ngày 31/03.",
+          "normalized_text": "Được chuyển tối đa 5 ngày phép chưa dùng sang năm sau và phải sử dụng trước ngày 31/03.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 3,
+            "block_end": 3
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Đơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc.",
+          "normalized_text": "Đơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 4,
+            "block_end": 4
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "Nghỉ đột xuất phải thông báo cho quản lý trong vòng 24 giờ kể từ khi bắt đầu nghỉ.",
+          "normalized_text": "Nghỉ đột xuất phải thông báo cho quản lý trong vòng 24 giờ kể từ khi bắt đầu nghỉ.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 5,
+            "block_end": 5
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000006",
+          "raw_text": "Quản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường.",
+          "normalized_text": "Quản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 6,
+            "block_end": 6
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nTrong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm.\nĐược chuyển tối đa 5 ngày phép chưa dùng sang năm sau và phải sử dụng trước ngày 31/03.\nĐơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc.\nNghỉ đột xuất phải thông báo cho quản lý trong vòng 24 giờ kể từ khi bắt đầu nghỉ.\nQuản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường.",
+          "text_sha256": "7131822afbd4b7c18344602855a116b8c260b86524225aaed0ef252f18bd167a",
+          "token_count": 122,
+          "location": {
+            "kind": "docx_block",
+            "locations": [
+              {
+                "kind": "docx_block",
+                "block_start": 1,
+                "block_end": 1
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 2,
+                "block_end": 2
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 3,
+                "block_end": 3
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 4,
+                "block_end": 4
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 5,
+                "block_end": 5
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 6,
+                "block_end": 6
+              }
+            ],
+            "block_start": 1,
+            "block_end": 6
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 72,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 87,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 71,
+              "role": "content"
+            },
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 82,
+              "role": "content"
+            },
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 64,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "security": {
+      "sha256": "e959a680436a68e59b44be0f5e9aa0c7ec5f3e30498069217bf7a73eb979ba8e",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "Hướng dẫn bảo mật mẫu\n",
+          "normalized_text": "Hướng dẫn bảo mật mẫu",
+          "location": {
+            "kind": "line_range",
+            "line_start": 1,
+            "line_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 3,
+            "line_end": 3
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Mật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự.\n",
+          "normalized_text": "Mật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 5,
+            "line_end": 5
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.\n",
+          "normalized_text": "Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 7,
+            "line_end": 7
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "Không được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ.\n",
+          "normalized_text": "Không được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 9,
+            "line_end": 9
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Hướng dẫn bảo mật mẫu\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nMật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự.\nKhi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.\nKhông được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ.",
+          "text_sha256": "a65da0a129f9524f66d9b3313671c1d520f35fa4d7292238558cde077f015574",
+          "token_count": 92,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 1,
+                "line_end": 1
+              },
+              {
+                "kind": "line_range",
+                "line_start": 3,
+                "line_end": 3
+              },
+              {
+                "kind": "line_range",
+                "line_start": 5,
+                "line_end": 5
+              },
+              {
+                "kind": "line_range",
+                "line_start": 7,
+                "line_end": 7
+              },
+              {
+                "kind": "line_range",
+                "line_start": 9,
+                "line_end": 9
+              }
+            ],
+            "line_start": 1,
+            "line_end": 9
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 21,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 51,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 93,
+              "role": "content"
+            },
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 76,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "support": {
+      "sha256": "30a1fff8cc0ab02b32a217c75498473c70361c94d4c6962ff60d486a0c7e2597",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "# FAQ hỗ trợ nội bộ mẫu\n",
+          "normalized_text": "# FAQ hỗ trợ nội bộ mẫu",
+          "location": {
+            "kind": "line_range",
+            "line_start": 1,
+            "line_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 3,
+            "line_end": 3
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Yêu cầu hỗ trợ gửi qua cổng helpdesk nội bộ, kèm mô tả lỗi, thời điểm xảy ra và ảnh chụp đã che dữ liệu nhạy cảm.\n",
+          "normalized_text": "Yêu cầu hỗ trợ gửi qua cổng helpdesk nội bộ, kèm mô tả lỗi, thời điểm xảy ra và ảnh chụp đã che dữ liệu nhạy cảm.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 5,
+            "line_end": 5
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Bộ phận hỗ trợ làm việc từ 09:00 đến 18:00, thứ Hai đến thứ Sáu; ngoài giờ chỉ tiếp nhận phiếu, không cam kết xử lý ngay.\n",
+          "normalized_text": "Bộ phận hỗ trợ làm việc từ 09:00 đến 18:00, thứ Hai đến thứ Sáu; ngoài giờ chỉ tiếp nhận phiếu, không cam kết xử lý ngay.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 7,
+            "line_end": 7
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "# FAQ hỗ trợ nội bộ mẫu",
+          "text_sha256": "5a4e9d0852d262b01ced2f8c23340603b10fd73f51cf113ab0650416c24e90da",
+          "token_count": 11,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 1,
+                "line_end": 1
+              }
+            ],
+            "line_start": 1,
+            "line_end": 1
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 23,
+              "role": "content"
+            }
+          ]
+        },
+        {
+          "chunk_index": 1,
+          "text": "# FAQ hỗ trợ nội bộ mẫu\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nYêu cầu hỗ trợ gửi qua cổng helpdesk nội bộ, kèm mô tả lỗi, thời điểm xảy ra và ảnh chụp đã che dữ liệu nhạy cảm.\nBộ phận hỗ trợ làm việc từ 09:00 đến 18:00, thứ Hai đến thứ Sáu; ngoài giờ chỉ tiếp nhận phiếu, không cam kết xử lý ngay.",
+          "text_sha256": "e361d422cf998e4a3e2069288328a04c54b6655c1adc629f64e56b6e732e0c7a",
+          "token_count": 103,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 3,
+                "line_end": 3
+              },
+              {
+                "kind": "line_range",
+                "line_start": 5,
+                "line_end": 5
+              },
+              {
+                "kind": "line_range",
+                "line_start": 7,
+                "line_end": 7
+              }
+            ],
+            "line_start": 3,
+            "line_end": 7
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 23,
+              "role": "context"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 113,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 121,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "discount_v1": {
+      "sha256": "068d5f487f0396949b814f7a45a64acdc0b43edc58b25d1e77d8103c20111bec",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "Chính sách chiết khấu mẫu — bản A\n",
+          "normalized_text": "Chính sách chiết khấu mẫu — bản A",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 1,
+            "block_end": 1,
+            "bbox": [
+              40.0,
+              35.00328063964844,
+              235.31201171875,
+              48.39528274536133
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 2,
+            "block_end": 2,
+            "bbox": [
+              40.0,
+              105.00300598144531,
+              534.2738037109375,
+              117.27900695800781
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Theo bản A, nhân viên kinh doanh chỉ được đề xuất chiết khấu thông thường tối đa 3%.\n",
+          "normalized_text": "Theo bản A, nhân viên kinh doanh chỉ được đề xuất chiết khấu thông thường tối đa 3%.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 3,
+            "block_end": 3,
+            "bbox": [
+              40.0,
+              175.0030059814453,
+              467.53680419921875,
+              187.2790069580078
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Bản A không ghi ngày hiệu lực hoặc thông tin xác nhận ban hành.\n",
+          "normalized_text": "Bản A không ghi ngày hiệu lực hoặc thông tin xác nhận ban hành.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 4,
+            "block_end": 4,
+            "bbox": [
+              40.0,
+              285.0030212402344,
+              361.4748840332031,
+              297.2790222167969
+            ]
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Chính sách chiết khấu mẫu — bản A\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nTheo bản A, nhân viên kinh doanh chỉ được đề xuất chiết khấu thông thường tối đa 3%.\nBản A không ghi ngày hiệu lực hoặc thông tin xác nhận ban hành.",
+          "text_sha256": "8617dba40b840cc679676cded83d755e412805444680919814b88c6fcb7d4ecc",
+          "token_count": 77,
+          "location": {
+            "kind": "pdf_page",
+            "locations": [
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 1,
+                "block_end": 1,
+                "bbox": [
+                  40.0,
+                  35.00328063964844,
+                  235.31201171875,
+                  48.39528274536133
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 2,
+                "block_end": 2,
+                "bbox": [
+                  40.0,
+                  105.00300598144531,
+                  534.2738037109375,
+                  117.27900695800781
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 3,
+                "block_end": 3,
+                "bbox": [
+                  40.0,
+                  175.0030059814453,
+                  467.53680419921875,
+                  187.2790069580078
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 4,
+                "block_end": 4,
+                "bbox": [
+                  40.0,
+                  285.0030212402344,
+                  361.4748840332031,
+                  297.2790222167969
+                ]
+              }
+            ],
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 1,
+            "block_end": 4
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 33,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 84,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 63,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "discount_v2": {
+      "sha256": "e743a778c22f73c3543bf4482df29205b6d3b669ddca4be7855e08428eb4b642",
+      "version": 2,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "# Chính sách chiết khấu mẫu — bản B\n",
+          "normalized_text": "# Chính sách chiết khấu mẫu — bản B",
+          "location": {
+            "kind": "line_range",
+            "line_start": 1,
+            "line_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 3,
+            "line_end": 3
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.\n",
+          "normalized_text": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 5,
+            "line_end": 5
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt.\n",
+          "normalized_text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 7,
+            "line_end": 7
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.\n",
+          "normalized_text": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 9,
+            "line_end": 9
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000006",
+          "raw_text": "Không cộng dồn chiết khấu hợp đồng với ưu đãi khuyến mại khác trong cùng một giao dịch.\n",
+          "normalized_text": "Không cộng dồn chiết khấu hợp đồng với ưu đãi khuyến mại khác trong cùng một giao dịch.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 11,
+            "line_end": 11
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000007",
+          "raw_text": "Bản B không ghi ngày hiệu lực hoặc thông tin xác nhận thay thế bản A.\n",
+          "normalized_text": "Bản B không ghi ngày hiệu lực hoặc thông tin xác nhận thay thế bản A.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 13,
+            "line_end": 13
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "# Chính sách chiết khấu mẫu — bản B",
+          "text_sha256": "40a467c1fc033844fc76da669a299b6d139f9a2e17b27fdba21ee4771758639b",
+          "token_count": 14,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 1,
+                "line_end": 1
+              }
+            ],
+            "line_start": 1,
+            "line_end": 1
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 35,
+              "role": "content"
+            }
+          ]
+        },
+        {
+          "chunk_index": 1,
+          "text": "# Chính sách chiết khấu mẫu — bản B\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nTheo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.\nVới hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt.\nVới hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.\nKhông cộng dồn chiết khấu hợp đồng với ưu đãi khuyến mại khác trong cùng một giao dịch.\nBản B không ghi ngày hiệu lực hoặc thông tin xác nhận thay thế bản A.",
+          "text_sha256": "b632c032277ffd9ad24ce00a985bc81388dde8ac3579e6c3ee4c4db3c943e2f6",
+          "token_count": 162,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 3,
+                "line_end": 3
+              },
+              {
+                "kind": "line_range",
+                "line_start": 5,
+                "line_end": 5
+              },
+              {
+                "kind": "line_range",
+                "line_start": 7,
+                "line_end": 7
+              },
+              {
+                "kind": "line_range",
+                "line_start": 9,
+                "line_end": 9
+              },
+              {
+                "kind": "line_range",
+                "line_start": 11,
+                "line_end": 11
+              },
+              {
+                "kind": "line_range",
+                "line_start": 13,
+                "line_end": 13
+              }
+            ],
+            "line_start": 3,
+            "line_end": 13
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 35,
+              "role": "context"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 80,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 106,
+              "role": "content"
+            },
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 146,
+              "role": "content"
+            },
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 87,
+              "role": "content"
+            },
+            {
+              "block_id": "b000007",
+              "char_start": 0,
+              "char_end": 69,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "approvals": {
+      "sha256": "66f047aa37a81533bbf07914e26af0529161408082acfe0c14d5fceb25dc52b8",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 1,
+            "block_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "Đề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ.",
+          "normalized_text": "Đề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 2,
+            "block_end": 2
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Người có thẩm quyền phản hồi hồ sơ ngoại lệ trong 2 ngày làm việc kể từ khi nhận đủ thông tin.",
+          "normalized_text": "Người có thẩm quyền phản hồi hồ sơ ngoại lệ trong 2 ngày làm việc kể từ khi nhận đủ thông tin.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 3,
+            "block_end": 3
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Hồ sơ thiếu thông tin được trả lại để bổ sung; chưa bắt đầu tính thời hạn phản hồi.",
+          "normalized_text": "Hồ sơ thiếu thông tin được trả lại để bổ sung; chưa bắt đầu tính thời hạn phản hồi.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 4,
+            "block_end": 4
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nĐề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ.\nNgười có thẩm quyền phản hồi hồ sơ ngoại lệ trong 2 ngày làm việc kể từ khi nhận đủ thông tin.\nHồ sơ thiếu thông tin được trả lại để bổ sung; chưa bắt đầu tính thời hạn phản hồi.",
+          "text_sha256": "5154e82152b2006adf14796aa51ca8a92d80591e17abc002e453b5347e30651c",
+          "token_count": 109,
+          "location": {
+            "kind": "docx_block",
+            "locations": [
+              {
+                "kind": "docx_block",
+                "block_start": 1,
+                "block_end": 1
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 2,
+                "block_end": 2
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 3,
+                "block_end": 3
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 4,
+                "block_end": 4
+              }
+            ],
+            "block_start": 1,
+            "block_end": 4
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 119,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 83,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "onboarding": {
+      "sha256": "df38711f9bc3aecb6e271b0fee393502ff4c6cd0893141b99bf2fc58dd6c9a2f",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 1,
+            "block_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "Mỗi nhân viên mới có một mentor hỗ trợ trong 5 ngày làm việc đầu tiên.",
+          "normalized_text": "Mỗi nhân viên mới có một mentor hỗ trợ trong 5 ngày làm việc đầu tiên.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 2,
+            "block_end": 2
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Buổi đánh giá thử việc nội bộ đầu tiên được tổ chức vào ngày thứ 45 kể từ ngày bắt đầu làm việc.",
+          "normalized_text": "Buổi đánh giá thử việc nội bộ đầu tiên được tổ chức vào ngày thứ 45 kể từ ngày bắt đầu làm việc.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 3,
+            "block_end": 3
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "IT chuẩn bị tài khoản làm việc trước ngày nhân viên mới bắt đầu, sau khi nhận yêu cầu từ nhân sự.",
+          "normalized_text": "IT chuẩn bị tài khoản làm việc trước ngày nhân viên mới bắt đầu, sau khi nhận yêu cầu từ nhân sự.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 4,
+            "block_end": 4
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "Việc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02.",
+          "normalized_text": "Việc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02.",
+          "location": {
+            "kind": "docx_block",
+            "block_start": 5,
+            "block_end": 5
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nMỗi nhân viên mới có một mentor hỗ trợ trong 5 ngày làm việc đầu tiên.\nBuổi đánh giá thử việc nội bộ đầu tiên được tổ chức vào ngày thứ 45 kể từ ngày bắt đầu làm việc.\nIT chuẩn bị tài khoản làm việc trước ngày nhân viên mới bắt đầu, sau khi nhận yêu cầu từ nhân sự.\nViệc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02.",
+          "text_sha256": "921b5a43ecf6af4e2a6e417e1e24a970efdd618d10a6edc5dd9feb9e5cd94e3b",
+          "token_count": 118,
+          "location": {
+            "kind": "docx_block",
+            "locations": [
+              {
+                "kind": "docx_block",
+                "block_start": 1,
+                "block_end": 1
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 2,
+                "block_end": 2
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 3,
+                "block_end": 3
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 4,
+                "block_end": 4
+              },
+              {
+                "kind": "docx_block",
+                "block_start": 5,
+                "block_end": 5
+              }
+            ],
+            "block_start": 1,
+            "block_end": 5
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 70,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 96,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 97,
+              "role": "content"
+            },
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 80,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "acceptance": {
+      "sha256": "dd8f13dc81f5603b289e1d4cb866a4d5632fee55d129f5f09c177c0bb6830966",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "Quy trình nghiệm thu dịch vụ mẫu\n",
+          "normalized_text": "Quy trình nghiệm thu dịch vụ mẫu",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 1,
+            "block_end": 1,
+            "bbox": [
+              40.0,
+              35.00328063964844,
+              219.96400451660156,
+              48.39528274536133
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 2,
+            "block_end": 2,
+            "bbox": [
+              40.0,
+              105.00300598144531,
+              534.2738037109375,
+              117.27900695800781
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Khách hàng có 5 ngày làm việc để phản hồi hồ sơ nghiệm thu kể từ lúc nhận đầy đủ hồ sơ.\n",
+          "normalized_text": "Khách hàng có 5 ngày làm việc để phản hồi hồ sơ nghiệm thu kể từ lúc nhận đầy đủ hồ sơ.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 3,
+            "block_end": 3,
+            "bbox": [
+              40.0,
+              175.0030059814453,
+              484.6307678222656,
+              187.2790069580078
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Lỗi mức nghiêm trọng C1 phải được khắc phục trước khi ký biên bản nghiệm thu.\n",
+          "normalized_text": "Lỗi mức nghiêm trọng C1 phải được khắc phục trước khi ký biên bản nghiệm thu.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 4,
+            "block_end": 4,
+            "bbox": [
+              40.0,
+              285.0030212402344,
+              437.0008239746094,
+              297.2790222167969
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "Quy trình nghiệm thu dịch vụ mẫu\n",
+          "normalized_text": "Quy trình nghiệm thu dịch vụ mẫu",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 2,
+            "page_end": 2,
+            "block_start": 1,
+            "block_end": 1,
+            "bbox": [
+              40.0,
+              35.00328063964844,
+              219.96400451660156,
+              48.39528274536133
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000006",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 2,
+            "page_end": 2,
+            "block_start": 2,
+            "block_end": 2,
+            "bbox": [
+              40.0,
+              105.00300598144531,
+              534.2738037109375,
+              117.27900695800781
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000007",
+          "raw_text": "Hồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.\n",
+          "normalized_text": "Hồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 2,
+            "page_end": 2,
+            "block_start": 3,
+            "block_end": 3,
+            "bbox": [
+              40.0,
+              175.0030059814453,
+              428.5198059082031,
+              187.2790069580078
+            ]
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000008",
+          "raw_text": "Kết quả nghiệm thu được ghi trên BM­09 và cần xác nhận của đại diện khách hàng.\n",
+          "normalized_text": "Kết quả nghiệm thu được ghi trên BM-09 và cần xác nhận của đại diện khách hàng.",
+          "location": {
+            "kind": "pdf_page",
+            "page_start": 2,
+            "page_end": 2,
+            "block_start": 4,
+            "block_end": 4,
+            "bbox": [
+              40.0,
+              285.0030212402344,
+              448.0998229980469,
+              297.2790222167969
+            ]
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Quy trình nghiệm thu dịch vụ mẫu\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nKhách hàng có 5 ngày làm việc để phản hồi hồ sơ nghiệm thu kể từ lúc nhận đầy đủ hồ sơ.\nLỗi mức nghiêm trọng C1 phải được khắc phục trước khi ký biên bản nghiệm thu.",
+          "text_sha256": "5132527389a34152e98846f1a83a394ae73da7f1df36245f3319aa607cb2ca7e",
+          "token_count": 81,
+          "location": {
+            "kind": "pdf_page",
+            "locations": [
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 1,
+                "block_end": 1,
+                "bbox": [
+                  40.0,
+                  35.00328063964844,
+                  219.96400451660156,
+                  48.39528274536133
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 2,
+                "block_end": 2,
+                "bbox": [
+                  40.0,
+                  105.00300598144531,
+                  534.2738037109375,
+                  117.27900695800781
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 3,
+                "block_end": 3,
+                "bbox": [
+                  40.0,
+                  175.0030059814453,
+                  484.6307678222656,
+                  187.2790069580078
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 1,
+                "page_end": 1,
+                "block_start": 4,
+                "block_end": 4,
+                "bbox": [
+                  40.0,
+                  285.0030212402344,
+                  437.0008239746094,
+                  297.2790222167969
+                ]
+              }
+            ],
+            "page_start": 1,
+            "page_end": 1,
+            "block_start": 1,
+            "block_end": 4
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 32,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 87,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 77,
+              "role": "content"
+            }
+          ]
+        },
+        {
+          "chunk_index": 1,
+          "text": "Quy trình nghiệm thu dịch vụ mẫu\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nHồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.\nKết quả nghiệm thu được ghi trên BM-09 và cần xác nhận của đại diện khách hàng.",
+          "text_sha256": "0e70732431c934c4978fd6d83f0ccdf24a0e14179f0b51ef3df37d7f1348ca60",
+          "token_count": 79,
+          "location": {
+            "kind": "pdf_page",
+            "locations": [
+              {
+                "kind": "pdf_page",
+                "page_start": 2,
+                "page_end": 2,
+                "block_start": 1,
+                "block_end": 1,
+                "bbox": [
+                  40.0,
+                  35.00328063964844,
+                  219.96400451660156,
+                  48.39528274536133
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 2,
+                "page_end": 2,
+                "block_start": 2,
+                "block_end": 2,
+                "bbox": [
+                  40.0,
+                  105.00300598144531,
+                  534.2738037109375,
+                  117.27900695800781
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 2,
+                "page_end": 2,
+                "block_start": 3,
+                "block_end": 3,
+                "bbox": [
+                  40.0,
+                  175.0030059814453,
+                  428.5198059082031,
+                  187.2790069580078
+                ]
+              },
+              {
+                "kind": "pdf_page",
+                "page_start": 2,
+                "page_end": 2,
+                "block_start": 4,
+                "block_end": 4,
+                "bbox": [
+                  40.0,
+                  285.0030212402344,
+                  448.0998229980469,
+                  297.2790222167969
+                ]
+              }
+            ],
+            "page_start": 2,
+            "page_end": 2,
+            "block_start": 1,
+            "block_end": 4
+          },
+          "source_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 32,
+              "role": "content"
+            },
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000007",
+              "char_start": 0,
+              "char_end": 76,
+              "role": "content"
+            },
+            {
+              "block_id": "b000008",
+              "char_start": 0,
+              "char_end": 79,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "expenses": {
+      "sha256": "80c59434827b1c447a35f407ce4b974e99ecb9c1f3e42d6208200c1b04788475",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "Hướng dẫn thanh toán chi phí mẫu\n",
+          "normalized_text": "Hướng dẫn thanh toán chi phí mẫu",
+          "location": {
+            "kind": "line_range",
+            "line_start": 1,
+            "line_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 3,
+            "line_end": 3
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "Khoản chi từ 200.000 đồng phải có hóa đơn hoặc chứng từ hợp lệ trong hồ sơ hoàn ứng.\n",
+          "normalized_text": "Khoản chi từ 200.000 đồng phải có hóa đơn hoặc chứng từ hợp lệ trong hồ sơ hoàn ứng.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 5,
+            "line_end": 5
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "Nhân viên nộp hồ sơ hoàn ứng trong vòng 7 ngày làm việc sau khi kết thúc chuyến công tác.\n",
+          "normalized_text": "Nhân viên nộp hồ sơ hoàn ứng trong vòng 7 ngày làm việc sau khi kết thúc chuyến công tác.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 7,
+            "line_end": 7
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "Mức thanh toán tiền ăn công tác tối đa là 150.000 đồng mỗi người mỗi ngày.\n",
+          "normalized_text": "Mức thanh toán tiền ăn công tác tối đa là 150.000 đồng mỗi người mỗi ngày.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 9,
+            "line_end": 9
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000006",
+          "raw_text": "Chi phí vé và phòng ở phải được quản lý phê duyệt trước khi đặt dịch vụ.\n",
+          "normalized_text": "Chi phí vé và phòng ở phải được quản lý phê duyệt trước khi đặt dịch vụ.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 11,
+            "line_end": 11
+          },
+          "context_ids": []
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Hướng dẫn thanh toán chi phí mẫu\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nKhoản chi từ 200.000 đồng phải có hóa đơn hoặc chứng từ hợp lệ trong hồ sơ hoàn ứng.\nNhân viên nộp hồ sơ hoàn ứng trong vòng 7 ngày làm việc sau khi kết thúc chuyến công tác.\nMức thanh toán tiền ăn công tác tối đa là 150.000 đồng mỗi người mỗi ngày.\nChi phí vé và phòng ở phải được quản lý phê duyệt trước khi đặt dịch vụ.",
+          "text_sha256": "e8a99cb08a452b4eb8634ad7301c7472bcef8d358015a904b921bfcae3131c09",
+          "token_count": 116,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 1,
+                "line_end": 1
+              },
+              {
+                "kind": "line_range",
+                "line_start": 3,
+                "line_end": 3
+              },
+              {
+                "kind": "line_range",
+                "line_start": 5,
+                "line_end": 5
+              },
+              {
+                "kind": "line_range",
+                "line_start": 7,
+                "line_end": 7
+              },
+              {
+                "kind": "line_range",
+                "line_start": 9,
+                "line_end": 9
+              },
+              {
+                "kind": "line_range",
+                "line_start": 11,
+                "line_end": 11
+              }
+            ],
+            "line_start": 1,
+            "line_end": 11
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 32,
+              "role": "content"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 84,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 89,
+              "role": "content"
+            },
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 74,
+              "role": "content"
+            },
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 72,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    },
+    "forms": {
+      "sha256": "6358c044f8f7b7642c174bc4057e7c7c56969c2b9d80fc3c81f429bb0e255fb1",
+      "version": 1,
+      "blocks": [
+        {
+          "block_id": "b000001",
+          "raw_text": "# Danh mục biểu mẫu nội bộ mẫu\n",
+          "normalized_text": "# Danh mục biểu mẫu nội bộ mẫu",
+          "location": {
+            "kind": "line_range",
+            "line_start": 1,
+            "line_end": 1
+          },
+          "context_ids": []
+        },
+        {
+          "block_id": "b000002",
+          "raw_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\n",
+          "normalized_text": "TÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 3,
+            "line_end": 3
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000003",
+          "raw_text": "BM-07 là phiếu đề nghị duyệt ngoại lệ chiết khấu, gồm giá trị hợp đồng, tỷ lệ đề xuất và lý do.\n",
+          "normalized_text": "BM-07 là phiếu đề nghị duyệt ngoại lệ chiết khấu, gồm giá trị hợp đồng, tỷ lệ đề xuất và lý do.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 5,
+            "line_end": 5
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000004",
+          "raw_text": "BM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng.\n",
+          "normalized_text": "BM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 7,
+            "line_end": 7
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        },
+        {
+          "block_id": "b000005",
+          "raw_text": "TS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao.\n",
+          "normalized_text": "TS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao.",
+          "location": {
+            "kind": "line_range",
+            "line_start": 9,
+            "line_end": 9
+          },
+          "context_ids": [
+            "b000001"
+          ]
+        }
+      ],
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "# Danh mục biểu mẫu nội bộ mẫu",
+          "text_sha256": "f6298b123ff299d666deee2c2f549bf8f2a59c341b28e1f4039054b13384be0d",
+          "token_count": 12,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 1,
+                "line_end": 1
+              }
+            ],
+            "line_start": 1,
+            "line_end": 1
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 30,
+              "role": "content"
+            }
+          ]
+        },
+        {
+          "chunk_index": 1,
+          "text": "# Danh mục biểu mẫu nội bộ mẫu\nTÀI LIỆU GIẢ LẬP để kiểm thử SME Knowledge Copilot. Không phải quy định của doanh nghiệp thật.\nBM-07 là phiếu đề nghị duyệt ngoại lệ chiết khấu, gồm giá trị hợp đồng, tỷ lệ đề xuất và lý do.\nBM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng.\nTS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao.",
+          "text_sha256": "85bed42f917ab50a133784e29ade5118d0e98a83cfa07200a900f55c255ddf77",
+          "token_count": 120,
+          "location": {
+            "kind": "line_range",
+            "locations": [
+              {
+                "kind": "line_range",
+                "line_start": 3,
+                "line_end": 3
+              },
+              {
+                "kind": "line_range",
+                "line_start": 5,
+                "line_end": 5
+              },
+              {
+                "kind": "line_range",
+                "line_start": 7,
+                "line_end": 7
+              },
+              {
+                "kind": "line_range",
+                "line_start": 9,
+                "line_end": 9
+              }
+            ],
+            "line_start": 3,
+            "line_end": 9
+          },
+          "source_spans": [
+            {
+              "block_id": "b000001",
+              "char_start": 0,
+              "char_end": 30,
+              "role": "context"
+            },
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 94,
+              "role": "content"
+            },
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 95,
+              "role": "content"
+            },
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 117,
+              "role": "content"
+            },
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 78,
+              "role": "content"
+            }
+          ]
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "source_mapping": {
+    "leave:author-v1:annual": {
+      "document_id": "leave",
+      "spans": [
+        {
+          "block_id": "b000002",
+          "char_start": 0,
+          "char_end": 72
+        }
+      ]
+    },
+    "leave:author-v1:carry": {
+      "document_id": "leave",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 87
+        }
+      ]
+    },
+    "leave:author-v1:notice": {
+      "document_id": "leave",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 71
+        }
+      ]
+    },
+    "leave:author-v1:urgent": {
+      "document_id": "leave",
+      "spans": [
+        {
+          "block_id": "b000005",
+          "char_start": 0,
+          "char_end": 82
+        }
+      ]
+    },
+    "leave:author-v1:approver": {
+      "document_id": "leave",
+      "spans": [
+        {
+          "block_id": "b000006",
+          "char_start": 0,
+          "char_end": 64
+        }
+      ]
+    },
+    "security:author-v1:password": {
+      "document_id": "security",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 51
+        }
+      ]
+    },
+    "security:author-v1:lost_device": {
+      "document_id": "security",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 93
+        }
+      ]
+    },
+    "security:author-v1:sharing": {
+      "document_id": "security",
+      "spans": [
+        {
+          "block_id": "b000005",
+          "char_start": 0,
+          "char_end": 76
+        }
+      ]
+    },
+    "support:author-v1:ticket": {
+      "document_id": "support",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 113
+        }
+      ]
+    },
+    "support:author-v1:hours": {
+      "document_id": "support",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 121
+        }
+      ]
+    },
+    "discount_v1:author-v1:base": {
+      "document_id": "discount_v1",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 84
+        }
+      ]
+    },
+    "discount_v1:author-v1:effectivity": {
+      "document_id": "discount_v1",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 63
+        }
+      ]
+    },
+    "discount_v2:author-v1:base": {
+      "document_id": "discount_v2",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 80
+        }
+      ]
+    },
+    "discount_v2:author-v1:manager": {
+      "document_id": "discount_v2",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 106
+        }
+      ]
+    },
+    "discount_v2:author-v1:director": {
+      "document_id": "discount_v2",
+      "spans": [
+        {
+          "block_id": "b000005",
+          "char_start": 0,
+          "char_end": 146
+        }
+      ]
+    },
+    "discount_v2:author-v1:stacking": {
+      "document_id": "discount_v2",
+      "spans": [
+        {
+          "block_id": "b000006",
+          "char_start": 0,
+          "char_end": 87
+        }
+      ]
+    },
+    "discount_v2:author-v1:effectivity": {
+      "document_id": "discount_v2",
+      "spans": [
+        {
+          "block_id": "b000007",
+          "char_start": 0,
+          "char_end": 69
+        }
+      ]
+    },
+    "approvals:author-v1:form": {
+      "document_id": "approvals",
+      "spans": [
+        {
+          "block_id": "b000002",
+          "char_start": 0,
+          "char_end": 119
+        }
+      ]
+    },
+    "approvals:author-v1:sla": {
+      "document_id": "approvals",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 94
+        }
+      ]
+    },
+    "approvals:author-v1:missing": {
+      "document_id": "approvals",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 83
+        }
+      ]
+    },
+    "onboarding:author-v1:mentor": {
+      "document_id": "onboarding",
+      "spans": [
+        {
+          "block_id": "b000002",
+          "char_start": 0,
+          "char_end": 70
+        }
+      ]
+    },
+    "onboarding:author-v1:review": {
+      "document_id": "onboarding",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 96
+        }
+      ]
+    },
+    "onboarding:author-v1:account": {
+      "document_id": "onboarding",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 97
+        }
+      ]
+    },
+    "onboarding:author-v1:equipment": {
+      "document_id": "onboarding",
+      "spans": [
+        {
+          "block_id": "b000005",
+          "char_start": 0,
+          "char_end": 80
+        }
+      ]
+    },
+    "acceptance:author-v1:window": {
+      "document_id": "acceptance",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 87
+        }
+      ]
+    },
+    "acceptance:author-v1:critical": {
+      "document_id": "acceptance",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 77
+        }
+      ]
+    },
+    "acceptance:author-v1:bundle": {
+      "document_id": "acceptance",
+      "spans": [
+        {
+          "block_id": "b000007",
+          "char_start": 0,
+          "char_end": 76
+        }
+      ]
+    },
+    "acceptance:author-v1:form": {
+      "document_id": "acceptance",
+      "spans": [
+        {
+          "block_id": "b000008",
+          "char_start": 0,
+          "char_end": 79
+        }
+      ]
+    },
+    "expenses:author-v1:receipt": {
+      "document_id": "expenses",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 84
+        }
+      ]
+    },
+    "expenses:author-v1:deadline": {
+      "document_id": "expenses",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 89
+        }
+      ]
+    },
+    "expenses:author-v1:meal": {
+      "document_id": "expenses",
+      "spans": [
+        {
+          "block_id": "b000005",
+          "char_start": 0,
+          "char_end": 74
+        }
+      ]
+    },
+    "expenses:author-v1:booking": {
+      "document_id": "expenses",
+      "spans": [
+        {
+          "block_id": "b000006",
+          "char_start": 0,
+          "char_end": 72
+        }
+      ]
+    },
+    "forms:author-v1:bm07": {
+      "document_id": "forms",
+      "spans": [
+        {
+          "block_id": "b000003",
+          "char_start": 0,
+          "char_end": 95
+        }
+      ]
+    },
+    "forms:author-v1:bm09": {
+      "document_id": "forms",
+      "spans": [
+        {
+          "block_id": "b000004",
+          "char_start": 0,
+          "char_end": 117
+        }
+      ]
+    },
+    "forms:author-v1:ts02": {
+      "document_id": "forms",
+      "spans": [
+        {
+          "block_id": "b000005",
+          "char_start": 0,
+          "char_end": 78
+        }
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": "q001",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.annual",
+          "document_id": "leave",
+          "quote": "Trong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:annual",
+            "char_start": 0,
+            "char_end": 72
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 72
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q002",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.carry",
+          "document_id": "leave",
+          "quote": "Được chuyển tối đa 5 ngày phép chưa dùng sang năm sau và phải sử dụng trước ngày 31/03.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:carry",
+            "char_start": 0,
+            "char_end": 87
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 87
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q003",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.notice",
+          "document_id": "leave",
+          "quote": "Đơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:notice",
+            "char_start": 0,
+            "char_end": 71
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 71
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q004",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.urgent",
+          "document_id": "leave",
+          "quote": "Nghỉ đột xuất phải thông báo cho quản lý trong vòng 24 giờ kể từ khi bắt đầu nghỉ.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:urgent",
+            "char_start": 0,
+            "char_end": 82
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 82
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q005",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.approver",
+          "document_id": "leave",
+          "quote": "Quản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:approver",
+            "char_start": 0,
+            "char_end": 64
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 64
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q006",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.annual",
+          "document_id": "leave",
+          "quote": "Trong bộ dữ liệu mẫu, nhân viên toàn thời gian có 12 ngày nghỉ phép năm.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:annual",
+            "char_start": 0,
+            "char_end": 72
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 72
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q007",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "leave.notice",
+          "document_id": "leave",
+          "quote": "Đơn nghỉ phép thông thường phải được gửi trước ít nhất 3 ngày làm việc.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:notice",
+            "char_start": 0,
+            "char_end": 71
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 71
+            }
+          ]
+        },
+        {
+          "evidence_id": "G2",
+          "evidence_group_id": "leave.approver",
+          "document_id": "leave",
+          "quote": "Quản lý trực tiếp là người phê duyệt đơn nghỉ phép thông thường.",
+          "author_span": {
+            "source_block_id": "leave:author-v1:approver",
+            "char_start": 0,
+            "char_end": 64
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 64
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q008",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "security.password",
+          "document_id": "security",
+          "quote": "Mật khẩu tài khoản nội bộ phải có ít nhất 14 ký tự.",
+          "author_span": {
+            "source_block_id": "security:author-v1:password",
+            "char_start": 0,
+            "char_end": 51
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q009",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "security.lost_device",
+          "document_id": "security",
+          "quote": "Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.",
+          "author_span": {
+            "source_block_id": "security:author-v1:lost_device",
+            "char_start": 0,
+            "char_end": 93
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 93
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q010",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "security.sharing",
+          "document_id": "security",
+          "quote": "Không được chia sẻ mật khẩu qua email, tin nhắn hoặc ghi trong phiếu hỗ trợ.",
+          "author_span": {
+            "source_block_id": "security:author-v1:sharing",
+            "char_start": 0,
+            "char_end": 76
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 76
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q011",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "security.lost_device",
+          "document_id": "security",
+          "quote": "Khi mất thiết bị công ty, nhân viên phải báo bộ phận IT trong vòng 30 phút sau khi phát hiện.",
+          "author_span": {
+            "source_block_id": "security:author-v1:lost_device",
+            "char_start": 0,
+            "char_end": 93
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 93
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q012",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "support.ticket",
+          "document_id": "support",
+          "quote": "Yêu cầu hỗ trợ gửi qua cổng helpdesk nội bộ, kèm mô tả lỗi, thời điểm xảy ra và ảnh chụp đã che dữ liệu nhạy cảm.",
+          "author_span": {
+            "source_block_id": "support:author-v1:ticket",
+            "char_start": 0,
+            "char_end": 113
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 113
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q013",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "support.hours",
+          "document_id": "support",
+          "quote": "Bộ phận hỗ trợ làm việc từ 09:00 đến 18:00, thứ Hai đến thứ Sáu; ngoài giờ chỉ tiếp nhận phiếu, không cam kết xử lý ngay.",
+          "author_span": {
+            "source_block_id": "support:author-v1:hours",
+            "char_start": 0,
+            "char_end": 121
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 121
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q014",
+      "evidence": []
+    },
+    {
+      "id": "q015",
+      "evidence": []
+    },
+    {
+      "id": "q016",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.base",
+          "document_id": "discount_v2",
+          "quote": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:base",
+            "char_start": 0,
+            "char_end": 80
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q017",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.manager",
+          "document_id": "discount_v2",
+          "quote": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:manager",
+            "char_start": 0,
+            "char_end": 106
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 106
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q018",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.director",
+          "document_id": "discount_v2",
+          "quote": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:director",
+            "char_start": 0,
+            "char_end": 146
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 146
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q019",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.stacking",
+          "document_id": "discount_v2",
+          "quote": "Không cộng dồn chiết khấu hợp đồng với ưu đãi khuyến mại khác trong cùng một giao dịch.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:stacking",
+            "char_start": 0,
+            "char_end": 87
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 87
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q020",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.base",
+          "document_id": "discount_v2",
+          "quote": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:base",
+            "char_start": 0,
+            "char_end": 80
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q021",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "approvals.sla",
+          "document_id": "approvals",
+          "quote": "Người có thẩm quyền phản hồi hồ sơ ngoại lệ trong 2 ngày làm việc kể từ khi nhận đủ thông tin.",
+          "author_span": {
+            "source_block_id": "approvals:author-v1:sla",
+            "char_start": 0,
+            "char_end": 94
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 94
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q022",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "approvals.form",
+          "document_id": "approvals",
+          "quote": "Đề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ.",
+          "author_span": {
+            "source_block_id": "approvals:author-v1:form",
+            "char_start": 0,
+            "char_end": 119
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 119
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q023",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.director",
+          "document_id": "discount_v2",
+          "quote": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:director",
+            "char_start": 0,
+            "char_end": 146
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 146
+            }
+          ]
+        },
+        {
+          "evidence_id": "G2",
+          "evidence_group_id": "approvals.form",
+          "document_id": "approvals",
+          "quote": "Đề nghị duyệt chiết khấu ngoại lệ phải dùng biểu mẫu BM-07 và đính kèm giá trị hợp đồng, tỷ lệ đề xuất, lý do ngoại lệ.",
+          "author_span": {
+            "source_block_id": "approvals:author-v1:form",
+            "char_start": 0,
+            "char_end": 119
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 119
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q024",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v1.base",
+          "document_id": "discount_v1",
+          "quote": "Theo bản A, nhân viên kinh doanh chỉ được đề xuất chiết khấu thông thường tối đa 3%.",
+          "author_span": {
+            "source_block_id": "discount_v1:author-v1:base",
+            "char_start": 0,
+            "char_end": 84
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 84
+            }
+          ]
+        },
+        {
+          "evidence_id": "G2",
+          "evidence_group_id": "discount_v2.base",
+          "document_id": "discount_v2",
+          "quote": "Theo bản B, nhân viên kinh doanh được đề xuất chiết khấu thông thường tối đa 5%.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:base",
+            "char_start": 0,
+            "char_end": 80
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 80
+            }
+          ]
+        },
+        {
+          "evidence_id": "G3",
+          "evidence_group_id": "discount_v1.effectivity",
+          "document_id": "discount_v1",
+          "quote": "Bản A không ghi ngày hiệu lực hoặc thông tin xác nhận ban hành.",
+          "author_span": {
+            "source_block_id": "discount_v1:author-v1:effectivity",
+            "char_start": 0,
+            "char_end": 63
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 63
+            }
+          ]
+        },
+        {
+          "evidence_id": "G4",
+          "evidence_group_id": "discount_v2.effectivity",
+          "document_id": "discount_v2",
+          "quote": "Bản B không ghi ngày hiệu lực hoặc thông tin xác nhận thay thế bản A.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:effectivity",
+            "char_start": 0,
+            "char_end": 69
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000007",
+              "char_start": 0,
+              "char_end": 69
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q025",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "onboarding.mentor",
+          "document_id": "onboarding",
+          "quote": "Mỗi nhân viên mới có một mentor hỗ trợ trong 5 ngày làm việc đầu tiên.",
+          "author_span": {
+            "source_block_id": "onboarding:author-v1:mentor",
+            "char_start": 0,
+            "char_end": 70
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000002",
+              "char_start": 0,
+              "char_end": 70
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q026",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "onboarding.review",
+          "document_id": "onboarding",
+          "quote": "Buổi đánh giá thử việc nội bộ đầu tiên được tổ chức vào ngày thứ 45 kể từ ngày bắt đầu làm việc.",
+          "author_span": {
+            "source_block_id": "onboarding:author-v1:review",
+            "char_start": 0,
+            "char_end": 96
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 96
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q027",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "onboarding.account",
+          "document_id": "onboarding",
+          "quote": "IT chuẩn bị tài khoản làm việc trước ngày nhân viên mới bắt đầu, sau khi nhận yêu cầu từ nhân sự.",
+          "author_span": {
+            "source_block_id": "onboarding:author-v1:account",
+            "char_start": 0,
+            "char_end": 97
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 97
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q028",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "onboarding.equipment",
+          "document_id": "onboarding",
+          "quote": "Việc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02.",
+          "author_span": {
+            "source_block_id": "onboarding:author-v1:equipment",
+            "char_start": 0,
+            "char_end": 80
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q029",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "acceptance.window",
+          "document_id": "acceptance",
+          "quote": "Khách hàng có 5 ngày làm việc để phản hồi hồ sơ nghiệm thu kể từ lúc nhận đầy đủ hồ sơ.",
+          "author_span": {
+            "source_block_id": "acceptance:author-v1:window",
+            "char_start": 0,
+            "char_end": 87
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 87
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q030",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "acceptance.critical",
+          "document_id": "acceptance",
+          "quote": "Lỗi mức nghiêm trọng C1 phải được khắc phục trước khi ký biên bản nghiệm thu.",
+          "author_span": {
+            "source_block_id": "acceptance:author-v1:critical",
+            "char_start": 0,
+            "char_end": 77
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 77
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q031",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "acceptance.bundle",
+          "document_id": "acceptance",
+          "quote": "Hồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.",
+          "author_span": {
+            "source_block_id": "acceptance:author-v1:bundle",
+            "char_start": 0,
+            "char_end": 76
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000007",
+              "char_start": 0,
+              "char_end": 76
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q032",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "acceptance.bundle",
+          "document_id": "acceptance",
+          "quote": "Hồ sơ nghiệm thu gồm báo cáo kết quả, nhật ký kiểm thử và biên bản bàn giao.",
+          "author_span": {
+            "source_block_id": "acceptance:author-v1:bundle",
+            "char_start": 0,
+            "char_end": 76
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000007",
+              "char_start": 0,
+              "char_end": 76
+            }
+          ]
+        },
+        {
+          "evidence_id": "G2",
+          "evidence_group_id": "forms.bm09",
+          "document_id": "forms",
+          "quote": "BM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng.",
+          "author_span": {
+            "source_block_id": "forms:author-v1:bm09",
+            "char_start": 0,
+            "char_end": 117
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 117
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q033",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "expenses.receipt",
+          "document_id": "expenses",
+          "quote": "Khoản chi từ 200.000 đồng phải có hóa đơn hoặc chứng từ hợp lệ trong hồ sơ hoàn ứng.",
+          "author_span": {
+            "source_block_id": "expenses:author-v1:receipt",
+            "char_start": 0,
+            "char_end": 84
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 84
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q034",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "expenses.deadline",
+          "document_id": "expenses",
+          "quote": "Nhân viên nộp hồ sơ hoàn ứng trong vòng 7 ngày làm việc sau khi kết thúc chuyến công tác.",
+          "author_span": {
+            "source_block_id": "expenses:author-v1:deadline",
+            "char_start": 0,
+            "char_end": 89
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 89
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q035",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "expenses.meal",
+          "document_id": "expenses",
+          "quote": "Mức thanh toán tiền ăn công tác tối đa là 150.000 đồng mỗi người mỗi ngày.",
+          "author_span": {
+            "source_block_id": "expenses:author-v1:meal",
+            "char_start": 0,
+            "char_end": 74
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 74
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q036",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "expenses.booking",
+          "document_id": "expenses",
+          "quote": "Chi phí vé và phòng ở phải được quản lý phê duyệt trước khi đặt dịch vụ.",
+          "author_span": {
+            "source_block_id": "expenses:author-v1:booking",
+            "char_start": 0,
+            "char_end": 72
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000006",
+              "char_start": 0,
+              "char_end": 72
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q037",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "forms.bm07",
+          "document_id": "forms",
+          "quote": "BM-07 là phiếu đề nghị duyệt ngoại lệ chiết khấu, gồm giá trị hợp đồng, tỷ lệ đề xuất và lý do.",
+          "author_span": {
+            "source_block_id": "forms:author-v1:bm07",
+            "char_start": 0,
+            "char_end": 95
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000003",
+              "char_start": 0,
+              "char_end": 95
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q038",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "forms.bm09",
+          "document_id": "forms",
+          "quote": "BM-09 là biên bản ghi kết quả nghiệm thu dịch vụ, gồm hạng mục bàn giao, kết quả và xác nhận của đại diện khách hàng.",
+          "author_span": {
+            "source_block_id": "forms:author-v1:bm09",
+            "char_start": 0,
+            "char_end": 117
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 117
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q039",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "forms.ts02",
+          "document_id": "forms",
+          "quote": "TS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao.",
+          "author_span": {
+            "source_block_id": "forms:author-v1:ts02",
+            "char_start": 0,
+            "char_end": 78
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 78
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q040",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "discount_v2.manager",
+          "document_id": "discount_v2",
+          "quote": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 5% đến 8% phải được trưởng phòng kinh doanh phê duyệt.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:manager",
+            "char_start": 0,
+            "char_end": 106
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000004",
+              "char_start": 0,
+              "char_end": 106
+            }
+          ]
+        },
+        {
+          "evidence_id": "G2",
+          "evidence_group_id": "discount_v2.director",
+          "document_id": "discount_v2",
+          "quote": "Với hợp đồng từ 100 triệu đồng, mức chiết khấu trên 8% đến tối đa 10% cần giám đốc phê duyệt và khách hàng trả trước ít nhất 50% giá trị hợp đồng.",
+          "author_span": {
+            "source_block_id": "discount_v2:author-v1:director",
+            "char_start": 0,
+            "char_end": 146
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 146
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q041",
+      "evidence": [
+        {
+          "evidence_id": "G1",
+          "evidence_group_id": "onboarding.equipment",
+          "document_id": "onboarding",
+          "quote": "Việc bàn giao thiết bị cho nhân viên mới phải được ghi nhận bằng biểu mẫu TS-02.",
+          "author_span": {
+            "source_block_id": "onboarding:author-v1:equipment",
+            "char_start": 0,
+            "char_end": 80
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 80
+            }
+          ]
+        },
+        {
+          "evidence_id": "G2",
+          "evidence_group_id": "forms.ts02",
+          "document_id": "forms",
+          "quote": "TS-02 là phiếu bàn giao thiết bị, ghi mã tài sản, người nhận và ngày bàn giao.",
+          "author_span": {
+            "source_block_id": "forms:author-v1:ts02",
+            "char_start": 0,
+            "char_end": 78
+          },
+          "parser_spans": [
+            {
+              "block_id": "b000005",
+              "char_start": 0,
+              "char_end": 78
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q042",
+      "evidence": []
+    },
+    {
+      "id": "q043",
+      "evidence": []
+    },
+    {
+      "id": "q044",
+      "evidence": []
+    },
+    {
+      "id": "q045",
+      "evidence": []
+    }
+  ],
+  "question_count": 45,
+  "source_block_count": 35,
+  "evidence_count": 47
+}

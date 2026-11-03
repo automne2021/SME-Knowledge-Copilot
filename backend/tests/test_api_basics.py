@@ -5,7 +5,8 @@ def test_health_checks_database(client: TestClient) -> None:
     response = client.get("/api/v1/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "database": "ok"}
+    assert response.json()["data"] == {"status": "ok", "database": "ok"}
+    assert response.json()["request_id"] == response.headers["X-Request-ID"]
     assert response.headers["X-Request-ID"]
 
 
@@ -14,5 +15,6 @@ def test_error_body_has_standard_shape(client: TestClient) -> None:
 
     assert response.status_code == 404
     body = response.json()
-    assert set(body) == {"code", "message", "request_id"}
+    assert set(body) == {"error", "request_id"}
+    assert set(body["error"]) == {"code", "message", "details"}
     assert body["request_id"] == response.headers["X-Request-ID"]

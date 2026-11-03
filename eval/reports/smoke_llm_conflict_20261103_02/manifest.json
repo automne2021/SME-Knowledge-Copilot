@@ -1,0 +1,20 @@
+{
+  "run_id": "smoke_llm_conflict_20261103_02",
+  "started_at_utc": "2026-11-03T07:06:04.594108+00:00",
+  "stage": "llm",
+  "selected_case_id": "adhoc_conflict_not_human_gold",
+  "dataset_manifest_sha256": "efccfaeaf67e9e49035d08771977982ccd34df83d12128a4835948738f2c6b26",
+  "config_sha256": "dfc55fc7cf6d6ba86dad85966b9d1001b908a6dd8db9789d981f56eca40440e1",
+  "python": "3.12.8",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cpu_logical": 8,
+  "memory_available_before_bytes": 4165713920,
+  "code_commit": "9d9edd0b211e0c3197310824d86937b2a4eb1fa4",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "model_smoke.py": "399fd6e1d8bd997f60f7d30c78cac49f805762f38a438fa16bc6b140b86810e2",
+    "embedding_runtime.py": "69ff225f3ded961c75a9e58565d24a3108307f4e62a821d14ed6cb360c179616",
+    "gemini_smoke.py": "4cbd4ed0d95fc9a7eeab6979a453e71cd314be160e54eb1f25075e676964e489"
+  },
+  "test_questions_used_for_tuning": false
+}

@@ -73,6 +73,22 @@ Các mục K-001–K-009 dưới đây tổng hợp **thiết kế/đề xuất 
 | K-024 | Fixtures thật và reproducibility của PDF/DOCX | build_dataset.py; corpus_manifest.json; dev lock |
 | K-025 | Kiểm thử metric khác đánh giá model và nghiệm thu pipeline | metrics.py; eval/tests; dataset-step02.md |
 | K-026 | Báo tiến độ theo khối lượng có bằng chứng | Yêu cầu người dùng; PLAN quy ước tiến độ |
+| K-027 | Phát hành nhãn đã duyệt và khóa review ledger | publish_reviewed.py; reviewed-v1 |
+| K-028 | Windows ACL, Git line endings và file khóa Word | Publisher; .gitattributes; .gitignore |
+| K-029 | Môi trường embedding CPU tối giản và pin model/runtime | requirements-ai-cpu.lock; model_smoke.json |
+| K-030 | Prefix/pooling/token budget và số đo smoke thật | embedding_runtime.py; smoke_embedding_20261103_01 |
+| K-031 | Native Gemini, schema/citation-ID và free-tier preflight | gemini_smoke.py; hướng dẫn key |
+| K-032 | Tiến độ sau review và phân biệt software/model evidence | Bước 02 xong; Bước 03 mới 2/6 |
+| K-033 | Có API key khác với đã xác minh free tier/quota | Preflight lần 2; vị trí kiểm tra AI Studio |
+| K-034 | Bằng chứng tài khoản và smoke Gemini thật đầu tiên | User screenshots; run đầu 4/5 hợp lệ |
+| K-035 | Lỗi validator, diagnostics an toàn và retest một case | Prompt v2; run retest 1/1; 72 eval tests |
+| K-036 | Đóng gate model smoke khác với benchmark chất lượng | PLAN v1.6; tiến độ 17,1% |
+| K-037 | Migration chuyển tiếp giữ legacy và review autogenerate | 20261103_rag04; populated migration tests |
+| K-038 | Partial unique/composite FK và giới hạn schema guarantees | knowledge.py; PostgreSQL constraints tests |
+| K-039 | Argon2id, opaque bearer và token digest | security.py; auth_tokens; ADR RAG-06 |
+| K-040 | Workspace/owner scope và error envelope nhất quán | access.py; resources.py; frontend client |
+| K-041 | Seed idempotent, secrets riêng và DB transaction boundaries | app.seed; .env; dev probe |
+| K-042 | Bằng chứng Bước 04 và tiến độ 24,9% | 124 backend + 72 eval; schema-identity-step04.md |
 
 ## 3. Các giải thích nền tảng
 
@@ -452,12 +468,414 @@ Các mục K-001–K-009 dưới đây tổng hợp **thiết kế/đề xuất 
 
 **Cách áp dụng / kiểm chứng:** mỗi final báo tỷ lệ, nói rõ gate còn thiếu khi có. Lượt chỉ đọc/giải thích giữ nguyên %. Chỉ sửa file tiến độ trong đợt người dùng đã xác nhận “Thực hiện đi”, tránh biến yêu cầu báo % thành quyền tự ghi workspace. Bước 02 còn người A/B rà soát; không tự điền tên/approve hoặc chạy Bước 03 để tăng tiến độ.
 
+### K-027 — Phát hành bộ nhãn đã được con người duyệt
+
+**Ngày / loại:** 03/11/2026 — đã publish [reviewed-v1](eval/snapshots/reviewed-v1/corpus_manifest.json), strict validation đạt. Tiếp nối K-022, K-026; [báo cáo Bước 03](docs/model-smoke-step03.md).
+
+**Bối cảnh / kiến thức:** người dùng đã tự cập nhật 45/45 dòng approved với annotator/reviewer khác nhau, không có changes requested. Không còn lý do giữ gate human review mở, nhưng sửa một trường trạng thái manifest thôi chưa khóa được dữ liệu mà họ đã xem. Snapshot cần gồm corpus, câu/đáp án, spans và cả sổ duyệt; nếu sổ thay đổi mà không được phát hiện, benchmark sau không còn truy được bộ nhãn đã được ai kiểm tra.
+
+**Lựa chọn / lý do:** thêm `eval.publish_reviewed` kiểm tra nguồn rồi copy đúng files trong manifest vào thư mục phiên bản riêng, không copy file khóa Word. Manifest mới ghi `dataset_version=reviewed-v1`, `label_status=human_reviewed`, parent manifest hash, publication UTC và SHA-256 review CSV. Validate toàn bản stage trước rename. Giữ working draft và ledger người dùng nguyên vẹn, không tự sửa danh tính/approved, không overwrite version đã có. Lần gọi lại cùng inputs chỉ xác minh; source/ledger khác phải tạo phiên bản mới.
+
+**Phương án khác / đánh đổi:** promote draft tại chỗ ít tốn disk nhưng khó phân biệt trước/sau review và khiến builder ban đầu có thể vô tình hạ trạng thái. Copy snapshot lặp khoảng 2,5 MB corpus/fixtures nhưng đơn giản, tự chứa và rất nhỏ so với weights. Chỉ lưu manifest trỏ ra ngoài cần validator cho phép paths vượt root, làm yếu kiểm tra path hiện tại. Đổi version labels không tạo parser mapping: `author-v1` vẫn cần remap ở Bước 05, giữ `pending_step05` trung thực.
+
+**Kiểm chứng:** 45/45 approvals, strict validator đạt trên reviewed-v1; tests publish/idempotency, pending review bị từ chối trước tạo output, đổi ledger nguồn không re-bless output và sửa ledger đã freeze bị phát hiện. Code chỉ xác nhận tính hợp lệ của hồ sơ; việc hai thành viên thực sự đọc nguồn dựa trên xác nhận và sổ do họ cung cấp, không suy diễn từ validator thành đánh giá ngữ nghĩa độc lập thứ ba.
+
+### K-028 — Bảo toàn bytes và quyền đọc trên Windows
+
+**Ngày / loại:** 03/11/2026 — sửa lỗi publish và bổ sung cấu hình repository trong đợt được xác nhận.
+
+**Lỗi thực tế / nguyên nhân:** publish bằng `TemporaryDirectory` ban đầu qua validation trong sandbox, nhưng process người dùng chạy model báo PermissionError khi đọc reviewed manifest. `icacls` cho thấy thư mục sau rename chỉ có SYSTEM/Administrators/OWNER RIGHTS, không có quyền VY kế thừa từ workspace. Thư mục tạm Windows dùng private ACL, quyền đó giữ lại khi di chuyển cùng volume; rename không tự lấy quyền của parent mới. File dữ liệu không bị sai hash.
+
+**Cách sửa / lý do:** publisher tạo staging directory UUID bằng mkdir trực tiếp dưới snapshot parent để kế thừa ACL workspace, validate xong rename nguyên thư mục. Cleanup lỗi chỉ được chạy khi resolved staging parent đúng parent đích đã kiểm tra. Với snapshot mới đã tạo, bật lại inheritance chỉ trong subtree đó bằng icacls; process VY sau đó đọc và chạy smoke thành công. Không cấp Everyone toàn quyền, không sửa thư mục ngoài phạm vi. Kiến thức chính: validation trong một identity không đủ chứng minh user bình thường truy cập được artifact.
+
+**Git / bytes:** Git autocrlf có thể đổi newline khi checkout. Corpus, seed, labels và ledger có SHA-256 theo bytes nên thay LF/CRLF cũng thành khác dữ liệu dù nhìn văn bản giống nhau. Thêm `.gitattributes` dùng `-text` cho datasets/seeds/snapshots, `binary` cho PDF/DOCX. Không chạy renormalize/stage/commit trong đợt này; bytes hiện tại và hashes giữ nguyên. Không chữa checksum bằng cách tùy tiện nhận CRLF là LF sau khi đã freeze, vì quy ước cần được xác định trước.
+
+**Phương án khác / đánh đổi:** so hash text đã normalize có ích cho nội dung nhưng không thay hash file gốc/ZIP/PDF. Tắt autocrlf toàn user gây ảnh hưởng repo khác; attributes theo paths đúng phạm vi. Xóa file `~$*.docx` đang mở có thể ảnh hưởng Word, nên chỉ thêm ignore; corpus manifest/publisher copy exact allowlist, không gom mọi file trong thư mục. Tests và run thật sau sửa đạt; lỗi ACL trước model download xảy ra trước tạo report directory, không phải failure inference của E5.
+
+### K-029 — Môi trường E5 CPU tối giản, model revision và dependency lock
+
+**Ngày / loại:** 03/11/2026 — đã cài và chạy thật. Liên quan K-002, K-017–018, [CPU lock](backend/requirements-ai-cpu.lock), [config](eval/configs/model_smoke.json).
+
+**Kiến thức / lựa chọn:** model ID là tên repo có thể đổi nội dung, revision SHA xác định snapshot weights/tokenizer/config. Dùng E5-small revision `614241f622f53c4eeff9890bdc4f31cfecc418b3`, fingerprint SHA-256 sáu files, chỉ tải safetensors/tokenizer/config cần thiết vào cache D. `trust_remote_code=False`, load local-only sau download và không dùng paid Hugging Face inference endpoint. Revision được đọc từ metadata repo công khai trước khi tải.
+
+**Runtime / lý do:** torch **2.9.1+cpu**, transformers **4.57.6**, psutil **7.2.2**. Dùng trực tiếp AutoTokenizer/AutoModel và mean pooling theo model card, thay vì thêm sentence-transformers/sklearn/scipy cho một smoke adapter nhỏ. Pin nhánh Transformers 4 đã kiểm thử thay vì nâng lên latest 5 trong cùng lần đầu inference. Wheel CPU khoảng 110,9 MB, không cần CUDA toolkit, torchvision/torchaudio hoặc GPU. Caches pip/HF ở D; venv vẫn ở C. Torch runtime không được trộn vào production lock trước khi triển khai model service.
+
+**Phương án khác / đánh đổi:** sentence-transformers là lựa chọn tốt khi cần API encode/benchmark phong phú, nhưng hiện thêm dependency surface chưa phục vụ smoke. ONNX/OpenVINO có thể tối ưu CPU sau này; đổi runtime ngay sẽ thêm biến khi chưa có baseline FP32. BGE-M3/local generative LLM cần RAM lớn hơn và chưa có benchmark chứng minh đáng đổi. Host trước install còn khoảng 4.045 MiB RAM khả dụng; ưu tiên một model/process, batch 4 và 2 threads, hoãn BGE thay vì coi RAM 16 GB tổng là chỗ trống.
+
+**Lock / kiểm chứng:** `requirements-ai-cpu.lock` include dev lock, pin toàn bộ packages mới và URL torch CPU **CPython 3.12 Windows x64**. URL platform-specific tránh pip tự chọn CUDA wheel; phải tạo/kiểm tra lock Linux riêng khi đóng gói Docker. Không khẳng định cùng lock chạy mọi OS. pip check đạt; actual runtime ghi torch CPU/no CUDA và package versions trong report. Model fingerprint khác phải coi là experiment khác, không trộn vectors trong cùng collection tương lai.
+
+**Nguồn:** [E5 model card](https://huggingface.co/intfloat/multilingual-e5-small), [PyTorch CPU installation](https://pytorch.org/get-started/locally/), [Transformers 4.57 model loading](https://huggingface.co/docs/transformers/v4.57.2/en/main_classes/model). Đây là căn cứ API/profile; tính phù hợp tiếng Việt cuối cùng vẫn cần dev retrieval evaluation.
+
+### K-030 — Prefix, pooling, chống truncation và đọc đúng số đo embedding
+
+**Ngày / loại:** 03/11/2026 — inference CPU thật đạt; [runtime](eval/embedding_runtime.py), [report](eval/reports/smoke_embedding_20261103_01/metrics.json).
+
+**Kiến thức:** E5 encode query/passage khác vai trò nên dùng prefix tương ứng kể cả tiếng Việt. Mean pooling phải bỏ padding bằng attention mask, rồi L2 normalize nếu profile yêu cầu. Chỉ gọi encode không lỗi có thể đang âm thầm cắt input; số token phải tính sau heading/prefix/special tokens và kiểm tra trước forward. Một chunk target 350 tokens không có nghĩa toàn input luôn dưới 512 khi thêm metadata.
+
+**Lựa chọn / kiểm chứng:** encode 35 author passages (document ID làm heading) và 5 câu dev, FP32/CPU batch 4/threads 2. Shape `[35,384]`, mọi giá trị finite, L2 norms 0,99999988–1,00000012. Vector đầu khi encode một mình/batch khớp tolerance 1e-5, xác minh padding không làm lệch pooling ở case đó. Runtime preflight dùng `truncation=False`; probe đúng 512 tokens inference đạt, 513 tokens raise InputTooLong trước forward. Tokenizer warning cho probe dài là dự kiến, không phải đã chạy thành công input vượt giới hạn.
+
+**Số đo / giới hạn:** resolve/download đầu 12,70 s; process load/imports 5,79 s; passage đầu 49,09 ms; 35 passages sau warmup 0,407 s (~86/s). Năm query khoảng 13,57–18,83 ms. Peak process RSS lấy mẫu 20 ms là 723,13 MiB, không phải peak toàn Windows/Docker hoặc VRAM. Corpus rất ngắn, passage dài nhất 44 tokens; không suy rộng throughput này cho chunks 350 tokens. Cold theo process, không loại OS disk cache; năm query trong một run không đủ p95/SLA. Chưa đo chất lượng hay tốc độ retrieval Qdrant.
+
+**Phương án khác / xem lại:** truncation tự động thuận tiện nhưng có thể cắt điều kiện cuối chính sách mà vẫn trả vector hợp lệ. Chọn reject để chunker Bước 05 có trách nhiệm chia lại. Pool CLS hoặc FP16/quantization cần thí nghiệm khác, không đổi âm thầm pooling/dtype của cùng fingerprint. Sau parser/chunker thật phải đo input dài, query concurrency và khả năng hai process load hai bản model; smoke một process chưa chứng minh RAM cho full stack.
+
+### K-031 — Native Gemini smoke, structured output và preflight ngân sách 0 USD
+
+**Ngày / loại:** 03/11/2026 — adapter/tests/hướng dẫn đã có; **LLM inference chưa chạy**. Người dùng trả lời chưa có key, cần hướng dẫn. [Thiết lập](docs/gemini-free-tier-setup.md), [adapter](eval/gemini_smoke.py), [preflight report](eval/reports/smoke_llm_preflight_20261103_01/metrics.json).
+
+**Lựa chọn / lý do:** giữ candidate `gemini-3.5-flash-lite` sau đọc lại model card/pricing; public standard input/output có free tier tại ngày kiểm tra. Dùng httpx sẵn có gọi native Google REST generateContent, cố định model/endpoint; không thêm OpenAI/Google SDK cho smoke. Profile này không đồng nghĩa OpenAI-compatible adapter dự kiến trong PLAN đã được kiểm chứng: native REST giảm lớp ánh xạ schema và dùng field được tài liệu Google hiện tại mô tả. Production provider abstraction ở Bước 08 vẫn cần triển khai riêng.
+
+**Schema / giới hạn:** `generationConfig.responseFormat.text` gồm mime enum `APPLICATION_JSON` và JSON Schema. Pydantic strict/extra forbid; claim phải có citation IDs trong whitelist, status grounded/partial/insufficient_evidence nhất quán với claims/missing evidence. Bỏ thought parts trước parse/lưu, không ghi key/header/provider error body. ID hợp lệ không chứng minh đoạn nguồn hỗ trợ claim; human semantic scoring vẫn cần. Schema/usage/thinking/decoding thật chưa được provider smoke, không gọi MockTransport pass là model compatibility.
+
+**Ngân sách / guard:** không request trước khi có key, explicit model/native endpoint và hai flags người dùng xác nhận free tier/quota. Endpoint cố định tránh gửi key sang host tùy ý, header x-goog-api-key thay vì query string. Runner tối đa 5 calls tuần tự, output 800 tokens, timeout 45 s, không tools/retry/fallback, dừng lỗi đầu tiên gồm 429. Flags chỉ là attestation, không kiểm soát billing account bên ngoài; muốn giữ 0 USD phải dùng project chưa bật billing và kiểm tra quota. Public free pricing không tự chứng minh điều kiện tài khoản đó. Chưa gọi model → report thật ghi 0 calls/0 USD; khi có calls mà chưa có chứng từ chi phí thì để cost null, không tự công bố hóa đơn bằng 0.
+
+**Protocol / phương án khác:** 4 câu dev có oracle evidence và 1 conflict tự soạn có nhãn ad hoc; không tune trên test q024 để minh họa conflict. Gửi context thủ công là kiểm tra generation, chưa phải app score hoặc full RAG. Compatible endpoint/SDK giúp thống nhất providers khi mở rộng nhưng thêm hành vi cần smoke; local LLM tránh key nhưng chưa biết tốc độ/RAM phù hợp, không tự tải model lớn thay hosted chỉ vì thiếu key. Hướng dẫn người dùng cấu hình riêng là phần còn thiếu, không cần yêu cầu họ gửi secret qua chat.
+
+**Nguồn chính thức 03/11/2026:** [Gemini model](https://aistudio.google.com/docs/models/gemini-3.5-flash-lite), [pricing](https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite), [GenerationConfig](https://aistudio.google.com/api-reference/generate-content#GenerationConfig), [API keys](https://aistudio.google.com/docs/api-key), [billing](https://aistudio.google.com/docs/billing), [rate limits](https://aistudio.google.com/docs/rate-limits). Dùng tài liệu key hiện hành thay hướng dẫn cũ giả định mọi key mới đều standard/unrestricted.
+
+### K-032 — Cập nhật tiến độ khi human review xong, model run còn thiếu
+
+**Ngày / loại:** 03/11/2026 — tiếp nối K-026; [PLAN v1.5](PLAN.md), [report](docs/model-smoke-step03.md).
+
+**Bằng chứng / cách tính:** Bước 02 đã publish/strict validate sau 45 approvals nên 7/7, tổng đến đó `(1,5+4+7)/102,5` ≈ 12,2%. Bước 03 chỉ ghi nhận đầu việc 1 (embedding thật) và 2 (tokenizer boundary), tức 2/6. Fingerprint/report embedding đã có nhưng cấu hình chung embedding/LLM chưa smoke nên mục 6 chưa tính; adapter tests không thay mục 3/4. Tổng `(12,5 + 5 × 2/6) / 102,5 × 100 = 13,8211…` → **13,8% / 100%**. Chưa bắt đầu Bước 04, không tự tăng phần trăm vì thêm docs/tests.
+
+**Phân biệt tests:** lượt hiện tại `pytest eval/tests` **64 passed**, Ruff check/format và pip check đạt. Đây là 64 eval cases khác với 64 backend baseline cases đã chạy Bước 01; không cộng thành một lượt 128 cases vừa chạy. Dữ liệu synthetic trong test publication có tên Test A/B để kiểm tra code trên temp copy, không thay thông tin thật trong reviewed ledger. Fake HTTP responses chỉ kiểm tra preflight/schema/error behavior; E5 run riêng mới là chứng cứ model inference thật. LLM `not_run` là thiếu đầu vào tài khoản, không phải đã quan sát model trả lời sai.
+
+**Điều kiện tiếp tục:** người dùng tạo key riêng, xác minh project Free/quota và cấu hình .env theo hướng dẫn; đợt LLM thật tiếp theo vẫn cần xác nhận phạm vi trước thực hiện. Không mở billing, tự tạo giả API success hoặc đổi local generative model để đóng gate. Không commit/push thay đổi mới khi đợt này chỉ duyệt snapshot/model preparation; giữ Git operations cho yêu cầu riêng.
+
+### K-033 — Key đã điền chưa chứng minh model hoặc ngân sách đã sẵn sàng
+
+**Ngày / loại:** 03/11/2026 — người dùng điền key và yêu cầu tiếp tục LLM; chưa xác minh free tier/quota. [Preflight lần 2](eval/reports/smoke_llm_preflight_20261103_02/metrics.json), [hướng dẫn](docs/gemini-free-tier-setup.md).
+
+**Kiến thức / lựa chọn:** key là thông tin xác thực gắn với project; billing tier, quyền model và quota là các thuộc tính khác. Đọc được một chuỗi trong .env không chứng minh key hợp lệ, model được cấp quyền hoặc cuộc gọi miễn phí. Người dùng đã cho phép chạy, nhưng vẫn giữ trần 0 USD. Khi họ trả lời chưa kiểm tra tài khoản, không tự đặt hai flags thành true và không dùng một generation request để dò điều kiện đó.
+
+**Đã làm / bằng chứng:** kiểm tra key bằng boolean, không in nội dung; endpoint/model khớp cấu hình. Public pricing/model card kiểm tra lại ngày hiện tại; reviewed snapshot hợp lệ, chuẩn bị 5 cases với 0 retries/fallbacks. Runner ghi `not_run`, chỉ thiếu xác nhận free/quota, **0 requests/0 USD**. Không gọi provider, không tuyên bố key đã hoạt động. Không chạy lại toàn bộ software suite khi code không đổi; kết quả 64 eval tests ở đợt trước vẫn là bằng chứng đúng thời điểm đó.
+
+**Vì sao không chọn cách khác:** bỏ guard vì có key sẽ làm quyết định ngân sách dựa trên suy đoán. Nhìn No credits rồi gọi đó là Free cũng sai: đây có thể là paid billing plan chưa có số dư. Người dùng kiểm tra project của key trong Projects/Billing Tier, rồi model trong Rate limits; nhãn Set up billing theo tài liệu Google chỉ project chưa gắn billing account, còn Set up Prepay/No credits cần phân biệt. RPM/TPM/RPD là quota toàn project, không tăng chỉ vì tạo key mới. Nếu quota thấp cần giãn nhịp hoặc chờ; không nâng billing.
+
+**Điều kiện tiếp tục:** cần người dùng xác nhận tier/quota thực, không cần gửi key qua chat hoặc cấp lại quyền cho cùng đợt đang chờ đầu vào. Hiện % giữ **13,8% / 100%**, Bước 03 chưa có LLM inference thật. Nguồn: [Google billing status](https://aistudio.google.com/docs/billing#verify-billing), [rate limits](https://aistudio.google.com/docs/rate-limits), [pricing](https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite).
+
+### K-034 — Từ xác nhận Free tier đến inference Gemini thật
+
+**Ngày / loại:** 03/11/2026 — API thật đã chạy sau khi người dùng bổ sung thông tin còn thiếu. Tiếp nối K-033; [run đầu](eval/reports/smoke_llm_20261103_01/assessment.md).
+
+**Bối cảnh / lựa chọn:** người dùng đã yêu cầu tiếp tục smoke và cung cấp ảnh project có Free level, rồi xác nhận quota chưa dùng kèm ảnh counters 0. Ghi nhận hai flags true trên .env riêng sau các thông tin đó; không yêu cầu lại quyền cho cùng phạm vi đang chờ đầu vào. Ảnh quota bị cắt thiếu header/tên model nên không khẳng định các số 15/250K/500 chính xác là RPM/TPM/RPD của model từ ảnh. Đây là xác nhận thủ công, không phải trợ lý truy vấn billing API. Model/API access sau đó được kiểm chứng trực tiếp bằng live responses; chưa kiểm chứng trạng thái billing tự động.
+
+**Kết quả thật:** đúng 5 requests, không retry/fallback. q001/q007/q009 grounded và q014 insufficient_evidence qua schema/status/citation-ID whitelist. Model version trả về `gemini-3.5-flash-lite`; claims được trợ lý đối chiếu đúng context đã có, không gọi đó là independent human scoring. Conflict ad hoc bị local parse/validation từ chối với mã gộp invalid_provider_output; run đầu **failed**, giữ nguyên tất cả artifacts. HTTP 200 đã qua nên lỗi này không phải bằng chứng key/quota không hoạt động hoặc thiếu nguồn trong corpus.
+
+**Usage / chi phí:** 4 successful outputs lưu được 529 prompt + 376 candidate = 905 tokens. Call lỗi thứ 5 mất usage trong adapter cũ, không lấy 905 làm tổng 5 calls. serviceTier standard là metadata inference, không chứng minh project paid hoặc Free. Giữ `api_cost_usd=null` sau calls vì không có đối chiếu hóa đơn, dù tài khoản dự kiến Free theo bằng chứng người dùng và không bật billing. Không diễn giải null thành đã phát sinh phí. Các preflight trước đó 0 calls/0 USD vẫn giữ lịch sử đúng.
+
+**Phương án khác / đánh đổi:** auto-approve Free ngay khi thấy key có thể trái trần 0 USD; tiếp tục đòi xác nhận lại sau ảnh và lời người dùng không thêm bằng chứng thực tế. Chọn ghi đúng mức chứng cứ, giữ model và endpoint cố định, chạy số calls đã duyệt. Không lưu key trong report hoặc đổi sang model/provider khác để làm smoke passed. Public model/pricing đã đọc lại ngày chạy; dữ liệu gửi là synthetic/oracle context, chưa có retrieval/app API.
+
+### K-035 — Chẩn đoán output bị từ chối và retest có giới hạn
+
+**Ngày / loại:** 03/11/2026 — sửa adapter/prompt và kiểm chứng; [retest](eval/reports/smoke_llm_conflict_20261103_02/assessment.md), [tests](eval/tests/test_model_smoke.py).
+
+**Lỗi quan sát / giới hạn:** adapter v1 gộp JSON/schema/contract exceptions và bỏ usage/model metadata khi validation lỗi. Vì response conflict đầu không được lưu đủ, không biết chính xác lỗi thuộc nhánh nào; không gọi thiếu missing_evidence là root cause đã chứng minh. Đọc code phát hiện prompt chỉ nói partial cho xung đột, chưa yêu cầu partial phải có missing_evidence theo validator, là khoảng trống hướng dẫn cần sửa; chưa biết nó có liên quan trực tiếp đến response đã mất hay không.
+
+**Cách sửa / lý do:** prompt v2 ghi rõ grounded có claims/không missing; partial có claims có nguồn và nêu căn cứ/điều kiện thiếu; insufficient_evidence không có claims. Diagnostics phân biệt schema error types, unknown IDs, invalid abstention và partial thiếu missing evidence; giữ usage/model metadata được allowlist trên HTTP 200 kể cả output bị từ chối. Không log response body/header, Pydantic input/context hoặc thoughts. CLI case-id chọn đúng một dev/ad hoc case, từ chối test q024; max_calls strict int 1–5, không cho 0 samples bị báo passed. Source snapshots `.py.txt` ở run mới giữ code thực đã chạy ngoài HEAD dirty; không tự tái tạo source lịch sử khi chỉ có hash.
+
+**Phương án khác / đánh đổi:** bỏ validator hoặc cho partial thiếu trường để báo thành công sẽ làm yếu contract. Lưu toàn provider body/Pydantic errors tăng khả năng lộ inputs/secrets/thoughts; chỉ cần error type/rule và usage để biết nhóm lỗi. Gọi lại toàn bộ 5 câu lãng phí quota và vượt giới hạn đợt đầu. Đã hoàn thành offline fixes + **68 tests pass** trước hỏi mở rộng đúng 1 request; người dùng trả lời “Thực hiện đi”, rồi mới retest riêng conflict. Không có retry tự động hoặc paid fallback.
+
+**Retest thật:** 1 request, partial, claims E1/E2 ghi đúng 12/15 ngày và missing_evidence nêu thiếu ngày hiệu lực/thay thế; schema/IDs đạt. Version giữ Gemini 3.5 Flash-Lite; 188 prompt + 143 candidate = 331 tokens, ~1,663 s. Run đầu vẫn 4/5 hợp lệ/failed, run retest 1/1 passed; **6 total requests**, không trình bày thành 5/5 trên prompt v2. Retest khác prompt và có biến thiên model nên không dùng nó chứng minh nguyên nhân lỗi cũ hay accuracy cải thiện. Năm outputs lưu usage đủ tổng 1.236 tokens; tổng cả 6 calls vẫn null do thiếu usage call lỗi đầu.
+
+**Kiểm chứng cuối:** thêm tests giữ usage/model khi invalid response nhưng không lộ inputs, chọn case gửi 1 request, unknown test case bị chặn và max_calls=0/-1/bool/6 bị từ chối; **72 eval cases pass**, Ruff đạt. Đây là suite eval hiện tại, không phải chạy lại backend 64 baseline cases. Không cần thêm API requests để kiểm tra các guards thuần logic.
+
+### K-036 — Gate Bước 03, cấu hình tạm và phần chưa chứng minh
+
+**Ngày / loại:** 03/11/2026 — PLAN v1.6, tiến độ **17,1% / 100%**. [Báo cáo tổng hợp](docs/model-smoke-step03.md).
+
+**Quyết định / lý do:** chọn tạm E5-small CPU FP32/384/mean pooling và Gemini 3.5 Flash-Lite native REST, structured response, output cap gửi 800 tokens. E5 token boundary/RAM đã đo; Gemini có live output được Pydantic validate và các case grounded/thiếu nguồn/conflict được kiểm tra định tính. Gate Bước 03 yêu cầu inference thật cho một embedding + một LLM và ít nhất một response validate được, đã đạt. Không cần biến smoke thành quality benchmark đầy đủ hoặc bảo đảm mọi lần generation đều thành công.
+
+**Cấu hình chưa đo:** không override thinking/temperature nên ghi provider defaults, không khẳng định đã tắt thinking; không có thoughtsTokenCount không chứng minh số thinking tokens bằng 0. Output field được endpoint nhận nhưng chưa gửi case đủ dài để kiểm tra chạm cap 800. Năm mẫu/runs khác prompt chưa đủ p95/accuracy; source/citation ID tồn tại vẫn không chứng minh claim luôn faithful. App schema/auth/worker/retrieval/answering còn chưa triển khai. Human response rubric và benchmark dev/test ở Bước 07/11 vẫn cần thực hiện.
+
+**BGE tùy điều kiện / tiến độ:** đầu việc 5 ghi rõ “nếu đủ tài nguyên”, hoãn challenger do RAM headroom hạn chế và baseline đã đáp ứng gate. Không đánh dấu đã smoke BGE và không loại nó khỏi kế hoạch so sánh sau. Các mục bắt buộc 1/2/3/4/6 hoàn tất theo phạm vi profile; mục tùy chọn không chặn gate. Giữ nguyên mọi trọng số/tổng 102,5 person-hours; `(1,5+4+7+5)/102,5 ×100 =17,073…` → 17,1%. Ghi điều kiện áp dụng ở PLAN thay vì coi 6/6 thí nghiệm đã chạy hoặc tăng % theo số tests. Bước 04 cần đợt được xác nhận riêng; không tự migrate/schema/auth hay commit/push trong đợt smoke này.
+
+### K-037 — Migration RAG giữ dữ liệu legacy, autogenerate cần review
+
+**Ngày / loại:** 03/11/2026 — Bước 04 đã upgrade PostgreSQL dev/test; [report](docs/schema-identity-step04.md), [ADR](docs/decisions/0006-identity-and-rag-schema.md). Migration cũ SHA-256 giữ nguyên, revision mới `20261103_rag04`.
+
+**Lựa chọn / lý do:** giữ workspaces/users và các bảng Operations, thêm username/is_active/knowledge_admin. User cũ được username `legacy_<UUID hex>` để không trùng/lộ email; inactive cho đến khi review, không nâng approver/demo_admin lên admin. Email và password_hash cũ không xóa/đổi. Jobs giữ generic entity fields/state cũ và thêm document/kind/revision/lease; CHECK discriminator phân biệt legacy với RAG, RAG worker sau này phải lọc kind/document_id. Vừa giữ rows cũ vừa tránh dùng nhầm status processing cho pipeline mới.
+
+**Kiến thức / lỗi cần tránh:** autogenerate so metadata với DB không tự viết business backfill hoặc nhận ra mọi CHECK thay đổi. Đã review và bổ sung CHECK VARCHAR enums, backfill trước NOT NULL, users composite unique trước các creator-scope FKs và FK active revision sau khi cả document/revision tồn tại. Không dùng ALTER TYPE của native enum vì project dùng VARCHAR + CHECK. Không import models hiện tại vào migration để tạo DDL động; migration snapshot được sinh và review riêng.
+
+**Phương án khác / đánh đổi:** drop/rename toàn legacy nhanh nhưng mất dữ liệu/FKs và trái phạm vi. Nhân đôi users/jobs cho RAG làm scope/migration khó đối chiếu hơn. Additive discriminator giữ dữ liệu, đổi lại CHECK/filter phức tạp hơn; username legacy không tự thành tài khoản mới đăng nhập được. Downgrade có guard từ chối nếu RAG tables/admin đã có dữ liệu, thay vì DROP TABLE rồi coi là rollback an toàn.
+
+**Kiểm chứng:** test trên schema tạm của PostgreSQL test có user approver/password hash/job processing thật trước upgrade: các giá trị giữ nguyên, username backfill đúng, inactive; downgrade/upgrade khi chưa có RAG data đạt. Có RAG data thì downgrade từ chối trước xóa bảng. Toàn schema tạm rollback, không drop dev DB. Dev ban đầu trống, test ở revision legacy với rows trống; sau tests dev mới được migrate/seed theo phạm vi đã duyệt.
+
+### K-038 — Bất biến ở PostgreSQL và phạm vi chúng thực sự bảo đảm
+
+**Ngày / loại:** 03/11/2026 — schema mới và SQL constraint tests đã chạy thật. [models](backend/app/models/knowledge.py), [tests](backend/tests/test_rag_constraints.py).
+
+**Kiến thức / lựa chọn:** validation Python chỉ bảo vệ đường gọi qua service, còn DB constraints bảo vệ cả writer khác và yêu cầu đồng thời. Partial unique live hash giữ chỗ cả status deleting; chỉ status deleted mới cho upload cùng hash. Unique theo kind/status chặn hai jobs active cùng loại/document; partial unique running/session chặn hai query đang chạy. Idempotency session/client_request_id khác invariant running: hai request ID khác nhau vẫn có thể tranh cùng session, cần cả hai ràng buộc.
+
+**Scope FKs:** creator+workspace FK bảo đảm owner thuộc workspace; active_revision+document FK chặn dùng revision của document khác. Query/run-session composite FK chặn message gắn run của phiên khác. Citation chunk ON DELETE SET NULL giữ lịch sử/tombstone, không cascade xóa cả chat. Các JSONB spans và generation membership còn cần domain service/parser kiểm tra; DB không tự chứng minh đủ vector points, text faithful hoặc lease chưa bị worker khác thay thế.
+
+**Phương án khác / đánh đổi:** chỉ SELECT rồi INSERT có race trước khi commit; chỉ unique session/client ID không chặn hai input khác nhau chạy cùng phiên. SQLite/mock SQL không chứng minh partial indexes/UUID/FK/locking PostgreSQL. Dùng constraints mạnh giảm dữ liệu sai nhưng phải review migration/FK cycles và xử lý IntegrityError ở service tương lai, không trả raw SQL error cho client.
+
+**Bằng chứng:** real inserts/raw SQL kiểm tra hash/count/text, duplicate revision/source block/chunk/point, live dedup, active ingest/cleanup, running lease fields, query/message/citation uniqueness và active revision sai document. Alembic check báo không có operations mới. Chưa chạy worker concurrency/restart/race/publish transaction, không gọi constraint test tuần tự là đã nghiệm thu fault recovery. [PostgreSQL constraints](https://www.postgresql.org/docs/16/ddl-constraints.html).
+
+### K-039 — Mật khẩu khác token: Argon2id và SHA-256 dùng ở hai chỗ khác nhau
+
+**Ngày / loại:** 03/11/2026 — auth backend đã triển khai/probe. [security.py](backend/app/core/security.py), [ADR RAG-06](docs/decisions/0006-identity-and-rag-schema.md).
+
+**Kiến thức / lựa chọn:** mật khẩu do con người chọn có entropy thấp, cần hash chậm/memory-hard và random salt để tăng chi phí dò khi DB lộ. Dùng Argon2id time_cost=2, memory=19.456 KiB, parallelism=1; mỗi lần hash có salt khác. Token lại do CSPRNG sinh 32 random bytes (~256-bit), dạng URL-safe 43 ký tự; hash SHA-256 đủ để không lưu bearer plaintext mà không cần Argon2 tốn RAM cho mỗi API request. Token hash không phải mật khẩu hash và không gửi được như bearer gốc.
+
+**Opaque thay JWT:** demo chỉ một backend/PostgreSQL, lưu user/hash/expiry/revoke dễ kiểm soát và phản ánh role/is_active mới mỗi request. TTL mặc định 3.600 giây, hết hạn/revoked/inactive/role legacy trả 401. Không cần JWT signing secret/algorithm/rotation/refresh ngay; đánh đổi là DB lookup mỗi request. Khi nhiều services/traffic mới xem lại JWT/central auth provider. Bcrypt/PBKDF2 chưa chọn vì không có compatibility/FIPS bắt buộc; Argon2id đáp ứng baseline hiện tại.
+
+**Bảo vệ đầu vào:** username ASCII lowercase/case-normalized, extra identity/role fields bị từ chối. Password không truncate, login giới hạn tối đa 128 ký tự; seed cần 12–128 và thực tế sinh 24 ký tự ngẫu nhiên. Unknown user vẫn verify dummy hash để giảm early return, không gọi đó là chống enumeration/timing tuyệt đối. Generic 401 không phân biệt sai password, inactive hay role bị loại. Bearer malformed bị chặn trước hash lookup, token chỉ nằm trong success response/Authorization của người dùng.
+
+**Kiểm chứng / giới hạn:** salted hashes khác nhau, đúng/sai/malformed legacy hash an toàn; login/me, expired/revoked/inactive/role change và raw token không ở DB. Argon2 dependencies được pin runtime và pip check đạt. Không triển khai refresh/SSO/reset/registration; public HTTPS/login rate limiting còn cần trước dùng ngoài demo. [OWASP password storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html), [session management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html).
+
+### K-040 — Authorization theo resource, error/request ID và read guard
+
+**Ngày / loại:** 03/11/2026 — [access service](backend/app/services/access.py), [resource routes](backend/app/api/resources.py), [API tests](backend/tests/test_rag_identity.py).
+
+**Lựa chọn / lý do:** role/workspace/user lấy từ token user đã xác thực qua DB, không từ body/query hoặc UUID client gửi. Lookup document scope trước rồi mới kiểm tra deleted: foreign/missing đều 404, own deleting/deleted 410; role thiếu quyền 403, không login 401. Chat session/run lookup còn ràng buộc created_by, kể cả knowledge_admin không bypass owner. Jobs join documents để lọc scope, legacy generic jobs không lọt vào RAG read API.
+
+**Source history:** cờ redaction lưu trong message có thể cập nhật chậm sau soft-delete. Read API kiểm tra SQL hiện tại: document/revision ready, workspace/active revision/generation, chunk association và citation available; bất kỳ nguồn không hợp lệ thì che content. Không trả excerpt snapshots/structured payload/trace để vòng qua guard. Tests đổi source/deleting, xóa chunk, mismatch generation, failed revision và unavailable citation trước khi cờ message cập nhật. Đây là read guard foundation, chưa phải cleanup/race workflow Bước 09 hoặc full AT-R18.
+
+**Envelope / errors:** đổi runtime về contract spec 10 `{data,request_id}` và `{error:{code,message,details},request_id}`; frontend apiFetch unwrap data và nested error, không giữ contract lỗi phẳng legacy. Server sinh request ID, thêm X-Request-ID/no-store, 401 có WWW-Authenticate. Error handler cũng đặt headers để lỗi 500 ngoài middleware không mất ID. Không echo validation inputs hoặc log exception text/SQL params có thể chứa credentials; log loại lỗi + ID thay traceback đầy đủ. Đánh đổi là debugging cần trace có kiểm soát, không chép secrets vào log mặc định.
+
+**Kiểm chứng / giới hạn:** real API tests cho cross-workspace/owner, role body spoofing, admin dependency qua route test riêng, missing auth, source masking và 500 có request ID nhưng không lộ secret giả. Frontend lint/build đạt sau helper đổi envelope; chưa có browser E2E/auth UI. Không triển khai upload/delete/retry ở đây để tạo kết quả giả: dependency đã chứng minh HTTP 403, nhưng full write-action matrix cần routes/service bước 05/06/09. UUID khó đoán không thay authorization; chưa tuyên bố DB RLS/production multi-tenant.
+
+### K-041 — Seed có transaction và credentials không thuộc source code
+
+**Ngày / loại:** 03/11/2026 — [seed CLI](backend/app/seed.py), .env riêng và dev auth probe.
+
+**Lựa chọn / lý do:** seed workspace ID/user IDs deterministic và usernames demo.admin/demo.member rõ role. Mật khẩu sinh ngẫu nhiên khác nhau bằng secrets, chỉ thêm keys còn thiếu vào .env bị ignore, giữ API key/DB credentials đã có. Chỉ placeholders vào .env.example. Kiểm tra cả hai password trước writes; caller dùng một transaction. Repeat seed không trùng users, không reset password hash hoặc tự promote/deactivate; identity/role conflict phải review, không lấy seed như đường nâng quyền.
+
+**Phương án khác / đánh đổi:** hardcode mật khẩu demo trong Git dễ dùng nhưng làm mất boundary secrets. Reset theo env mỗi lần startup có thể đổi tài khoản đang dùng hoặc nâng quyền ngoài ý muốn; seed tách CLI để chủ động chạy. Opaque tokens probe được revoke sau khi thử; không giữ raw tokens trong report. Đổi DEMO_ADMIN_PASSWORD trong .env sau khi seed không tự đổi mật khẩu đã hash trong DB, cần workflow reset riêng nếu được yêu cầu sau.
+
+**Tài nguyên / lỗi môi trường:** Docker Desktop tắt khiến DB chưa ready; khởi động hidden rồi chỉ up db bằng volume hiện có. Một lượt autogenerate chờ kết nối lâu đã dừng trước ghi revision; thêm libpq connect_timeout=5 cho app/migration, không kết luận timeout nguyên nhân schema sai. Libpq có thể thử nhiều địa chỉ nên đây không phải deadline tổng 5 giây. Readiness/probe thực mới xác nhận service nhận kết nối. Qdrant không cần cho auth/schema, không claim đã probe lại.
+
+**Bằng chứng:** seed dev tạo 2 users, seed lần hai tạo 0; login/me cả hai roles qua ASGI TestClient với Postgres dev thật, token probe revoke rồi 401. Dev 2 users/0 documents/2 revoked tokens; test 0 users/documents/tokens sau rollback. Không in password/token/API key. CLI seed và API DB errors báo generic type/message để không dump SQL bound parameters. DB dev đã migrate, không nhầm fixture rollback ở test là rollback schema dev.
+
+### K-042 — Definition of done Bước 04 và tiến độ
+
+**Ngày / loại:** 03/11/2026 — [report](docs/schema-identity-step04.md), PLAN v1.7. Bước 04 đủ 6 đầu việc foundation: schema/constraints, chuyển tiếp roles/jobs, seed/auth, scopes và envelope/config/transactions.
+
+**Kết quả thật:** full backend **124 passed, 1 warning**, gồm 56 guard, 6 legacy schema, 2 API envelope, 35 identity/security cases, 23 RAG constraint và 2 migration cases. Suite eval chạy riêng **72 passed**, không gọi model. Alembic check không drift; old migration SHA bất biến; dev/test head mới. Frontend lint + TypeScript/Vite build (44 modules), Ruff check/format và pip check đạt. Không cộng thành một lệnh 196 cases đã chạy; đây là hai invocations riêng. Warning TestClient/httpx đã có từ trước, không skip/sửa major dependencies để che.
+
+**Giới hạn nghiệm thu:** auth/scoped resources và write-role dependency đã có, AT-R09/19/23 chỉ nền phù hợp bước này. Upload/source file API/parser/worker/retrieval/answer/delete lifecycle chưa có; chưa tuyên bố full acceptance hoặc production auth. Không gọi model/API hoặc tải weights trong Bước 04. UI vẫn placeholder, helper mới tương thích envelope; không làm UI login ngoài phạm vi.
+
+**Tiến độ / tiếp tục:** giữ trọng số 8 cho Bước 04 và tổng 102,5. `(1,5+4+7+5+8)/102,5×100 =24,878…` → **24,9% / 100%**. Bước 05 tiếp theo là upload/parser/chunker với canonical mapping, chưa bắt đầu và cần xác nhận đợt riêng. Không tự commit/push các thay đổi đang có của Bước 03/04. Các báo cáo cũ giữ thời điểm/kết quả lịch sử thay vì viết lại như mọi feature đã tồn tại trước đó.
+
+### K-043 — Multipart streaming, authorization và dedup dưới tải đồng thời
+
+**Ngày / loại:** 03/11/2026 — đã code và kiểm chứng ở [Bước 05](docs/parsing-upload-step05.md), [router](backend/app/api/uploads.py), [service](backend/app/services/uploads.py).
+
+**Kiến thức:** `UploadFile` spool giúp không giữ toàn bộ file trong RAM, nhưng `request.form(max_part_size=...)` chỉ giới hạn non-file fields trong Starlette đang cài. Vì vậy cần hai giới hạn: tổng bytes receive (kể cả không Content-Length) và file bytes khi stream 64 KiB. Mặc định 20 MiB/file + 64 KiB request framing. Bắt đầu bằng AdminUser nên member/anonymous không được ghi; workspace lấy SQL identity, không nhận trong multipart.
+
+**Lựa chọn:** extension/MIME/signature cùng kiểm tra; hash bytes gốc SHA-256; UUID storage key tách tên hiển thị. DB partial unique index `(workspace,sha256)` cho mọi trạng thái chưa deleted xử lý race. Hai request cùng kiểm tra “chưa tồn tại” vẫn có thể insert đồng thời; unique violation được bắt qua savepoint rồi trả 409 + ID đúng scope. Đổi filename/extension không làm đổi hash. Cùng bytes ở workspace khác vẫn là hai tài liệu riêng; không tiết lộ nguồn giữa workspaces.
+
+**Phương án khác / đánh đổi:** đọc hết request rồi kiểm size đơn giản nhưng đã dùng hết memory/disk trước khi chặn. Dedup bằng filename sai vì hai bản khác nội dung có thể trùng tên. Global dedup tiết kiệm disk nhưng gây rủi ro lộ sự tồn tại và phức tạp ownership/cleanup. P0 chọn scoped dedup với local storage; object storage cân nhắc khi nhiều máy deploy.
+
+**Bug thực:** python-multipart bỏ Windows full path vì compatibility IE, khiến chỉ validate filename đã parse không thấy traversal. Đã validate thêm Content-Disposition gốc bằng standard email header parser. UUID key sâu và tên thư mục test dài gây MAX_PATH trên Windows; chuyển key thành workspace hex/revision hex và dùng basetemp ngắn. Không đổi registry/chính sách Windows để che lỗi. Tests gửi cả Unix/Windows traversal, fake MIME/signature, oversized streamed body và cùng bytes đổi tên. Race với hai PostgreSQL transactions thật cho đúng một 202, một 409, một document/revision/job/file.
+
+Nguồn: [Starlette request files](https://starlette.dev/requests/); thư viện python-multipart phiên bản đã pin được kiểm tra trực tiếp. Đây là validation boundary, không phải bảo đảm PDF/DOCX đã parse thành công sau magic check.
+
+### K-044 — Filesystem và SQL không có một transaction chung
+
+**Bối cảnh:** upload vừa ghi file vừa insert metadata. SQL rollback không tự xóa file, còn xóa file khi commit thực ra đã thành công sẽ làm document mất nguồn.
+
+**Cách làm:** ghi file theo key server, flush document → revision → job trong transaction, chỉ trả 202 sau commit. Lỗi validation/flush hoặc commit được xác minh rollback thì unlink file. Khi commit acknowledgement bị mất, rollback connection state rồi query revision: đã tồn tại thì giữ file; không tồn tại thì dọn. Nếu DB chưa thể trả lời, giữ file và log document ID cho reconciliation. Không log bytes/path/secrets.
+
+**Phương án khác:** lưu bytes trong PostgreSQL có thể gom atomicity nhưng làm DB/backup lớn; object storage + outbox/reconciler phù hợp deployment lớn hơn. File rename không biến filesystem và SQL thành distributed transaction. P0 dùng compensating action, chấp nhận cần sweeper cho process kill hoặc DB outage dài; phần recovery vận hành nối tại worker, không tự triển khai Bước 06 trong đợt này.
+
+**Bằng chứng:** fault injection job flush và commit trước khi ghi thành công đều không còn file/document/revision. Test mất acknowledgement sau commit giữ nguyên source và metadata. Interrupted stream dọn file. Kết quả trên DB test thật; không suy ra mọi failure/OS crash đã được xử lý.
+
+### K-045 — Source fidelity, normalization và hard timeout parser
+
+**Đã triển khai:** [parsing.py](backend/app/services/parsing.py) dùng PyMuPDF 1.28.2/python-docx 1.2.0, UTF-8/BOM TXT/MD. Giữ raw extracted/serialized text, normalized text và location. NFC thống nhất dấu tiếng Việt; whitespace collapse tránh quote sai chỉ vì line wrap. U+00AD → `-` là quyết định khai báo cho PDF mẫu BM-09, không phải quy tắc phổ quát đúng với mọi ngôn ngữ. Nếu dữ liệu thật có discretionary hyphen cần đổi normalization version, remap và reindex.
+
+**Offset:** Unicode code point trên normalized block, từ 0 đến end-exclusive; page/line/block từ 1. Không phải byte offset hay raw-text offset. Ví dụ NFD `To\u0302i` và NFC `Tôi` khác số code points dù hiển thị tương đương. Việc giữ raw không có nghĩa có thể lấy normalized offsets cắt raw. DOCX body paragraph/table là location thật; không bịa số trang vì pagination phụ thuộc Word/fonts/layout. Header/footer ngoài phạm vi body parser hiện tại; PDF bảng đơn giản có đường kẻ, DOCX/Markdown rows serialize có provenance, không hứa đọc biểu đồ/merged table phức tạp.
+
+**Giới hạn / lỗi:** 200 PDF pages; DOCX 2.000 ZIP entries/100 MiB uncompressed kiểm trước XML, không extract paths ra disk; 2 triệu tổng raw+normalized characters/20.000 blocks/5.000 chunks. PDF text ngắn có nghĩa vẫn giữ, không dùng character threshold tùy tiện làm OCR heuristic. Scan có ảnh không text → needs_ocr; blank → no_extractable_text; mixed chỉ giữ trang text và cảnh báo skipped pages; encrypted/malformed/encoding sai có mã riêng. HTML/prompt injection là dữ liệu, không thực thi hoặc tải link.
+
+**Tại sao subprocess:** thread timeout chỉ ngừng chờ, không dừng native C parse đang treo. `subprocess.run(timeout=60)` kill/wait child để parser không giữ worker vô hạn. Guards hiện tại không phải OS RAM sandbox; phải đo resource trước tăng concurrency. OCR/layout AI/API parser hoãn vì máy CPU 16 GB/corpus text/ngân sách 0 USD; pypdf/pdfplumber xem xét nếu layout/footprint hoặc cách phân phối yêu cầu đổi. PyMuPDF đang có dual AGPL/commercial license theo nhà cung cấp; khi phân phối cần kiểm tra lựa chọn license phù hợp, chưa mua commercial license.
+
+**Kiểm chứng:** real format fixtures, scan/blank/mixed/encrypted/malformed, ZIP bounds/path, subprocess deadline 1 ms để chứng minh hard timeout path, UTF-8 BOM/NFD/CRLF, bảng DOCX và PDF có kẻ, quote ở cả hai trang PDF render thật. Các text fixtures nhỏ không chứng minh throughput của file 20 MiB/200 trang.
+
+Nguồn: [PyMuPDF extraction/tables](https://pymupdf.readthedocs.io/en/latest/page.html), [python-docx body iteration](https://python-docx.readthedocs.io/en/latest/api/document.html). Parser version hiện tại gắn normalization và pinned libraries; đổi parser phải version artifact.
+
+### K-046 — Token budget thật, structure boundaries và context provenance
+
+**Bối cảnh:** E5 có input tối đa 512 tokens; đếm ký tự hoặc để tokenizer truncate có thể mất điều kiện chính sách mà không báo. Tokenizer LLM và embedding cũng không thể thay nhau.
+
+**Quyết định:** [chunking.py](backend/app/services/chunking.py) nạp tokenizer.json local-only từ E5-small revision cố định; dùng Rust tokenizers trực tiếp, không cần load torch/weights để đếm. Cả `passage: ` + heading/header + text + special tokens phải nằm trong **350 tokens toàn input**, nhỏ hơn 512. Đây là cách hiện thực bảo thủ của target 350 trong PLAN, không phải 350 body tokens cộng thêm overhead. Không padding/truncation. Settings chặn overlap >= size hoặc đổi model/revision chưa được hỗ trợ. Parser/tokenizer deps chuyển sang runtime locks; Torch vẫn chỉ thuộc CPU smoke/model environment.
+
+**Cách hoạt động:** gộp cùng cấu trúc đến budget, không xuyên trang PDF hoặc heading/header context boundary. Block dài tách ở Unicode/word boundary, đếm lại input cuối; overlap target 50 chỉ trong block phải tách, ưu tiên boundary cấu trúc khi gộp block. Mỗi substring có source span chính xác và mọi ký tự nội dung đều được bao phủ. Header dài đến mức không còn chỗ cho nội dung → lỗi document_limit_exceeded; không cắt heading âm thầm. Giới hạn input ký tự mỗi lần tokenize và tổng chunks để tránh công việc bệnh lý.
+
+**Provenance:** heading/table header lặp có `role=context` và trỏ block/offset gốc; nội dung chính có `role=content`. Vì vậy UI/retrieval evaluator tương lai không nhầm header lặp thành câu gốc mới hoặc evidence độc lập. Chunk lưu token count/hash/location tổng hợp + locations chi tiết. Parser-local block IDs sẽ ánh xạ UUID theo generation ở Bước 06.
+
+**Phương án khác:** fixed character chunks nhanh nhưng không kiểm được input budget; fixed token windows dễ cắt điều kiện/bảng; recursive splitters tổng quát thêm abstraction mà vẫn phải viết provenance riêng. BGE-M3 có tokenizer/context/index khác, chưa đổi chỉ để chunk dài hơn; phải benchmark và reindex. Giữ baseline đơn giản có thể giải thích, xem lại size/overlap bằng dev retrieval benchmark thay vì suy từ số chunk.
+
+**Bằng chứng:** round-trip source spans trên 10 tài liệu, E5 count gồm prefix/special thực, block tiếng Việt dài kiểm không mất ký tự/có overlap/không vượt 350 và fail max_chunks. Corpus hiện tại chỉ 14 chunks, max 162 tokens, không lấy corpus nhỏ này làm bằng chứng đã stress 512 tokens. [E5 model card](https://huggingface.co/intfloat/multilingual-e5-small).
+
+### K-047 — Remap gold mà không sửa lại lịch sử human review
+
+**Đã kiểm chứng:** [mapper](eval/parser_mapping.py), [artifact version 1](eval/mappings/reviewed-v1-source-v1-e5-350-v1.json). Author-v1 của Bước 02 là cách tác giả chia fact, không phải blocks parser. Nếu so char offsets của hai namespace trực tiếp, retrieval metric có thể báo đúng/sai giả.
+
+Mapper validate snapshot reviewed/hashes trước, chạy cùng production parser/chunker trên 10 files, tìm quote duy nhất đúng page/paragraph/line, rồi ghi parser spans mới. Missing/ambiguous quote hoặc content chunks không phủ đủ ký tự gold đều fail; không fuzzy-match tùy output và không bỏ câu khó. Context headers lặp không được dùng để “bù” coverage của content bị mất. Artifact giữ author spans, new spans, raw/normalized blocks, chunks, tokenizer/config và parent manifest/questions/review hashes.
+
+Kết quả **35 author blocks → 54 parser blocks, 14 chunks; đủ 45 câu/47 evidence references**, giữ 6 câu unanswerable. Test tái tạo report từ nguồn thật so toàn JSON với artifact. Source snapshot/ledger không thay đổi; pending_step05 trong manifest lịch sử giữ nguyên, artifact mới xác nhận mapping bằng hash. Đọc toàn corpus/gold để kiểm extraction compatibility không phải tune retrieval trên test; chưa có retrieval scores hay quality benchmark. Công thức match 80%/union top-k để tính retrieval metric vẫn cần ở Bước 07/11.
+
+### K-048 — Nghiệm thu Bước 05, lỗi môi trường và quy tắc UI
+
+**Kết quả thật:** full backend **166 passed, 1 warning**; eval **76 passed** ở lệnh riêng; Ruff check/format 75 files và pip check đạt. Warning Starlette TestClient/httpx giữ từ baseline. Không chạy frontend tests/build vì frontend không đổi. Source render PDF kiểm trực quan dấu/câu C1 và BM-09; không coi đây là review chất lượng RAG mới.
+
+Các lỗi đầu lượt gồm shared Temp ACL khác sandbox/host, MAX_PATH và fixture module plugin chỉ chạy riêng được nhưng không được full collection nhận như mong đợi. Dùng basetemp ngắn duy nhất trong workspace; fixture identity dùng chung chuyển vào conftest. Chạy lại full suite sau sửa, không skip cases. Basetemp phải mới vì pytest có thể xóa đường dẫn đã tồn tại; không đổi ACL toàn user hay xóa thư mục ngoài workspace.
+
+**Definition of done:** hoàn thành 7/7 đầu việc Bước 05 ở tầng upload/parser/chunker/mapping. Chưa có worker chuyển queued → ready, publish vector hoặc cập nhật terminal job errors; phần đó của AT-R01–05 nghiệm thu ở Bước 06. Không sửa applied migration/legacy data, không gọi API model hoặc tải thêm weights, không commit/push. Tiến độ `(25,5+12)/102,5×100` → **36,6% / 100%**, không phải AI accuracy.
+
+**Quy tắc người dùng 03/11/2026:** trước khi code/sửa UI phải nhắc, nêu màn hình/file/phạm vi và chờ “Thực hiện đi” cho đợt UI. Đã lưu [AGENTS.md](AGENTS.md)/[CLAUDE.md](CLAUDE.md) trong đợt backend được duyệt; xác nhận backend không tự cho phép UI. Bước 06 hoặc bất kỳ đợt mới nào cũng chờ phạm vi/xác nhận riêng.
+
+### K-049 — Durable queue, lease và fencing không phải exactly-once
+
+**Ngày / loại:** 03/11/2026 — đã code/kiểm chứng Bước 06; [JobQueue](backend/app/services/jobs.py), [worker](backend/app/worker.py), [ADR RAG-05](docs/decisions/0005-durable-ingestion-worker.md).
+
+PostgreSQL lưu job bền qua restart; worker riêng claim FOR UPDATE SKIP LOCKED trong transaction ngắn. Khóa document trước job ở mọi đường ghi để cùng thứ tự với publish/delete tương lai; không giữ DB transaction/lock khi parse hoặc inference. Heartbeat thread dùng session riêng, default 15 s gia hạn lease 60 s. DB clock quyết định hạn lease, không dựa wall clock client để cấp quyền publish.
+
+**Generation/fencing:** lease token xác định chủ job hiện tại; generation mới cho mỗi attempt cô lập chunks/points. UUIDv5(generation, block/chunk identity) tạo ID ổn định trong attempt để upsert lặp không nhân bản, nhưng attempt mới không ghi đè attempt cũ. Check cả token, generation, lease expiry, document status/lifecycle và revision khi ghi stage/persist/publish/fail. Worker cũ còn chạy sau mất lease không được cập nhật hoặc fail thay worker mới. Source spans chuyển parser-local IDs sang SQL block UUID, giữ parser_block_id/context IDs để mapping canonical sau này.
+
+**Vì sao chọn:** BackgroundTasks gắn web process không giải quyết durable restart; Celery/Redis/RabbitMQ thêm hạ tầng chưa cần với một CPU worker/corpus nhỏ. SKIP LOCKED tránh đợi cùng hàng queue, không phải bảo đảm exactly-once. Chấp nhận retry và orphan staging, quản bằng generation/manifest/reconciliation. Xem lại transport khi có số đo queue contention hoặc nhiều workers; không bỏ fencing khi đổi queue.
+
+**Bằng chứng:** hai claim không sở hữu cùng job; document đang bị khóa được bỏ qua; heartbeat vẫn gia hạn khi inference chờ lâu hơn lease gốc và session khác vẫn khóa document NOWAIT được. Kill tiến trình thật sau batch Qdrant đầu rồi restart tạo generation mới, active generation đủ points, old token touch/persist/publish/fail đều bị từ chối. Tests dùng vector giả có nhãn, DB/Qdrant thật; không gọi đây là AI quality. [PostgreSQL locking](https://www.postgresql.org/docs/16/sql-select.html).
+
+### K-050 — Model process, hard timeout và fingerprint đủ để tái tạo
+
+**Đã chọn/kiểm chứng:** giữ E5-small CPU FP32/eager, 384 chiều, masked mean/L2, threads 2/batch 4/concurrency 1. [LocalEmbedder](backend/app/services/embeddings.py) giữ một child process nạp model, tái dùng nhiều tài liệu. Không chuyển sang GPU vì máy không có NVIDIA, không tải challenger hoặc đổi paid API trong ngân sách 0 USD.
+
+Thread timeout chỉ ngừng chờ, không dừng Torch/native work. Child process có startup/batch timeout 120 s; hết hạn terminate/join, process sau nạp lại khi cần. Persistent child tiết kiệm cold load so với spawn model cho mỗi file; đánh đổi IPC, lifecycle và memory management phức tạp hơn in-process inference. Heartbeat ở parent nên model chậm không tự làm job hết lease. Parent kiểm tra lại lease trước upsert/publish, không dùng vector trả muộn của attempt mất quyền.
+
+**Fingerprint:** ID/revision và 6 file hashes cố định weights/tokenizer thực; lưu dimension/device/dtype/pooling/normalization/prefix/max input/runtime versions. Index version thêm parser/chunker/config. Chỉ tên model không phân biệt revision hoặc preprocessing; chỉ dimension không phân biệt hai vector spaces khác nhau. Kiểm tra shape/count/finiteness/norm, từ chối NaN/zero/boolean/sai chiều trước Qdrant. Không cắt/pad vector hay silently truncate text. Thiếu cache/runtime → startup lỗi local-only, không download/fallback.
+
+Core [e5_runtime.py](backend/app/services/e5_runtime.py) chuyển từ eval sang backend để worker và smoke dùng cùng implementation; eval shim giữ import compatibility. Source snapshots cũ giữ nguyên, smoke mới capture cả shared runtime. requirements-worker-cpu.lock dành Windows CPython 3.12; không đem URL wheel Windows vào Linux image. API runtime không phải load Torch ở startup. ONNX/OpenVINO/quantization hoặc BGE chỉ xét sau dev retrieval/resource benchmark, đổi runtime cũng cần fingerprint/reindex.
+
+**Kiểm chứng:** model thật chạy 1+10 documents; unit tests kiểm startup timeout và batch timeout sau khi child đã báo ready, đều terminate child; invalid vectors không vào index. Không có stress/OOM benchmark, không suy ra mọi file lớn đều dưới 120 s. [E5 model card](https://huggingface.co/intfloat/multilingual-e5-small).
+
+### K-051 — Atomic publish qua hai hệ thống bằng manifest và SQL authority
+
+**Bối cảnh:** Qdrant đã ghi một phần hoặc đủ vectors không có nghĩa document được phép hỏi đáp. PostgreSQL và Qdrant không chung transaction.
+
+Ghi blocks/chunks staging và freeze manifest expected point IDs/count/generation/index/collection/SHA-256 trước embedding. Upsert wait=true từng batch bằng [REST adapter](backend/app/services/vectors.py), scroll toàn generation để so đúng IDs/count/payload; không chỉ một hit hoặc count trùng. Payload chỉ chứa IDs/index/provenance, text nằm SQL. Collection 384/Cosine phải có embedding_hash metadata khớp; cùng dimension nhưng sai model fingerprint vẫn bị từ chối.
+
+Publish transaction khóa document rồi job, xác minh lease/lifecycle/manifest không đổi, SQL chunk point set và revision metadata. Cùng commit revision ready + document active generation/ready + job completed. Sau upsert mà DB rollback: vẫn staging, retry generation mới. Commit acknowledgement mất: read-back completed + active generation trước khi đánh dấu error, tránh phá trạng thái thành công. DB chưa xác minh được thì chờ lease recovery.
+
+**Phương án khác:** publish từng batch làm query thấy corpus thiếu; active flag chỉ trong Qdrant làm lifecycle SQL/delete khó đồng bộ; distributed transaction vượt API/storage hiện có. Chọn atomic SQL publication, consumer Bước 07 phải filter/revalidate SQL, không tin chỉ Qdrant payload. HTTPX trực tiếp phù hợp vài REST operations, có sẵn trong venv; không thêm SDK retry ẩn. Timeout network 10 s là I/O timeout, không phải wall deadline của toàn scroll nhiều trang.
+
+**Bằng chứng:** mất vectors hoặc tamper SQL manifest đều không ready; rollback publish sau Qdrant thành công để lại staging; retry generation mới hoàn tất; mất ack sau commit vẫn completed. Source chunks staging chưa active; actual search exclusion cần endpoint/filter tests Bước 07, không tự tuyên bố đã có retrieval. [Qdrant upsert](https://api.qdrant.tech/api-reference/points/upsert-points), [scroll](https://api.qdrant.tech/api-reference/points/scroll-points), [metadata](https://api.qdrant.tech/api-reference/collections/create-collection).
+
+### K-052 — Retry hữu hạn, manual retry và orphan reconciliation
+
+**Retry:** tối đa 3 attempts/job, base 5 s/cap 60 s exponential với jitter [delay/2,delay]. Transient timeout/connection/DB/vector failures mới tự retry; document giữ processing, job retry_wait. Parse/encoding/encrypted/needs_ocr, config/dimension/manifest sai là permanent. Không biến lỗi hạ tầng thành no evidence. Hết lease → recover; hết attempts → failed. Shutdown dừng nhận việc, dừng attempt giữa stages/batches; hard kill chờ lease, không mất job vĩnh viễn.
+
+[Manual retry](backend/app/services/retry.py) là admin write API có workspace scope, chỉ failed/retryable=true tạo job mới cùng revision. Active job đã có thì trả cùng ID. Document lock và partial unique index làm idempotency dưới concurrency, không reset history attempts. Không cho retry needs_ocr vô hạn vì chưa có OCR. Resource API trả progress/timings an toàn và latest_job_id; timestamps trùng trong transaction test từng làm trả nhầm job cũ. Đã dùng bulk row_number ưu tiên active rồi created_at/id, tránh N+1 và tránh DISTINCT ON API deprecated của SQLAlchemy 2.1. Test API kiểm lại đúng ID, member 403, foreign admin 404, permanent error 409.
+
+**Orphans:** process crash có thể để file không revision hoặc staging vectors/blocks không active. Sweeper 60 s, grace mặc định 1 giờ và ít nhất lease + embedding timeout + vector timeout để old in-flight work dừng. Chỉ dọn generations có worker provenance, không active/cited/live; vector I/O ngoài DB lock, SQL recheck trước delete. Late stale upsert được vòng sau dọn tiếp. Chưa là delete/history cleanup Bước 09; không xóa active source để dọn cache. File sweeper chỉ unlink canonical UUID key đủ cũ/unreferenced/trong root/không symlink; fresh/referenced/unrecognized files giữ lại, không recursive delete.
+
+**Đánh đổi:** cleanup tức thì dễ đụng worker đang chạy, grace dài giữ rác lâu hơn nhưng an toàn với P0. Revision tombstones vẫn giữ metadata/storage key để audit/manual retry; không remove source file của failed document vì vẫn cần retry. Khi có retention/reindex/multi-node phải version chính sách, không tự mở rộng sweeper thành delete API. Tests xác nhận stale gen cũ/late replay bị dọn, active gen/reference file và file fresh không bị xóa; delete lifecycle chặn stale publish/cancel expired job.
+
+### K-053 — Đo ingestion thật, cold/warm và cấu hình máy
+
+**Bằng chứng:** [report](docs/worker-index-step06.md), [run manifest](eval/reports/ingestion_s6_20261103T093516Z_896b9799/manifest.json), [per-document](eval/reports/ingestion_s6_20261103T093516Z_896b9799/per_document.jsonl), [source hashes](eval/reports/ingestion_s6_20261103T093516Z_896b9799/source_sha256.json). Auth/upload/get document/get job qua TestClient, worker thật/E5 thật/PostgreSQL test và Qdrant thật; không gọi LLM.
+
+1 document cold: **13,0251 s / 1 chunk**, trong đó model load **10,1699 s**. 10 documents warm tuần tự: **4,5647 s / 14 chunks**. Vì cold load chiếm đa số, so 13 s và 4,6 s mà bỏ startup sẽ hiểu sai tốc độ scaling. Chưa sweep batch size; giữ batch 4/threads 2/concurrency 1 vì đã chạy được trên máy, không gọi là cấu hình tối ưu. CPU model thật không chứng minh retrieval relevance; quality cần Bước 07/11.
+
+Trước chạy có khoảng **3,41 GiB RAM available / C 7,78 GiB free / D 79,03 GiB free**. Sampled peak tổng RSS parent+children **1.181.339.648 bytes (~1,10 GiB)** ở sampler 20 ms, gồm tool/TestClient/model process; có thể đếm chung DLL/mapped pages, không phải peak RAM toàn máy hoặc model-only footprint. Không thêm Docker Linux worker image/Torch download trong máy ít disk; worker host Windows dùng cache D và venv đã có. Compose db/qdrant vẫn chạy riêng. Load/stress/concurrency cao chưa đo.
+
+Thêm đủ 8 fixtures: scan/blank/encrypted/malformed-PDF terminal đúng, mixed/injection ready, spoofed PDF và non-ZIP DOCX 415 trước job; tổng **19 upload attempts**. Một fixture parser trực tiếp có thể parse_failed, upload boundary từ chối sớm hơn là đúng theo lớp validation. Report passed/cleanup_completed=true; xóa đúng smoke collection/workspaces/users/tokens/files/SQL rows, không sửa reviewed snapshot hay dev data. LLM calls=0/API model spend=0 USD; không tính điện/local compute thành phí API.
+
+### K-054 — Definition of done Bước 06 và bàn giao
+
+**Kết quả thật:** full backend **196 passed, 1 warning**, eval suite riêng **76 passed**; Ruff check/format **85 files** và pip check đạt. Warning Starlette TestClient/httpx giữ từ baseline. Không chạy frontend build vì UI không sửa. Tests reliability dùng embeddings fake có nhãn tách khỏi real local-model smoke; không cộng số đó thành RAG accuracy.
+
+Lượt full đầu bắt lỗi latest_job_id khi timestamp trùng; sửa thứ tự ưu tiên active và window function rồi chạy lại full. Test SKIP LOCKED cần đủ thời gian để libpq tạo kết nối mới localhost/IPv6 trên Windows; timeout test tăng từ 3 lên 15 s, vẫn chứng minh trả về khi document lock chưa được thả, không biến lock-wait thành pass. Không skip cases hoặc sửa DB guard. Các reports lịch sử giữ nguyên; không gọi lại model chỉ để xóa failure.
+
+Đủ 6/6 đầu việc worker/lease/generation/embedding/Qdrant/publish/recovery và đo 1+10 của Bước 06. Giữ trọng số 10/tổng102,5, `(37,5+10)/102,5×100 =46,341…` → **46,3% / 100%**. Search/source endpoints/SQL retrieval revalidation, benchmark Hit/Recall/MRR, answering/citation/delete còn ở bước sau. Nền worker AT-R06–08 đã được fault-injection/crash kiểm chứng, chưa nói end-to-end retrieval/QA đã nghiệm thu.
+
+Worker không tự migrate; DB head/schema Bước 04 giữ nguyên. CLI và locks/hướng dẫn tại [report](docs/worker-index-step06.md). Không sửa UI/gọi LLM/paid fallback/tải model mới/commit/push. Bước 07 cần trình bày phạm vi và xác nhận riêng; trước code UI nhắc người dùng như quy tắc AGENTS/CLAUDE.
+
+**Probe bàn giao:** CLI --once exit 0; dev/test cùng head 20261103_rag04, đều 0 documents/revisions/blocks/chunks, dev giữ 2 users/test 0 users. Qdrant chỉ còn collection mặc định 0 points; smoke/test datasets đã dọn, report giữ kết quả và source snapshots để không cần để dữ liệu synthetic trong dev. Reviewed manifest/mapping hashes không đổi; scan 162 source/docs/eval/config files không có secrets thực .env; local links/whitespace đạt.
+
+### K-055 — Hai lớp lọc retrieval và transaction boundary
+
+**Ngày / loại:** 03/11/2026 — đã triển khai/kiểm chứng Bước 07; [service](backend/app/services/retrieval.py), [schema/router](backend/app/api/search.py), [ADR RAG-02](docs/decisions/0002-dense-retrieval-baseline.md).
+
+Client chỉ gửi query/top_k/mode/document IDs, backend lấy workspace từ bearer identity. Resolve tất cả IDs trước status: foreign/missing phải 404 toàn request, không trả một phần hoặc để own nonready che việc có ID ngoài quyền. Own nonready 409, deleting/deleted 410; không có explicit filters thì tự bỏ nonready, không có ready sources trả empty không nạp model. Strict schema chặn extra fields, duplicate/invalid UUIDs, top-k sai kiểu/bounds; không cho client chọn provider/model/workspace/collection.
+
+**Thiết kế:** SQL lấy active revision/generation/index tương thích rồi kết thúc transaction read/auth, model query và Qdrant chạy ngoài transaction. Filter Qdrant workspace + đúng generation set + index; SQL đọc lại candidates kiểm tra ready/active/lifecycle/index và metadata IDs. Text/filename/location chỉ từ SQL, payload text không được tin. Race nguồn chuyển deleting sau query bị SQL loại, trả ít hits và trace chứ không backfill nguồn chưa kiểm tra. Point/chunk dedup và sort score giảm dần/ID cho kết quả ổn định trong candidate pool.
+
+**Vì sao hai lớp:** lọc chỉ sau retrieval để vector stale/foreign chiếm hết candidate budget; chỉ tin payload không thấy lifecycle SQL mới nhất. Hai lớp tốn một lượt đọc lại nhưng giữ scope/source-of-truth. Không giữ DB lock xuyên inference để tránh làm nghẽn upload/delete. Service hiện commit read boundary; query-run orchestrator Bước 08 phải commit setup trước gọi service, không dùng retrieval để vô tình commit business writes chưa sẵn sàng.
+
+Candidate20/top5 (API cho 1–10), Cosine dense, cutoff None. Technical error model/vector/index mismatch → 503 retrieval_unavailable, DB handler giữ 503; không biến lỗi thành no-evidence. Không có ready source → reason riêng; không dùng cosine làm xác suất trả lời đúng. P1 hybrid/reranker hoãn để baseline kiểm tra độc lập. Tests thực SQL/Qdrant cô lập từng workspace/generation/index filter, forged/stale candidates, ties/duplicates và delete race. [Qdrant query/filtering](https://api.qdrant.tech/api-reference/search/query-points).
+
+### K-056 — Query encoder đúng vai trò và lazy model lifecycle
+
+E5 học truy vấn/tài liệu qua prefixes khác nhau; passage: đúng cho indexing nhưng query: mới là contract truy vấn. IPC [LocalEmbedder](backend/app/services/embeddings.py) thêm kind; default passage giữ worker cũ, encode_query gửi query cùng weights/pooling/L2. Tokenizer đếm cả query prefix/special tokens trước gọi child; >512 tokens trả 422, không truncate. Fingerprint đã khai báo cả hai prefixes từ Bước 06 nên index version passage không đổi.
+
+API tạo runtime lazy khi có eligible sources, dùng model child persistent và nonblocking lock để không trộn RPC giữa threads. Child deadlines giữ Bước 06; bận trả 429 thay unbounded queue, lifespan đóng process/HTTP client. Loader chỉ đọc cache local; không có key LLM vẫn search được. API host cần CPU dependencies như worker; không giả rằng Docker image tối thiểu đã có Torch/Linux worker được thử.
+
+**Phương án khác:** dùng cùng passage prefix cho cả hai dễ viết nhưng sai preprocessing được model card hướng dẫn; tạo model mỗi request làm cold load lặp lại; load ở startup khiến health/auth phải chịu model dependency dù chưa có tài liệu. Giữ một child phù hợp CPU/RAM hiện tại, xem lại pool/batching khi có tải concurrent thật. Reader check_collection chỉ đọc, không tự tạo collection khi index mất; worker ensure_collection thêm keyword payload indices cho workspace/document/revision/generation/index_version. Test query counter dùng tokenizer thật và real dev queries xác nhận query path; không gọi LLM.
+
+### K-057 — Mở nguồn an toàn khác với rendering UI
+
+[Source service](backend/app/services/sources.py) kiểm workspace/status trước file IO, chỉ active revision/generation; chunk khác document 404, revision/generation cũ 410 thay vì tự remap sang nguồn hiện tại. Chunk API trả text/location/spans/document_version đủ để kiểm citation sau này.
+
+PDF trả original bytes trong upload cap, size/hash đúng revision; TXT/MD text/plain/nosniff; DOCX dùng extracted body blocks text/plain vì không có Word pagination chuẩn. Header filename sanitize + UTF-8 encode, no-store/CSP sandbox; không render Markdown/HTML/script. File path do SQL/server key quyết định, resolve phải trong root; checksum/file mất hoặc lifecycle đổi lúc IO → 410. Source normalized spans không dùng để cắt raw file bytes.
+
+**Đánh đổi:** full bounded response đơn giản, không advertise Range/giả 206; mọi Range request vẫn auth, authorized nhận full 200. FileResponse/streaming tiết kiệm RAM hơn với file lớn nhưng cần giữ semantics auth/delete/file consistency trong lúc stream; P0 cap20 MiB phù hợp bounded response. Không tuyên bố thu hồi bytes đã gửi trước delete. Inline preview UI/HTML sanitizer còn bước UI, hiện chỉ API; không code UI trong đợt này.
+
+Tests kiểm actual PDF bytes, DOCX text, raw Markdown HTML là literal text, member/foreign/unauth, Range auth, same-size checksum tamper, storage escape và inactive chunk. Đây là foundation mở citation, chưa có answer/citation claims hoặc delete/history workflow.
+
+### K-058 — Evidence groups, alternatives và union spans để metric không tăng giả
+
+[Loader](eval/retrieval_gold.py) nối external document ref/corpus version/hash/parser block sang SQL active revision/generation/block UUID. Semantic corpus version 2 không phải DB revision counter của lần upload đầu (1); phải map qua checksum/UUID, không so hai counter. So đủ raw+normalized/location/chunk text/hash/spans; drift phải fail, không bỏ câu khỏi denominator. Dev run có injected mapping drift và xác minh bị từ chối.
+
+[Matcher](eval/span_metrics.py): các quote thay thế trong cùng group là OR; các parser spans cần để tái tạo một quote là AND; các groups cần để trả lời đầy đủ cũng là AND. Union clipped intervals trên cùng block UUID, >=80% từng required span thì complete; overlap không đếm đôi. Context heading/header lặp không tự tạo thêm gold support. MRR first-relevant rank là rank sớm nhất hoàn tất group qua union top-k, không phải rank xuất hiện một phần chữ. Không fuzzy-match sau khi nhìn kết quả.
+
+**Vì sao không dùng chunk UUID làm gold:** thay chunk size/generation thì ID đổi trong khi facts không đổi; lexical substring đơn giản cũng không phân biệt revision/location. Canonical spans + explicit remap giữ thí nghiệm có thể so. Rule80% là protocol dự án, không phải chân lý phổ quát; đổi rule phải version config trước đo lại.
+
+Macro successful-answerable Hit/Recall/MRR và multi-group All-evidence có count; strict all-answerable cho lỗi kỹ thuật điểm0 thay vì bỏ denominator. Failed cached hits không được tính; zero denominator null. Unanswerable không có gold groups nên retrieval metrics null, không gán retrieval hits thành abstention đúng/sai của LLM. Tests alternatives/required spans/union/overlap/null/error denominator/invalid interval, và test tái tính toàn metrics + verify source snapshots của run mà không inference lại.
+
+### K-059 — Dev baseline E5: kết quả tốt ở top5 chưa phải accuracy 100%
+
+**Số đo thật:** [run](eval/reports/retrieval_dev_20261103T101104Z_968416c5/manifest.json), [per-query](eval/reports/retrieval_dev_20261103T101104Z_968416c5/per_question.jsonl), [report](docs/search-retrieval-step07.md). Ingest đủ 10 docs/54 blocks/14 chunks, chỉ 15 dev queries (13 answerable/2 unanswerable), 0 test queries/0 LLM calls. Config được lưu trước query đầu, actual production search/source API qua member token; E5/SQL/Qdrant thật, model warm từ ingestion.
+
+Hit/Recall@1 **11/13 =0,8462**; @3/@5/@10 **1,0**; MRR@3/5/10 **0,9231**. Multi-group All-evidence **1/1**, technical errors **0/15**. Warm HTTP latency p50 **82,711 ms**, p95 nearest-rank/max **131,272 ms** (n15, không cold load/SLA). Tổng sampled parent+child RSS **1.167.622.144 bytes (~1,09 GiB)**, không phải riêng model/toàn máy. Coarse corpus chỉ14chunks và một câu multi-group làm bài dễ; không suy ra model answer accuracy=100% hoặc HNSW/corpus lớn cũng như vậy.
+
+**Phân loại misses:** q010 FAQ top1 0,8634 cạnh tranh security đúng top2 0,8619 — dense topic ranking. q012 heading-only FAQ top1 0,8428, body có ticket top2 0,8337 — standalone heading cạnh tranh fact, không phải parser/chunker mất chữ. Source/gold mapping và active filter đã verify, không có LLM context budget. Treatment heading merge/drop cần index version mới và dev comparison riêng; giữ baseline vì top5 đã đủ support.
+
+**Cutoff:** q014/q015 unknown top score **0,84529305/0,8375946**, còn minimum answerable top score **0,84276205**. Không có một cutoff giữ hết answerable và loại hết unknown ngay trong dev này; cosine là tương đồng, không biết câu trả lời có đủ support hay không. Giữ None, không tune cutoff trên 2 negative rồi tuyên bố abstention tốt. Grounding/insufficient_evidence phải làm ở answering Bước 08.
+
+**Lựa chọn:** [dense config v1](eval/configs/dense.json) pin candidate20/production top5/eval top10, 350/50 và index9851b494…c4a4. E5 là baseline vận hành được, chưa model winner. BGE-M3 chưa cache, available RAM trước run khoảng2,77 GiB (probe sau3,11 GiB), margin chưa validate nên hoãn mục challenger có điều kiện; không có BGE số đo. Hybrid/reranker hoãn để tránh đổi nhiều biến trước baseline. Model/normalization/parser/chunker đổi phải version/reindex; test set giữ kín cho gate sau.
+
+### K-060 — Bàn giao Bước 07 và tiến độ
+
+Core search/source/matching/dev runner và freeze đủ 6 mục bắt buộc; mục 6 so BGE là có điều kiện và hoãn có lý do K-059. [Báo cáo](docs/search-retrieval-step07.md) tách run model thật khỏi fake-embedding tests. Worker reliability fixture chuyển sang tests/worker_support.py và export từ conftest để search/worker dùng chung, không plugin test module theo thứ tự collection hoặc nhân đôi cleanup. Không bỏ tests cũ.
+
+Reports immutable giữ source snapshots/hash tại phiên bản đã chạy. Metric guards sau run được bổ sung invalid interval/failed cached hit để strict score không tăng giả; valid completed run tái tính ra cùng metrics, không chạy lại model để thay số. Reviewed snapshot/parser mapping cũ không sửa, cleanup đúng test collection/workspace/users/tokens/files. Git/source scan/probe cuối và full test counts ghi khi hoàn tất đợt.
+
+**Kết quả kiểm chứng:** full backend **222 passed/1 warning**, eval suite riêng **86 passed**; Ruff check/format **96 files** và pip check đạt. Warning Starlette TestClient/httpx là baseline, không tắt hoặc skip. Full suite giữ worker kill/recovery, query budget count dùng tokenizer thật và các guards/API tests cũ. Không sửa schema/applied migrations hoặc cài thêm model/dependencies. Không có frontend build vì UI không đổi.
+
+**Probe bàn giao:** worker --once exit0 và thêm đủ5 keyword payload indices; dev/test cùng head20261103_rag04, đều0 documents/revisions/blocks/chunks (dev2users/test0users). Qdrant còn default collection0points, mọi test/dev-eval collection đã dọn. Reviewed manifest/parser mapping SHA-256 bất biến; scan230 source/docs/eval/config files không chứa secrets thực .env, local links/whitespace đạt. Không để server/model process chạy nền. Tiến độ đã xác minh **56,1% / 100%**; Bước 08 chưa bắt đầu.
+
+Trọng số giữ10/tổng102,5, `(47,5+10)/102,5×100=56,097…` → **56,1% / 100%** khi kiểm chứng đủ. Chưa answering/citation/abstention/delete/UI, không coi toàn M1 đã pass. Không paid fallback/API LLM/download BGE/commit/push. Bước 08 cần phạm vi/xác nhận riêng; trước code UI vẫn nhắc/chờ theo AGENTS/CLAUDE.
+
+### K-061 — Chốt Git: kiểm tra snapshot staged trước commit/push
+
+**Ngày / loại:** 03/11/2026 — người dùng đã xem thông điệp commit và xác nhận riêng đợt Git sau Bước 07. Gộp dataset đã duyệt cùng Bước 03–07 thành một mốc triển khai; giữ các reports/source snapshots lịch sử và không sửa commit hash trong manifests cũ thành hash mới.
+
+Git index là snapshot sẽ được commit, có thể khác working tree, nên kiểm tra secrets trên bytes staged và đối chiếu hashes dataset/report sau khi add. Chỉ kiểm tra file .env đang ignored chưa đủ chứng minh index không chứa secrets. .env.example/config placeholders được version; .env thật, model cache, runtime storage, venv và artifacts tạm bị bỏ qua. Không chạy lại model để chuẩn bị commit; validation 222 backend/86 eval là kết quả đã đo ở Bước 07.
+
+Push thông thường lên origin/main giữ lịch sử; không force-push hoặc amend các commits đã công bố. Sau push đối chiếu local HEAD với remote branch và kiểm tra working tree. Nếu remote đi trước, phải fetch/đánh giá divergence trước tích hợp, không dùng force để vượt non-fast-forward. Git checkpoint không hoàn thành thêm đầu việc sản phẩm, nên tiến độ giữ **56,1% / 100%**. Bước 08 vẫn cần phạm vi/xác nhận riêng; kết quả SHA/push thực được báo sau khi Git xác nhận.
+
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai
 
-- Kết quả model smoke tests với model ID/revision, config, máy thực và peak RAM.
-- Hai người gán/kiểm tra chéo đủ 45 câu, snapshot reviewed có ledger được khóa và parser span mapping đúng.
-- Retrieval report đầu tiên với gold mapping và phân loại lỗi.
-- Kết quả code/test của auth, parser, worker, context/citation và delete lifecycle.
+- Retrieval/answer quality và human scoring trên pipeline thật; E5/Gemini compatibility smoke đã có K-030/K-034–036, chưa kiểm chứng thinking overrides hoặc chi phí theo hóa đơn.
+- Parser span mapping K-047, SQL generation mapping và retrieval span loader/matcher K-058 đã có; cần nối context/cited spans và held-out eval Bước 08/11.
+- Dev retrieval report đầu tiên K-059 đã có; cần answer/oracle/E2E và test holdout theo protocol, không tune test.
+- Context/citation và delete lifecycle tests; search/source action matrix K-055–060, worker K-049–054, parser/upload K-043–048 và auth/schema K-037–042 đã có; answering/delete chưa triển khai.
 - Các lần thay đổi quyết định sau benchmark, kể cả giữ baseline vì treatment không cải thiện.
 - Kiến thức phát sinh từ dependency/runtime, migrations, frontend, deployment và các bug thực tế.
 

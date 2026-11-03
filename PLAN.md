@@ -1,12 +1,12 @@
 # PLAN — SME Knowledge Copilot
 
-> **Phiên bản:** 1.4 — Bước 02 có artifacts kỹ thuật, chờ human review, 02/11/2026 (lập kế hoạch 01/11/2026)<br>
+> **Phiên bản:** 1.10 — hoàn thành search/dev retrieval Bước 07, 03/11/2026 (lập kế hoạch 01/11/2026)<br>
 > **Nguồn yêu cầu:** [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md), v2.1  
 > **Mục tiêu:** hoàn thành project RAG thuần có demo, test và benchmark tái lập; hướng tới M1 ngày 15/11/2026.  
 > **Nhân sự:** 2 người. Kế hoạch theo thứ tự phụ thuộc; thời lượng là ước lượng, không phải cam kết.  
-> **Trạng thái:** hoàn thành Bước 00/01; Bước 02 đạt 6/7 đầu việc, chờ hai người kiểm tra nhãn; Bước 03–12 chưa thực hiện. Chưa tải model, gọi inference hoặc chạy benchmark chất lượng.<br>
+> **Trạng thái:** hoàn thành Bước 00–07 theo phạm vi; BGE có điều kiện hoãn. Bước 08–12 chưa thực hiện. Ingestion/search/source và dev retrieval benchmark đã có; chưa answering/held-out benchmark.<br>
 
-**Tiến độ hiện tại: 11,2% / 100%.** [Bước 02](docs/dataset-step02.md) đã có 10 tài liệu giả lập, 45 câu nháp (15 dev/30 test, 6 unanswerable), 8 fixtures và 37 eval tests đạt; **0/45 câu được hai người duyệt**, chưa có human gold/benchmark. [Bước 01](docs/environment-step01.md) hoàn thành baseline 64 tests và môi trường. [Audit Bước 00](docs/rag-transition-audit.md) giữ lịch sử; [KNOWLEDGE.md](KNOWLEDGE.md) ghi lý do/kết quả. Ngân sách **0 USD/free tier**. Không tự bắt đầu Bước 03 khi chưa có xác nhận đợt riêng.
+**Tiến độ hiện tại: 56,1% / 100%.** [Bước 07](docs/search-retrieval-step07.md) có search/source APIs, active-generation SQL revalidation, canonical span matcher và dev benchmark thật: 13 answerable/2 unknown, Hit/Recall@5=1, MRR@5≈0,923, 0/15 technical errors. Đây là corpus nhỏ, không phải answering accuracy/held-out result. **222 backend + 86 eval tests đạt** ở hai suites riêng; Ruff/pip check đạt. Giữ E5350/50/candidate20/top5/cutoff None, BGE hoãn. Không LLM calls/UI/commit/push. [KNOWLEDGE K-055–060](KNOWLEDGE.md); Bước 08 cần xác nhận riêng.
 
 ### Quy ước báo tiến độ project
 
@@ -16,11 +16,18 @@ Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/
 |---|---:|---:|---:|
 | 00 | 1,5 | 100% — audit/hướng dẫn | 1,5 |
 | 01 | 4 | 100% — môi trường/baseline, quota thật là gate trước smoke | 4 |
-| 02 | 7 | 6/7 đầu việc; mục 5 chờ gán/kiểm tra chéo bởi hai người | 6 |
-| 03–12 | 90 | 0% | 0 |
-| Tổng | 102,5 | `(1,5 + 4 + 6) / 102,5` | **11,2% / 100%** |
+| 02 | 7 | 7/7 — hai người duyệt và snapshot khóa ledger | 7 |
+| 03 | 5 | Đạt 5/5 mục bắt buộc áp dụng; mục 5 BGE tùy điều kiện hoãn | 5 |
+| 04 | 8 | 6/6 — schema/migration/identity/scopes/envelope foundation | 8 |
+| 05 | 12 | 7/7 — upload/parser/chunker/source mapping; worker ready thuộc 06 | 12 |
+| 06 | 10 | 6/6 — durable worker/local E5/index/publish/recovery/measurement | 10 |
+| 07 | 10 | 6/6 mục bắt buộc; mục 6 challenger có điều kiện hoãn | 10 |
+| 08–12 | 45 | 0% | 0 |
+| Tổng | 102,5 | `(1,5 + 4 + 7 + 5 + 8 + 12 + 10 + 10) / 102,5` | **56,1% / 100%** |
 
-Đầu việc đang làm/chưa xác minh không tính hoàn thành; đóng gate còn cần các điều kiện của từng bước. Cách chia đều đầu việc trong một bước là ước lượng quản lý, không phải giờ thực tế đã tiêu hay độ chính xác AI. Nếu chỉ giải thích/đọc, giữ nguyên %; chỉ ghi file tiến độ trong đợt thay đổi đã xác nhận. Bước 02 đủ 7/7 sẽ đưa tổng lên khoảng 12,2%, nhưng hiện chưa đạt.
+Đầu việc đang làm/chưa xác minh không tính hoàn thành; đóng gate còn cần các điều kiện của từng bước. Cách chia đều đầu việc trong một bước là ước lượng quản lý, không phải giờ thực tế đã tiêu hay độ chính xác AI. Nếu chỉ giải thích/đọc, giữ nguyên %; chỉ ghi file tiến độ trong đợt thay đổi đã xác nhận. Bước 02 đã đạt khoảng 12,2% trước cộng embedding/tokenizer Bước 03.
+
+V1.6 giữ nguyên mọi trọng số. Mục 5 Bước 03 ghi rõ **nếu đủ tài nguyên**, nên không nằm trong gate bắt buộc khi chủ động hoãn challenger; không đánh dấu đã smoke BGE. Gate Bước 03 là có inference thật cho một embedding + một LLM và response validate được. Đạt gate này không có nghĩa mọi output đều đúng: run đầu có lỗi, retest chỉ một case/prompt v2, không phải 5/5 cùng prompt. Human quality/retrieval benchmark còn ở Bước 07/11.
 
 ## 1. Phương án khởi đầu
 
@@ -350,6 +357,18 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 **Đầu ra:** `model_smoke` report dự kiến với pass/fail, timings, peak RAM, số calls/cost và cấu hình.  
 **Gate:** có đường inference thật cho embedding + LLM, không OOM; ít nhất một schema response được backend validate. Kết quả định tính sẽ đo đầy đủ ở bước 07/11.
 
+**Kết quả đợt được xác nhận 03/11/2026:**
+
+- [x] Chốt Bước 02: 45/45 human-approved, publish `eval/snapshots/reviewed-v1`, strict validator đạt và hash cả review CSV. Các mục chờ human review ở phần kết quả ngày 02/11 phía trên là lịch sử trước đợt này.
+- [x] Mục 1: E5-small revision `614241f622f53c4eeff9890bdc4f31cfecc418b3`, CPU FP32, batch 4/threads 2; 35 passages + 5 dev queries, vector 384 finite/L2 đạt; peak RSS mẫu 723,13 MiB.
+- [x] Mục 2: prefix/heading/special tokens được tính; input 512 tokens encode thật, 513 bị reject trước inference.
+- [x] Mục 3: Gemini 3.5 Flash-Lite gọi thật trên 4 câu dev và 1 conflict ad hoc; run đầu 4/5 qua validator, conflict retest riêng 1/1 đạt. Tổng 6 requests đã được duyệt, không retry/fallback.
+- [x] Mục 4: native endpoint nhận JSON schema/output config, Pydantic/status/citation IDs validate outputs thật; usage/latency lưu trong run. Thinking/temperature giữ provider defaults, không tuyên bố đã kiểm chứng override/tắt thinking. Stub errors và safe diagnostics có tests.
+- [ ] Mục 5 (tùy điều kiện, hoãn): chưa smoke BGE; chọn baseline nhẹ theo tài nguyên, challenger chuyển sang đợt so sánh Bước 07. Không chặn gate model smoke bắt buộc.
+- [x] Mục 6: pin E5 revision/dtype/prefix; Gemini model/version, prompt v1/v2, schema/config/code fingerprints và reports được lưu. Chọn tạm E5 CPU + Gemini hosted, chưa chọn model thắng.
+
+**72 eval tests pass**, Ruff đạt. [Báo cáo Bước 03](docs/model-smoke-step03.md), [hướng dẫn key](docs/gemini-free-tier-setup.md), [config smoke](eval/configs/model_smoke.json). Hai preflight ban đầu 0 calls/0 USD là lịch sử; live calls có cost null khi chưa có chứng từ, không dùng số đó để suy ra phát sinh phí. Project giữ Free tier, không bật billing. Bước 04 chưa được thực hiện.
+
 ### Bước 04 — Schema, migration và identity
 
 1. Tạo migrations mới cho document/revision/source blocks/chunks, jobs, sessions/query runs/messages/citations theo spec mục 9.
@@ -362,6 +381,17 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 **Đầu ra:** schema và seed/auth chạy được trên PostgreSQL thật.  
 **Gate:** migration upgrade hoạt động, constraints có test, member không vượt quyền. Phủ AT-R09 và nền tảng AT-R19/23.
 
+**Kết quả đợt được xác nhận 03/11/2026 — hoàn thành nền Bước 04:**
+
+- [x] Mục 1: revision `20261103_rag04` sau migration legacy bất biến, thêm 10 bảng gồm RAG/auth tokens; public schema 22 tables kể cả alembic_version. Upgrade dev/test đạt, không drop bảng cũ.
+- [x] Mục 2: partial unique/composite FK/checks được kiểm chứng PostgreSQL thật; migration từ legacy có dữ liệu và rollback schema tạm; downgrade từ chối RAG data.
+- [x] Mục 3: giữ email/roles legacy, username backfill theo UUID, legacy rows inactive; knowledge_admin chỉ seed rõ, không auto-promote approver/demo_admin. Jobs có discriminator để giữ legacy processing mà RAG dùng state riêng.
+- [x] Mục 4: Argon2id + random bearer token digest/expiry/revoke; seed admin/member từ secrets .env riêng. Login/me dev probe đạt, repeat seed không trùng/reset/promote.
+- [x] Mục 5: 401/403/404/410, workspace/owner/admin isolation, document/job/session/run read scopes và source-history SQL masking có tests. AdminUser qua HTTP route test riêng; full upload/delete/retry matrix AT-R09 còn chờ endpoints ở bước sau.
+- [x] Mục 6: envelope RAG/request IDs/cache no-store, generic validation/DB/500 errors, settings validation và transaction boundaries. Frontend apiFetch được đồng bộ data/error envelope.
+
+**124 backend tests, 72 eval tests đạt**, Alembic check không schema drift, frontend lint/build, Ruff/pip check đạt. 1 Starlette TestClient/httpx deprecation warning đã ghi. [Report Bước 04](docs/schema-identity-step04.md), [ADR RAG-06](docs/decisions/0006-identity-and-rag-schema.md). Đây là nền AT-R09/19/23, không đánh dấu các acceptance cases end-to-end hoàn tất. Bước 05 chưa thực hiện; cần đợt xác nhận riêng.
+
 ### Bước 05 — Upload, parser và chunker giữ nguồn
 
 1. Upload stream → size/type validation → SHA-256 → storage key → transaction document/revision/job; dọn file orphan khi lỗi.
@@ -373,7 +403,9 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 7. Test upload trùng đồng thời; đổi filename không được vượt dedup.
 
 **Đầu ra:** source blocks/chunks kiểm tra được và parser fixtures.  
-**Gate:** AT-R01–05; không text rỗng, offset giả, path traversal hoặc silent truncation. Nếu nguồn trích sai, sửa parser trước tăng model.
+**Gate:** nền upload/parser/chunker của AT-R01–05; không text rỗng, offset giả, path traversal hoặc silent truncation. Phần `202 → ready`/job terminal của acceptance cases cần worker Bước 06. Nếu nguồn trích sai, sửa parser trước tăng model. Làm rõ phụ thuộc gate, không đổi trọng số hoặc bỏ yêu cầu acceptance end-to-end.
+
+**Trạng thái 03/11/2026 — hoàn thành 7/7 đầu việc Bước 05:** admin multipart streaming/size/MIME/signature/hash, SQL transaction + compensating cleanup, concurrent duplicate một 202/một 409; bốn parser với hard subprocess timeout/resource bounds; chunks E5 local tokenizer với nguồn/heading/header provenance. Mapping mới giữ đủ 45 câu, 35 author blocks/47 references → 54 parser blocks/14 chunks; reviewed snapshot bất biến. **166 backend + 76 eval tests đạt** ở hai suites riêng; Ruff/pip check đạt. Xem [report và giới hạn](docs/parsing-upload-step05.md), [ADR RAG-07](docs/decisions/0007-source-preserving-ingestion.md). Không gọi LLM/tải weights/sửa UI; chưa commit/push. Chờ xác nhận đợt Bước 06.
 
 ### Bước 06 — Worker, embeddings và publish index
 
@@ -387,6 +419,8 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 **Đầu ra:** upload → queued → processing → ready/failed hoạt động bằng worker thật.  
 **Gate:** AT-R06–08; kill/restart và DB publish failure không sinh ready giả; nguồn staging không retrieve được.
 
+**Trạng thái 03/11/2026 — hoàn thành 6/6 Bước 06:** worker standalone host, SKIP LOCKED/short transactions, heartbeat/token/generation fencing, E5 CPU child process deadlines, exact Qdrant/SQL manifests và atomic publication, bounded retry/admin retry, lease recovery/orphan reconciliation. Real smoke **1 cold doc 13,0251 s (model load 10,1699 s), 10 warm docs 4,5647 s/14 chunks**, 8 fixtures đúng; không quality benchmark. **196 backend + 76 eval tests đạt**, Ruff format/check 85 files, pip check đạt. Nền AT-R01–08 ở ingestion/worker đã có; endpoint search/source và SQL revalidation nghiệm thu tiếp Bước 07. [Report](docs/worker-index-step06.md), [ADR RAG-05](docs/decisions/0005-durable-ingestion-worker.md). Không gọi LLM/tải weights/sửa UI, không commit/push; chờ xác nhận đợt Bước 07.
+
 ### Bước 07 — Search-only và chốt embedding baseline
 
 1. Implement `/search`: validate scope/filter → query embedding → active generation filter → vector candidates → SQL revalidation → ranked source chunks.
@@ -399,6 +433,8 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 
 **Đầu ra:** retrieval report đầu tiên, lựa chọn embedding có lý do và tập failure cases.  
 **Gate:** AT-R10, AT-R21 và phần retrieval của AT-R22; search vẫn chạy khi tắt LLM. Không đánh giá model generation bằng một retriever chưa được kiểm tra.
+
+**Trạng thái 03/11/2026 — hoàn thành mục 1–5,7 (6 mục bắt buộc):** search/source có auth, strict filter/mode/top-k, pinned query encoder/index và SQL revalidation; source plain text/PDF có checksum/nosniff. Dev-only real run 15 queries trên 10docs/14chunks, 13 answerable Hit@1=11/13/Recall@5=1/MRR@5≈0,923; multi-group n1, technical errors0/15. Unknown scores overlap nên không bật cutoff; phân tích hai top1 misses, không đổi index hoặc tune test. Freeze [config](eval/configs/dense.json); mục6 BGE hoãn vì chưa cache/RAM margin chưa validate. **222 backend + 86 eval tests đạt**, giữ warning baseline. [Report](docs/search-retrieval-step07.md), [ADR RAG-02](docs/decisions/0002-dense-retrieval-baseline.md). Chưa answering/delete/UI, không LLM/paid calls/model download/commit/push; chờ đợt Bước 08.
 
 ### Bước 08 — RAG answering, citations và session
 

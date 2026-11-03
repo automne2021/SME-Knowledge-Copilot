@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+**Quy tắc UI (03/11/2026):** trước khi code/sửa UI, nhắc người dùng, trình bày màn hình/file và phạm vi, chờ **“Thực hiện đi”** cho đợt UI. Đợt backend không tự bao gồm UI.
+
 ## Xác nhận bắt buộc trước mọi thay đổi — 02/11/2026
 
 Trước mọi thay đổi trong workspace, trình bày phạm vi/file bị ảnh hưởng và chờ người dùng nói **“Thực hiện đi”** rồi mới thực hiện. Quy tắc áp dụng cả code, tài liệu, KNOWLEDGE.md, cấu hình, dependencies, dữ liệu, Git và lệnh có thể ghi file/artifacts. Được chuẩn bị bằng thao tác chỉ đọc. Một xác nhận áp dụng cho đợt công việc đã nêu; mở rộng phạm vi hoặc bắt đầu đợt mới phải có xác nhận mới. Không tự chuyển sang bước tiếp theo trong PLAN. Chi tiết tại [AGENTS.md](AGENTS.md).
@@ -30,7 +32,7 @@ Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 - **P1/M2:** reindex/update revision, hybrid/reranker, filter nâng cao, follow-up retrieval-aware, structured comparison và inspector/eval UI; chỉ làm sau baseline P0 và xác nhận riêng.
 - **Ngoài hướng RAG:** STT/audio/meeting intelligence, agent tool loop, proposal/approval/task. Không đưa workflow Operations cũ trở lại M1/M2 RAG.
 
-**Tiến độ 02/11/2026: 11,2% / 100%.** Bước 00/01 hoàn thành: venv/frontend dependencies, PostgreSQL/Qdrant và 64 baseline tests đạt. [Bước 02](docs/dataset-step02.md) có 10 tài liệu, 45 câu nháp (15 dev/30 test), 8 fixtures và 37 eval tests đạt; **0/45 human-approved**, còn chờ hai người kiểm tra nhãn. Source app vẫn là skeleton: chưa có auth endpoint, document pipeline, worker hay RAG API. Chưa gọi model; Bước 03 cần xác nhận riêng. Các lỗi môi trường Bước 00 giữ trong audit như lịch sử.
+**Tiến độ 03/11/2026: 56,1% / 100%.** Bước 00–07 hoàn thành theo phạm vi; [Bước 07](docs/search-retrieval-step07.md) có search/source APIs, scoped active generation revalidation và dev retrieval E5 thật (13 answerable/2 unknown, Recall@5=1/MRR@5≈0,923/0 errors). **222 backend + 86 eval tests pass**, Ruff/pip check đạt; không answering accuracy/held-out result. Freeze eval/configs/dense.json, cutoff None/BGE hoãn. Bước 08 chưa bắt đầu, cần xác nhận riêng; chưa answering/delete/UI. DB head/reviewed/mapping/reports cũ giữ nguyên, không LLM calls/tải model/UI/commit/push. API/worker host dùng CPU dependencies/cache; Linux AI image chưa build/test; không chạy chung queue DB với tests/eval.
 
 ## Bất biến nghiệp vụ (không được vi phạm)
 
@@ -53,7 +55,7 @@ Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 - Worker riêng poll processing_jobs bằng `FOR UPDATE SKIP LOCKED`, lease/heartbeat/generation/retry; gọi domain services trực tiếp, không giữ lock khi inference. Không dùng BackgroundTasks cho ingestion.
 - PostgreSQL giữ lifecycle/metadata/text/history, Qdrant giữ vector index; local file storage. Không thêm Redis/Celery trong P0. Compose đã có db/qdrant với image digests, persistent volumes, loopback ports và healthchecks; chưa có worker/frontend service.
 - Dense baseline trước hybrid/reranker. PLAN đề xuất E5-small CPU để smoke và BGE-M3 để so sánh; chưa có model chiến thắng hay benchmark thật.
-- Model budget **0 USD/free tier**, không bật paid fallback. Chưa có model weights/API key/quota được smoke-verified; không suy ra config model trong .env.example là pipeline đã triển khai.
+- Model budget **0 USD/free tier**, không bật paid fallback. E5/Gemini smoke thật đã có Bước 03; tokenizer Bước 05 dùng cache local, không gọi LLM. Free-tier/quota là xác nhận thủ công theo thời điểm, không phải billing cap; không suy ra smoke/config là pipeline RAG đã triển khai.
 
 Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi người dùng đã xác nhận. Ghi ADR theo hướng dẫn ở docs/decisions khi triển khai quyết định, và giải thích trong KNOWLEDGE.
 
@@ -64,9 +66,10 @@ Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi 
 - Tên code, field, API bằng tiếng Anh; nội dung UI và prompt bằng tiếng Việt.
 - Timestamps lưu UTC (`timestamptz`); hiển thị theo `Asia/Ho_Chi_Minh`.
 - File upload lưu theo UUID/storage key, không dùng tên file của người dùng làm đường dẫn.
-- Contract đích: JSON success `{data,request_id}`, failure `{error:{code,message,details},request_id}`; binary source dùng X-Request-ID. Runtime/client hiện còn lỗi phẳng, phải đổi đồng bộ khi triển khai, không ghi như đã có.
+- Runtime từ Bước 04 và frontend apiFetch đã đồng bộ JSON success `{data,request_id}`, failure `{error:{code,message,details},request_id}`. Server sinh X-Request-ID, no-store; binary source theo contract vẫn thuộc bước parser/source API sau.
 - Mọi thay đổi schema đi qua migration Alembic; không dùng `create_all()` ngoài test.
 - Config đích theo spec 17: DATABASE_URL, QDRANT_URL, FILE_STORAGE_DIR, embedding fingerprint, LLM/prompt/budget, job limits/auth. Thêm biến phải cập nhật .env.example; không giả định Settings cũ đã đọc các biến mới.
+- AuthToken chỉ lưu digest token, role/is_active đọc lại mỗi request. AdminUser bắt buộc cho write-document/job APIs sẽ triển khai; scope lookup trước status, admin không bypass session owner. Seed CLI idempotent, không reset hash/role khi chạy lại; private credentials ở DEMO_ADMIN_PASSWORD/DEMO_MEMBER_PASSWORD.
 - Nội dung do AI tạo hiển thị trên UI phải có nhãn "AI-generated".
 
 ## Test

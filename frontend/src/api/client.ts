@@ -1,4 +1,4 @@
-/** Lỗi từ backend theo body chuẩn {code, message, request_id} (spec mục 8). */
+/** RAG contract: {data, request_id} / {error: {code, message, details}, request_id}. */
 export class ApiError extends Error {
   constructor(
     public readonly status: number,
@@ -20,10 +20,11 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     const body = await response.json().catch(() => null);
     throw new ApiError(
       response.status,
-      body?.code ?? "http_error",
-      body?.message ?? response.statusText,
+      body?.error?.code ?? "http_error",
+      body?.error?.message ?? response.statusText,
       body?.request_id,
     );
   }
-  return response.json() as Promise<T>;
+  const body = (await response.json()) as { data: T; request_id: string };
+  return body.data;
 }

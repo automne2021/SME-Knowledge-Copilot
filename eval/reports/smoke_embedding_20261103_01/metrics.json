@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "stage": "embedding_compatibility",
+  "model_id": "intfloat/multilingual-e5-small",
+  "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+  "files_sha256": {
+    "config.json": "69137736cab8b8903a07fe8afaafdda25aac55415a12a55d1bffa9f581abf959",
+    "model.safetensors": "1a55775f53449dac10a2bcbc312469fac40b96d53198c407081a831f81c98477",
+    "tokenizer.json": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39",
+    "tokenizer_config.json": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b",
+    "special_tokens_map.json": "d05497f1da52c5e09554c0cd874037a083e1dc1b9cfd48034d1c717f1afc07a7",
+    "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+  },
+  "passages_encoded": 35,
+  "queries_encoded": 5,
+  "shape": [
+    35,
+    384
+  ],
+  "dtype": "torch.float32",
+  "device": "cpu",
+  "finite": true,
+  "l2_norm_min": 0.9999998807907104,
+  "l2_norm_max": 1.0000001192092896,
+  "max_observed_tokens": 44,
+  "boundary_512_encoded": true,
+  "overflow_513_rejected": true,
+  "batch_padding_consistent": true,
+  "cache_or_download_seconds": 12.700548999999228,
+  "cold_model_load_seconds": 5.791571000001568,
+  "first_passage_encode_seconds": 0.04908719999912137,
+  "warm_passages_seconds": 0.4069197000007989,
+  "passages_per_second": 86.01205594108932,
+  "process_rss_before_model_import_bytes": 97161216,
+  "sampled_peak_process_rss_bytes": 758259712,
+  "sampling_interval_seconds": 0.02,
+  "package_versions": {
+    "torch": "2.9.1+cpu",
+    "transformers": "4.57.6",
+    "huggingface-hub": "0.36.2",
+    "psutil": "7.2.2",
+    "numpy": "2.5.4"
+  },
+  "retrieval_quality": "not_measured",
+  "llm_calls": 0,
+  "api_cost_usd": 0
+}

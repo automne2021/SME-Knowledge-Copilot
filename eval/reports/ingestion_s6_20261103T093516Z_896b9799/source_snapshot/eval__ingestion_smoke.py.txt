@@ -1,0 +1,326 @@
+"""Real local E5 + PostgreSQL/Qdrant ingestion: 1 doc, 10 docs, failure fixtures; no LLM."""
+
+from __future__ import annotations
+
+import json
+import os
+import platform
+import subprocess
+import sys
+import threading
+import time
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "backend"))
+
+import psutil  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+from sqlalchemy import create_engine, delete, select, update  # noqa: E402
+from sqlalchemy.orm import sessionmaker  # noqa: E402
+
+from app.core.config import get_settings  # noqa: E402
+from app.core.db import get_db  # noqa: E402
+from app.core.security import hash_password  # noqa: E402
+from app.main import create_app  # noqa: E402
+from app.models import (  # noqa: E402
+    AuthToken,
+    Chunk,
+    Document,
+    DocumentRevision,
+    ProcessingJob,
+    SourceBlock,
+    User,
+    Workspace,
+)
+from app.services.chunking import E5TokenCounter  # noqa: E402
+from app.services.embeddings import LocalEmbedder, frozen_profile  # noqa: E402
+from app.services.jobs import JobQueue  # noqa: E402
+from app.services.vectors import QdrantIndex  # noqa: E402
+from app.worker import IngestionWorker  # noqa: E402
+from eval.parser_mapping import digest  # noqa: E402
+from eval.validate_dataset import validate  # noqa: E402
+from tests.conftest import _connection_url  # noqa: E402
+from tests.database_safety import validate_test_database_url  # noqa: E402
+
+MIMES = {
+    "pdf": "application/pdf",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "txt": "text/plain",
+    "md": "text/markdown",
+}
+
+
+class MemorySampler:
+    def __init__(self):
+        self.stop = threading.Event()
+        self.peak = 0
+        self.available_before = psutil.virtual_memory().available
+        self.thread = threading.Thread(target=self.run, daemon=True)
+
+    def run(self):
+        while not self.stop.wait(0.02):
+            process = psutil.Process()
+            total = process.memory_info().rss
+            for child in process.children(recursive=True):
+                try:
+                    total += child.memory_info().rss
+                except psutil.Error:
+                    pass
+            self.peak = max(total, self.peak)
+
+
+def main():
+    settings = get_settings()
+    target = validate_test_database_url(settings.test_database_url, settings.database_url)
+    dataset = ROOT / "eval/snapshots/reviewed-v1"
+    validate(dataset, require_reviewed=True)
+    manifest = json.loads((dataset / "corpus_manifest.json").read_text(encoding="utf-8"))
+    run_id = datetime.now(UTC).strftime("ingestion_s6_%Y%m%dT%H%M%SZ_") + uuid.uuid4().hex[:8]
+    output = ROOT / "eval/reports" / run_id
+    output.mkdir(parents=True, exist_ok=False)
+    storage = ROOT / "backend/.cache/s6" / run_id[-8:]
+    original_storage, original_collection = settings.storage_dir, settings.qdrant_collection
+    settings.storage_dir, settings.qdrant_collection = storage, "s6_smoke_" + run_id[-8:]
+    engine = create_engine(_connection_url(target), connect_args={"connect_timeout": 5})
+    sessions = sessionmaker(engine, expire_on_commit=False)
+    # Refuse to share a queue with unrelated tests or live jobs; workers are intentionally global.
+    with sessions() as db:
+        if (
+            db.scalar(
+                select(ProcessingJob.id)
+                .where(
+                    ProcessingJob.kind == "ingest",
+                    ProcessingJob.status.in_(["queued", "running", "retry_wait"]),
+                )
+                .limit(1)
+            )
+            is not None
+        ):
+            raise RuntimeError(
+                "Test database has unrelated active ingestion; run smoke in isolation"
+            )
+    profile = frozen_profile(settings)
+    vector = QdrantIndex(
+        settings.qdrant_url, settings.qdrant_collection, settings.vector_timeout_seconds
+    )
+    vector.ensure_collection(profile["embedding_hash"])
+    embedder = LocalEmbedder(profile, settings)
+    queue = JobQueue(sessions, settings)
+    worker = IngestionWorker(
+        queue, vector, embedder, E5TokenCounter(settings.hf_home / "hub"), profile
+    )
+    app = create_app()
+
+    def session_dependency():
+        with sessions() as db:
+            yield db
+
+    app.dependency_overrides[get_db] = session_dependency
+    spaces, rows = [], []
+    memory = MemorySampler()
+    memory.thread.start()
+    report = {
+        "run_id": run_id,
+        "synthetic": True,
+        "real_embedding": True,
+        "llm_calls": 0,
+        "api_model_spend_usd": 0,
+        "python": platform.python_version(),
+        "platform": platform.platform(),
+        "dataset_manifest_sha256": digest(dataset / "corpus_manifest.json"),
+        "profile": {key: value for key, value in profile.items() if key != "snapshot"},
+        "cpu_threads": settings.embedding_threads,
+        "batch_size": settings.embedding_batch_size,
+        "job_concurrency": 1,
+        "git_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip(),
+        "working_tree_dirty": True,
+        "phases": [],
+        "cleanup_completed": False,
+    }
+
+    def identity(client):
+        workspace_id, user_id = uuid.uuid4(), uuid.uuid4()
+        username = "smoke." + user_id.hex
+        password = "synthetic-ingestion-smoke-only"
+        with sessions() as db:
+            db.add(Workspace(id=workspace_id, name="Synthetic Step 06 smoke"))
+            db.flush()
+            db.add(
+                User(
+                    id=user_id,
+                    workspace_id=workspace_id,
+                    username=username,
+                    email=user_id.hex + "@example.invalid",
+                    display_name="Smoke",
+                    role="knowledge_admin",
+                    password_hash=hash_password(password),
+                )
+            )
+            db.commit()
+        spaces.append(workspace_id)
+        response = client.post(
+            "/api/v1/auth/login", json={"username": username, "password": password}
+        )
+        assert response.status_code == 200
+        return {"Authorization": "Bearer " + response.json()["data"]["access_token"]}
+
+    def ingest(client, auth, entry, phase):
+        path = dataset / entry["path"]
+        started = time.perf_counter()
+        response = client.post(
+            "/api/v1/documents",
+            headers=auth,
+            files={"file": (path.name, path.read_bytes(), MIMES[path.suffix[1:]])},
+        )
+        row = {"phase": phase, "path": entry["path"], "upload_http": response.status_code}
+        if response.status_code == 202:
+            data = response.json()["data"]
+            result = worker.run_once()
+            document = client.get("/api/v1/documents/" + data["document_id"], headers=auth)
+            job = client.get("/api/v1/jobs/" + data["job_id"], headers=auth)
+            assert document.status_code == job.status_code == 200
+            row.update(
+                document_id=data["document_id"],
+                job_id=data["job_id"],
+                document_status=document.json()["data"]["status"],
+                job_status=job.json()["data"]["status"],
+                error_code=job.json()["data"]["error_code"],
+                worker=result,
+                warnings=document.json()["data"]["warnings"],
+            )
+            with sessions() as db:
+                current = db.get(Document, uuid.UUID(data["document_id"]))
+                if current.status == "ready":
+                    revision = db.get(DocumentRevision, current.active_revision_id)
+                    points = list(vector.scroll(current.active_generation_id))
+                    assert len(points) == revision.expected_chunk_count
+                    row["verified_point_count"] = len(points)
+                else:
+                    assert current.active_generation_id is None
+        else:
+            row["error_code"] = response.json()["error"]["code"]
+        row["upload_to_terminal_seconds"] = round(time.perf_counter() - started, 4)
+        rows.append(row)
+        return row
+
+    try:
+        with TestClient(app) as client:
+            for phase, entries in [
+                ("one_document_cold", manifest["documents"][:1]),
+                ("ten_documents_warm", manifest["documents"]),
+            ]:
+                auth = identity(client)
+                started = time.perf_counter()
+                phase_rows = [ingest(client, auth, entry, phase) for entry in entries]
+                assert all(row.get("document_status") == "ready" for row in phase_rows)
+                report["phases"].append(
+                    {
+                        "name": phase,
+                        "documents": len(entries),
+                        "wall_seconds": round(time.perf_counter() - started, 4),
+                        "chunks": sum(row["verified_point_count"] for row in phase_rows),
+                    }
+                )
+                print(json.dumps(report["phases"][-1]), flush=True)
+            auth = identity(client)
+            expected = {
+                "scan.pdf": (202, "needs_ocr", "needs_ocr"),
+                "blank.pdf": (202, "failed", "no_extractable_text"),
+                "mixed.pdf": (202, "ready", None),
+                "encrypted.pdf": (202, "failed", "encrypted_document"),
+                "malformed.pdf": (202, "failed", "parse_failed"),
+                "spoofed.pdf": (415, None, "unsupported_file_type"),
+                "malformed.docx": (415, None, "unsupported_file_type"),
+                "prompt_injection.txt": (202, "ready", None),
+            }
+            for entry in manifest["fixtures"]:
+                row = ingest(client, auth, entry, "failure_fixtures")
+                assert (
+                    row["upload_http"],
+                    row.get("document_status"),
+                    row["error_code"],
+                ) == expected[Path(entry["path"]).name]
+            report["status"] = "passed"
+    except Exception as exc:
+        report["status"], report["error_type"] = "failed", type(exc).__name__
+        raise
+    finally:
+        memory.stop.set()
+        memory.thread.join(3)
+        report["peak_parent_and_children_rss_bytes"] = memory.peak
+        report["available_ram_before_bytes"] = memory.available_before
+        report["embedding_model_load_seconds"] = round(embedder.load_seconds, 4)
+        embedder.close()
+        try:
+            vector._request("DELETE")
+            with sessions() as db:
+                ids = select(Document.id).where(Document.workspace_id.in_(spaces))
+                revisions = select(DocumentRevision.id).where(DocumentRevision.document_id.in_(ids))
+                keys = db.scalars(
+                    select(DocumentRevision.storage_key).where(
+                        DocumentRevision.document_id.in_(ids)
+                    )
+                ).all()
+                db.execute(
+                    update(Document)
+                    .where(Document.workspace_id.in_(spaces))
+                    .values(status="failed", active_revision_id=None, active_generation_id=None)
+                )
+                db.execute(delete(ProcessingJob).where(ProcessingJob.document_id.in_(ids)))
+                db.execute(delete(Chunk).where(Chunk.revision_id.in_(revisions)))
+                db.execute(delete(SourceBlock).where(SourceBlock.revision_id.in_(revisions)))
+                db.execute(delete(DocumentRevision).where(DocumentRevision.document_id.in_(ids)))
+                db.execute(delete(Document).where(Document.workspace_id.in_(spaces)))
+                users = select(User.id).where(User.workspace_id.in_(spaces))
+                db.execute(delete(AuthToken).where(AuthToken.user_id.in_(users)))
+                db.execute(delete(User).where(User.workspace_id.in_(spaces)))
+                db.execute(delete(Workspace).where(Workspace.id.in_(spaces)))
+                db.commit()
+            for key in keys:
+                path = (storage / key).resolve()
+                assert path.is_relative_to(storage.resolve())
+                path.unlink(missing_ok=True)
+            report["cleanup_completed"] = True
+        finally:
+            vector.close()
+            engine.dispose()
+            settings.storage_dir, settings.qdrant_collection = original_storage, original_collection
+            (output / "manifest.json").write_text(
+                json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+            )
+            (output / "per_document.jsonl").write_text(
+                "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+            sources = [path for path in (ROOT / "backend/app/services").glob("*.py")]
+            sources += [ROOT / "backend/app/worker.py", Path(__file__)]
+            snapshot = output / "source_snapshot"
+            snapshot.mkdir()
+            hashes = {}
+            for source in sources:
+                name = source.relative_to(ROOT).as_posix().replace("/", "__") + ".txt"
+                (snapshot / name).write_bytes(source.read_bytes())
+                hashes[str(source.relative_to(ROOT))] = digest(source)
+            (output / "source_sha256.json").write_text(
+                json.dumps(hashes, indent=2) + "\n", encoding="utf-8"
+            )
+    print(
+        json.dumps(
+            {
+                "report": str(output.relative_to(ROOT)),
+                "status": report["status"],
+                "cleanup_completed": report["cleanup_completed"],
+            }
+        ),
+        flush=True,
+    )
+
+
+if __name__ == "__main__":
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    main()

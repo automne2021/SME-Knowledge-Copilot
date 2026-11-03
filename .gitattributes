@@ -1,0 +1,8 @@
+# Preserve bytes covered by corpus/seed/review hashes on Windows checkouts.
+eval/datasets/** -text
+eval/seeds/** -text
+eval/snapshots/** -text
+eval/reports/** -text
+eval/mappings/** -text
+*.pdf binary
+*.docx binary

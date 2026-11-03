@@ -2,9 +2,11 @@
 
 Ngày 02/11/2026. Snapshot `synthetic-sme-v1` / `draft-v1` gồm **10 tài liệu, 35 source blocks, 45 câu hỏi**, thêm 8 fixtures riêng. Toàn bộ nội dung doanh nghiệp là giả lập; không phải chính sách, mật khẩu hay dữ liệu của công ty thật.
 
-**Trạng thái:** `draft_pending_independent_human_review`; **0/45 câu đã được người duyệt**. Câu hỏi/đáp án do trợ lý soạn để hai thành viên kiểm tra. Chưa được coi là human gold, chưa chạy model benchmark. Theo spec 14.8, không dùng output model chưa được con người gán/kiểm tra làm ground truth.
+**Cập nhật 03/11/2026:** hai thành viên đã duyệt **45/45 câu**. Bản phát hành khóa hash cả sổ duyệt là [reviewed-v1](../snapshots/reviewed-v1/corpus_manifest.json). Thư mục datasets hiện tại vẫn là nguồn làm việc với manifest `draft-v1`; giữ để tái tạo/đối chiếu lịch sử, không đổi manifest draft thành reviewed tại chỗ. Câu/đáp án ban đầu do trợ lý soạn, đã được con người kiểm tra theo quy trình dưới đây. Chưa có RAG quality benchmark; E5 CPU smoke tương thích đã chạy tại [Bước 03](../../docs/model-smoke-step03.md).
 
 ## Files và quy ước nguồn
+
+**Bước 05:** canonical author spans của snapshot reviewed-v1 đã có [mapping version mới](../mappings/reviewed-v1-source-v1-e5-350-v1.json) sang parser thật (35 blocks/45 câu/47 evidence references), xem [report](../../docs/parsing-upload-step05.md). Giữ nguyên draft và reviewed manifest; không thay offsets author-v1 tại chỗ.
 
 | File/thư mục | Nội dung |
 |---|---|
@@ -28,7 +30,7 @@ Các câu cùng sự kiện/paraphrase ở cùng split. Validator kiểm tra c�
 3. Với câu thiếu bằng chứng, tìm trên **toàn snapshot**, không chỉ tài liệu có vẻ liên quan. Sáu câu hiện tại là q014–015, q042–045. Không dùng kiến thức ngoài corpus để trả lời câu hỏi về doanh nghiệp mẫu.
 4. Với q018, chỉ trả lời điều kiện giảm 10%, chưa kết luận giao dịch đã được duyệt/trả trước. Với q024, nêu 3%/5% và thiếu căn cứ hiệu lực; không chọn B chỉ vì số phiên bản lớn hơn. Hai câu này là `partial`, không phải abstain hoàn toàn.
 5. Ghi `status=approved` chỉ khi A/B đã thống nhất và nhãn đúng; có lỗi ghi `changes_requested` và mô tả trong `notes`. Chưa xem giữ `pending`. Mỗi câu phải được kiểm tra, không duyệt theo số đông.
-6. Nếu cần sửa câu/đáp án/nguồn, ghi notes để tạo snapshot phiên bản mới từ seeds cùng manifest/checksums, sau xác nhận phạm vi thay đổi. Không chỉ đổi hash để làm validator xanh. Sau 45 câu được duyệt, cần xuất snapshot có `label_status=human_reviewed` và khóa cả review ledger trước benchmark chính thức; công cụ phát hành snapshot reviewed chưa được triển khai ở bước này.
+6. Nếu cần sửa câu/đáp án/nguồn, ghi notes để tạo snapshot phiên bản mới từ seeds cùng manifest/checksums, sau xác nhận phạm vi thay đổi. Không chỉ đổi hash để làm validator xanh. Công cụ `eval.publish_reviewed` đã xuất reviewed-v1 với `label_status=human_reviewed` và khóa cả ledger. Chỉnh sửa tiếp cần snapshot phiên bản mới; không sửa bản đã khóa hoặc re-bless hash để che khác biệt.
 
 Validator chỉ kiểm tra có hai tên khác nhau; không thể chứng minh hai người đã thực sự đọc nguồn. Kết quả `structural_validation=passed` không thay việc duyệt nội dung.
 
@@ -45,10 +47,10 @@ Các lệnh Python không cần activate `.ps1`; chỉ chạy lệnh tạo artif
 ```powershell
 .\backend\.venv\Scripts\python.exe -B -m eval.validate_dataset
 .\backend\.venv\Scripts\python.exe -B -m pytest eval/tests -q -p no:cacheprovider
-.\backend\.venv\Scripts\python.exe -B -m eval.validate_dataset --require-reviewed
+.\backend\.venv\Scripts\python.exe -B -m eval.validate_dataset --dataset eval/snapshots/reviewed-v1 --require-reviewed
 ```
 
-Lệnh cuối hiện **phải từ chối** vì 0/45 human-approved. Đây là gate có chủ đích. Validator chỉ đọc dataset; pytest tạo bản sao tạm để thử lỗi, không sửa corpus/review thật và không kết nối DB/model.
+Lệnh cuối đạt trên reviewed-v1 có đủ 45 approvals/hash ledger. Nếu dùng `--require-reviewed` trên đường dẫn draft mặc định, nó vẫn từ chối vì chưa phải manifest phát hành reviewed. Validator chỉ đọc; pytest tạo bản sao tạm để thử lỗi, không sửa corpus/review thật và không kết nối DB/model.
 
 Builder từ [seeds](../seeds/) dành cho tái tạo/kiểm tra draft:
 

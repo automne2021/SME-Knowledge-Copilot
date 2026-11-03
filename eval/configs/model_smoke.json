@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "embedding": {
+    "model_id": "intfloat/multilingual-e5-small",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "dimension": 384,
+    "device": "cpu",
+    "dtype": "float32",
+    "pooling": "attention_mask_mean",
+    "normalize": true,
+    "max_input_tokens": 512,
+    "batch_size": 4,
+    "threads": 2,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: "
+  },
+  "llm": {
+    "prompt_version": "smoke-v2-status-contract",
+    "provider": "gemini",
+    "model_id": "gemini-3.5-flash-lite",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta",
+    "max_output_tokens": 800,
+    "timeout_seconds": 45,
+    "max_calls": 5,
+    "retries": 0,
+    "tools": [],
+    "pricing_verified_on": "2026-11-03",
+    "pricing_source": "https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite",
+    "account_tier": "requires_manual_confirmation",
+    "budget_usd": 0
+  }
+}

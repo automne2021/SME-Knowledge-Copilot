@@ -1,0 +1,15 @@
+# Verified standalone smoke environment: Windows x64, CPython 3.12, 2026-11-03.
+# Install from backend/: python -m pip install -r requirements-ai-cpu.lock
+# CPU wheel URL is platform-specific; do not reuse this lock for a Linux image.
+-r requirements-dev.lock
+Jinja2==3.1.6
+mpmath==1.3.0
+networkx==3.7
+numpy==2.5.4
+psutil==7.2.2
+regex==2026.9.29
+safetensors==0.8.0
+setuptools==78.1.0
+sympy==1.14.0
+torch @ https://download.pytorch.org/whl/cpu/torch-2.9.1%2Bcpu-cp312-cp312-win_amd64.whl
+transformers==4.57.6

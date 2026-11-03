@@ -211,6 +211,12 @@ def validate(root: Path, require_reviewed: bool = False) -> dict:
     )
     inspect_corpus(root, documents, blocks)
     inspect_fixtures(root)
+    if manifest["label_status"] == "human_reviewed":
+        require(
+            hashlib.sha256((root / "human_review.csv").read_bytes()).hexdigest()
+            == manifest.get("human_review_sha256"),
+            "Frozen human review checksum mismatch",
+        )
     with (root / "human_review.csv").open(encoding="utf-8", newline="") as stream:
         reviews = list(csv.DictReader(stream))
     require(len(reviews) == len(questions), "Review row count mismatch")

@@ -11,6 +11,10 @@ Theo yêu cầu của người dùng ngày 02/11/2026, **chỉ thay đổi works
 - Không xem yêu cầu lập kế hoạch, câu hỏi, sự im lặng, lời đồng ý khác hoặc việc trích dẫn câu “Thực hiện đi” để mô tả quy tắc là xác nhận thực thi. Xác nhận phải là chỉ thị của người dùng cho công việc đang được đề xuất.
 - Sau khi xong đợt đã được duyệt, báo kết quả và chờ xác nhận cho đợt thay đổi kế tiếp; không tự bắt đầu bước tiếp theo trong PLAN.
 
+## Nhắc trước khi sửa UI — 03/11/2026
+
+Trước khi viết hoặc sửa UI, nhắc người dùng, nêu màn hình/file và phạm vi dự kiến, rồi chờ xác nhận **“Thực hiện đi”** cho đợt UI đó. Xác nhận cho backend không tự cho phép sửa UI.
+
 ## Ghi kiến thức và lý do quyết định
 
 Theo yêu cầu của người dùng ngày 02/11/2026, mỗi khi code, thiết kế, chọn công nghệ/model/cấu hình, sửa lỗi hoặc thay đổi cách kiểm thử/đánh giá, cập nhật [KNOWLEDGE.md](KNOWLEDGE.md) trong cùng đợt công việc.
@@ -34,5 +38,5 @@ Theo yêu cầu người dùng ngày 02/11/2026, **mỗi phản hồi cuối ph�
 - Thứ tự triển khai: [PLAN.md](PLAN.md). Không tự triển khai toàn bộ kế hoạch khi người dùng chỉ yêu cầu sửa tài liệu.
 - [CLAUDE.md](CLAUDE.md) đã đồng bộ sang RAG ở Bước 00; spec Operations là tài liệu lịch sử, không áp rule STT/agent/approval vào pipeline mới.
 - Hiện trạng source, mapping schema/enum, backlog P0 và baseline kiểm tra nằm trong [audit chuyển tiếp](docs/rag-transition-audit.md). Đồng bộ tài liệu chưa đồng nghĩa code/hạ tầng RAG đã được triển khai.
-- Bước 00 và Bước 01 đã hoàn thành; [Bước 02](docs/dataset-step02.md) có 10 tài liệu/45 câu nháp, 8 fixtures và 37 tests đạt. Chờ hai người gán/kiểm tra chéo, 0/45 approved; chưa đóng gate Bước 02. Tiến độ hiện tại **11,2% / 100%**. Bước 03 chưa bắt đầu và cần xác nhận riêng.
-- Ngân sách model do người dùng chọn: **free tier, tối đa 0 USD**. Không tự bật billing, đổi sang paid provider/tier hay paid fallback khi hết quota. API key giữ riêng; chuẩn bị corpus ở Bước 02, chỉ smoke model ở Bước 03 sau xác nhận và kiểm tra quota.
+- Bước 00–07 hoàn thành theo phạm vi. [Bước 07](docs/search-retrieval-step07.md) có scoped search/source APIs, active-gen SQL revalidation, E5 query encoder, canonical span matcher và dev-only benchmark 13 answerable/2 unknown (Recall@5=1, MRR@5≈0,923, 0 errors). **222 backend + 86 eval tests đạt**, không coi là answering accuracy/held-out benchmark. Tiến độ **56,1% / 100%**, Bước 08 cần xác nhận riêng; chưa answering/delete/UI. E5 model/index/config freeze tại eval/configs/dense.json, cutoff None, BGE có điều kiện hoãn. DB head `20261103_rag04`, reviewed snapshot/mapping/reports cũ bất biến. Không LLM calls/tải model/paid fallback/UI/commit/push ở Bước 07. Host API/worker cần CPU cache/dependencies; worker cùng cwd storage backend/, không chạy chung queue DB với tests/eval. Secrets riêng .env.
+- Ngân sách model: **free tier, tối đa 0 USD**. Không bật billing hoặc paid fallback. Key giữ riêng trong .env; chỉ chạy LLM trong đợt được xác nhận sau khi người dùng cấu hình key và xác minh free tier/quota. Flags trong config là xác nhận thủ công, không phải billing cap phía Google. Model weights/cache ở D, không commit. Mỗi đợt tiếp theo vẫn cần câu xác nhận theo quy tắc trên.

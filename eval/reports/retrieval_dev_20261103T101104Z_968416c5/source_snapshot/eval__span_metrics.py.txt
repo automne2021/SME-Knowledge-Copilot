@@ -1,0 +1,102 @@
+"""Frozen 80%-coverage evidence-group matching with alternatives and top-k span union."""
+
+import math
+import statistics
+from collections import defaultdict
+
+from eval.metrics import retrieval_scores
+
+
+def covered_chars(intervals, start, end):
+    if type(start) is not int or type(end) is not int or not 0 <= start < end:
+        raise ValueError("Invalid gold span")
+    clipped = sorted(
+        (max(start, left), min(end, right))
+        for left, right in intervals
+        if left < end and right > start
+    )
+    covered, until = 0, start
+    for left, right in clipped:
+        if right > until:
+            covered += right - max(left, until)
+            until = right
+    return covered
+
+
+def ranked_group_hits(groups, ranked_spans):
+    """group -> alternative quotes -> required parser spans for that quote."""
+    if any(
+        not alternatives or any(not spans for spans in alternatives)
+        for alternatives in groups.values()
+    ):
+        raise ValueError("Evidence groups must have nonempty alternatives/spans")
+    coverage = defaultdict(list)
+    completed, ranked = set(), []
+    for spans in ranked_spans:
+        for span in spans:
+            if span.get("role", "content") != "content":
+                continue
+            if not 0 <= span["char_start"] < span["char_end"]:
+                raise ValueError("Invalid retrieved span")
+            coverage[span["block_id"]].append((span["char_start"], span["char_end"]))
+        now = {
+            group
+            for group, alternatives in groups.items()
+            if any(
+                all(
+                    covered_chars(coverage[span["block_id"]], span["char_start"], span["char_end"])
+                    * 5
+                    >= (span["char_end"] - span["char_start"]) * 4
+                    for span in required_spans
+                )
+                for required_spans in alternatives
+            )
+        }
+        ranked.append(now - completed)
+        completed.update(now)
+    return ranked
+
+
+def aggregate(rows, ks=(1, 3, 5, 10)):
+    eligible = [row for row in rows if row["required_groups"]]
+    successful = [row for row in eligible if row["status"] == "completed"]
+    failed = sum(row["status"] != "completed" for row in rows)
+
+    def summarize(selected, k):
+        scores = [
+            retrieval_scores(
+                set(row["required_groups"]),
+                [set(groups) for groups in row.get("ranked_group_hits", [])],
+                k,
+            )
+            for row in selected
+        ]
+        return {
+            "count": len(scores),
+            **{
+                name: statistics.mean(score[name] for score in scores) if scores else None
+                for name in ("hit", "recall", "mrr", "all_evidence")
+            },
+        }
+
+    result = {
+        "query_count": len(rows),
+        "answerable_count": len(eligible),
+        "unanswerable_count": sum(not row["required_groups"] for row in rows),
+        "technical_failures": failed,
+        "technical_error_rate": failed / len(rows) if rows else None,
+        "successful_answerable": {str(k): summarize(successful, k) for k in ks},
+        "strict_all_answerable": {str(k): summarize(eligible, k) for k in ks},
+        "multi_evidence_successful": {
+            str(k): summarize([row for row in successful if len(row["required_groups"]) > 1], k)
+            for k in ks
+        },
+    }
+    latencies = sorted(row["latency_ms"] for row in rows if row["status"] == "completed")
+    result["latency_ms"] = {
+        "count": len(latencies),
+        "p50": statistics.median(latencies) if latencies else None,
+        "p95_nearest_rank": latencies[math.ceil(0.95 * len(latencies)) - 1] if latencies else None,
+        "max": max(latencies) if latencies else None,
+    }
+    return result

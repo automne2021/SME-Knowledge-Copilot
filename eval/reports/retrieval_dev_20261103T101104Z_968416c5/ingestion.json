@@ -1,0 +1,172 @@
+[
+  {
+    "reference": "leave",
+    "corpus_version": 1,
+    "document_id": "c9a43432-9041-498e-a722-c23900d63e7c",
+    "worker": {
+      "job_id": "0aab0ed3-c86e-48a2-82d8-476d411ee0a1",
+      "status": "completed",
+      "chunk_count": 1,
+      "timings_ms": {
+        "parse_chunk_ms": 265.134,
+        "embedding_ms": 9996.605,
+        "vector_upsert_ms": 2032.145,
+        "vector_verify_ms": 3.753,
+        "total_before_publish_ms": 12425.642
+      }
+    }
+  },
+  {
+    "reference": "security",
+    "corpus_version": 1,
+    "document_id": "013ec067-a915-4d8c-8b89-476a6300caaf",
+    "worker": {
+      "job_id": "d1dea162-a06f-437e-bc84-a862ee221ad1",
+      "status": "completed",
+      "chunk_count": 1,
+      "timings_ms": {
+        "parse_chunk_ms": 141.294,
+        "embedding_ms": 71.449,
+        "vector_upsert_ms": 7.748,
+        "vector_verify_ms": 2.569,
+        "total_before_publish_ms": 322.121
+      }
+    }
+  },
+  {
+    "reference": "support",
+    "corpus_version": 1,
+    "document_id": "ae3ce1a0-6eae-4157-89eb-d734f0df04e0",
+    "worker": {
+      "job_id": "fb575f06-8537-4b5c-a215-05f7a169ad90",
+      "status": "completed",
+      "chunk_count": 2,
+      "timings_ms": {
+        "parse_chunk_ms": 132.411,
+        "embedding_ms": 179.642,
+        "vector_upsert_ms": 5.864,
+        "vector_verify_ms": 2.202,
+        "total_before_publish_ms": 435.669
+      }
+    }
+  },
+  {
+    "reference": "discount_v1",
+    "corpus_version": 1,
+    "document_id": "ff6d98dd-3733-4a9a-a4df-1ef6050c0dff",
+    "worker": {
+      "job_id": "7b445e0c-b7fd-4729-b7d1-e24fd00f3389",
+      "status": "completed",
+      "chunk_count": 1,
+      "timings_ms": {
+        "parse_chunk_ms": 260.665,
+        "embedding_ms": 83.742,
+        "vector_upsert_ms": 6.117,
+        "vector_verify_ms": 2.682,
+        "total_before_publish_ms": 486.204
+      }
+    }
+  },
+  {
+    "reference": "discount_v2",
+    "corpus_version": 2,
+    "document_id": "f303fc54-5b92-4709-bff6-9091f4c0811a",
+    "worker": {
+      "job_id": "ab7c9245-da68-45c3-bc4f-3a083b604cd2",
+      "status": "completed",
+      "chunk_count": 2,
+      "timings_ms": {
+        "parse_chunk_ms": 134.857,
+        "embedding_ms": 256.414,
+        "vector_upsert_ms": 17.635,
+        "vector_verify_ms": 2.395,
+        "total_before_publish_ms": 542.263
+      }
+    }
+  },
+  {
+    "reference": "approvals",
+    "corpus_version": 1,
+    "document_id": "9d95bcf5-ae71-4cac-a5df-d231406a91f1",
+    "worker": {
+      "job_id": "7076d14e-81a8-4c34-b962-1f70a9f217c3",
+      "status": "completed",
+      "chunk_count": 1,
+      "timings_ms": {
+        "parse_chunk_ms": 256.779,
+        "embedding_ms": 101.129,
+        "vector_upsert_ms": 4.704,
+        "vector_verify_ms": 16.178,
+        "total_before_publish_ms": 508.997
+      }
+    }
+  },
+  {
+    "reference": "onboarding",
+    "corpus_version": 1,
+    "document_id": "f0fc09ff-aa0f-4bf3-971c-a57d6db5e0ec",
+    "worker": {
+      "job_id": "e16dd031-d9c0-416b-83f0-0a2b72f326d9",
+      "status": "completed",
+      "chunk_count": 1,
+      "timings_ms": {
+        "parse_chunk_ms": 248.599,
+        "embedding_ms": 115.629,
+        "vector_upsert_ms": 8.06,
+        "vector_verify_ms": 3.095,
+        "total_before_publish_ms": 488.476
+      }
+    }
+  },
+  {
+    "reference": "acceptance",
+    "corpus_version": 1,
+    "document_id": "0e775736-cdfa-44ba-ad91-70f2130096d8",
+    "worker": {
+      "job_id": "e28e2eb5-5e86-46f7-ab4a-1cba57543167",
+      "status": "completed",
+      "chunk_count": 2,
+      "timings_ms": {
+        "parse_chunk_ms": 266.327,
+        "embedding_ms": 149.031,
+        "vector_upsert_ms": 19.454,
+        "vector_verify_ms": 2.635,
+        "total_before_publish_ms": 542.322
+      }
+    }
+  },
+  {
+    "reference": "expenses",
+    "corpus_version": 1,
+    "document_id": "61cc6798-2f94-4d94-be34-21dafa09d62d",
+    "worker": {
+      "job_id": "e27600f5-c545-48f2-bffe-f419398baef5",
+      "status": "completed",
+      "chunk_count": 1,
+      "timings_ms": {
+        "parse_chunk_ms": 131.634,
+        "embedding_ms": 89.707,
+        "vector_upsert_ms": 5.797,
+        "vector_verify_ms": 2.896,
+        "total_before_publish_ms": 386.151
+      }
+    }
+  },
+  {
+    "reference": "forms",
+    "corpus_version": 1,
+    "document_id": "26d16c44-ebbc-4eb2-b402-2ce8273030c0",
+    "worker": {
+      "job_id": "88ec0715-ee9e-4925-974f-9d27a777b3ce",
+      "status": "completed",
+      "chunk_count": 2,
+      "timings_ms": {
+        "parse_chunk_ms": 148.266,
+        "embedding_ms": 161.726,
+        "vector_upsert_ms": 6.6,
+        "vector_verify_ms": 13.424,
+        "total_before_publish_ms": 425.872
+      }
+    }
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "run_id": "smoke_llm_20261103_01",
+  "started_at_utc": "2026-11-03T06:56:23.796296+00:00",
+  "stage": "llm",
+  "dataset_manifest_sha256": "efccfaeaf67e9e49035d08771977982ccd34df83d12128a4835948738f2c6b26",
+  "config_sha256": "545e6eea314ddd7971c2a0d871a6b1099005181cb33636e66b3b8bc4a625ad33",
+  "python": "3.12.8",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "cpu_logical": 8,
+  "memory_available_before_bytes": 3809918976,
+  "code_commit": "9d9edd0b211e0c3197310824d86937b2a4eb1fa4",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "model_smoke.py": "01a5948f10c563898675d80e002a8c2062eb483709e8b06b814374d9601c192f",
+    "embedding_runtime.py": "69ff225f3ded961c75a9e58565d24a3108307f4e62a821d14ed6cb360c179616",
+    "gemini_smoke.py": "8fabdb081d533dedb4fe579123f8ee3b7134c09a4d1f829d4fb94849311a9ab4"
+  },
+  "test_questions_used_for_tuning": false
+}

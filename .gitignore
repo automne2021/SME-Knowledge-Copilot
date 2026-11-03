@@ -23,3 +23,5 @@ storage/
 .idea/
 .DS_Store
 Thumbs.db
+# Microsoft Word lock files created while reviewing source documents.
+~$*.docx
