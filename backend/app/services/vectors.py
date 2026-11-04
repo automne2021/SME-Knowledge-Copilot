@@ -1,6 +1,8 @@
 """Small explicit Qdrant REST adapter; no hidden retry or local vector fallback."""
 
+import asyncio
 import re
+import time
 import uuid
 
 import httpx
@@ -18,12 +20,26 @@ class QdrantIndex:
     def close(self):
         self.client.close()
 
-    def _request(self, method, suffix="", *, allow_missing=False, **kwargs):
+    async def _bounded_request(self, method, suffix, deadline, kwargs):
+        timeout = min(self.client.timeout.read, deadline - time.monotonic())
+        async with asyncio.timeout(max(0, timeout)):
+            async with httpx.AsyncClient(base_url=self.client.base_url, trust_env=False) as client:
+                return await client.request(
+                    method,
+                    f"/collections/{self.collection}{suffix}",
+                    timeout=max(0.001, timeout),
+                    **kwargs,
+                )
+
+    def _request(self, method, suffix="", *, allow_missing=False, deadline=None, **kwargs):
         try:
-            response = self.client.request(
-                method, f"/collections/{self.collection}{suffix}", **kwargs
-            )
-        except httpx.TimeoutException as exc:
+            if deadline is None:
+                response = self.client.request(
+                    method, f"/collections/{self.collection}{suffix}", **kwargs
+                )
+            else:
+                response = asyncio.run(self._bounded_request(method, suffix, deadline, kwargs))
+        except (TimeoutError, httpx.TimeoutException) as exc:
             raise WorkerError("vector_timeout", True) from exc
         except httpx.RequestError as exc:
             raise WorkerError("vector_unavailable", True) from exc
@@ -74,8 +90,8 @@ class QdrantIndex:
                     json={"field_name": field, "field_schema": "keyword"},
                 )
 
-    def check_collection(self, embedding_hash):
-        info = self._request("GET", allow_missing=True)
+    def check_collection(self, embedding_hash, deadline=None):
+        info = self._request("GET", allow_missing=True, deadline=deadline)
         if info is None:
             raise WorkerError("vector_unavailable", True)
         self._validate_collection(info, embedding_hash)
@@ -92,10 +108,11 @@ class QdrantIndex:
         ):
             raise WorkerError("vector_fingerprint_mismatch")
 
-    def query(self, vector, workspace_id, generations, index_version, limit):
+    def query(self, vector, workspace_id, generations, index_version, limit, deadline=None):
         result = self._request(
             "POST",
             "/points/query",
+            deadline=deadline,
             json={
                 "query": vector,
                 "limit": limit,
@@ -172,4 +189,46 @@ class QdrantIndex:
         if not isinstance(result, dict) or result.get("status") != "completed":
             raise WorkerError("vector_write_incomplete", True)
         if next(self.scroll(generation_id), None) is not None:
+            raise WorkerError("vector_cleanup_incomplete", True)
+
+    @staticmethod
+    def document_filter(workspace_id, document_id):
+        return {
+            "must": [
+                {"key": "workspace_id", "match": {"value": str(workspace_id)}},
+                {"key": "document_id", "match": {"value": str(document_id)}},
+            ]
+        }
+
+    def document_points(self, workspace_id, document_id):
+        result = self._request(
+            "POST",
+            "/points/scroll",
+            allow_missing=True,
+            json={
+                "filter": self.document_filter(workspace_id, document_id),
+                "limit": 1,
+                "with_payload": True,
+                "with_vector": False,
+            },
+        )
+        if result is None:
+            return []
+        if not isinstance(result, dict) or not isinstance(result.get("points"), list):
+            raise WorkerError("invalid_vector_response")
+        return result["points"]
+
+    def delete_document(self, workspace_id, document_id):
+        result = self._request(
+            "POST",
+            "/points/delete",
+            allow_missing=True,
+            params={"wait": "true"},
+            json={"filter": self.document_filter(workspace_id, document_id)},
+        )
+        if result is None:
+            return  # Collection already absent is an idempotent success.
+        if not isinstance(result, dict) or result.get("status") != "completed":
+            raise WorkerError("vector_write_incomplete", True)
+        if self.document_points(workspace_id, document_id):
             raise WorkerError("vector_cleanup_incomplete", True)

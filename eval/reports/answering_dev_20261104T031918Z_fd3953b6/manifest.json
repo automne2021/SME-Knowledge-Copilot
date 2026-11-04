@@ -1,0 +1,23 @@
+{
+  "run_id": "answering_dev_20261104T031918Z_fd3953b6",
+  "status": "failed",
+  "synthetic": true,
+  "split": "dev-fixtures",
+  "test_queries_used": 0,
+  "human_review": "pending",
+  "cleanup_completed": true,
+  "config_sha256": "67f535d9e889c5c502bee540593f58623ffdb9f3cc251a5fa3d77fe7e1ffe648",
+  "git_commit": "f9e4fc391dc2cd265d545bf4fc77c5fd6fb40f6e",
+  "working_tree_dirty": true,
+  "budget_usd": 0,
+  "account_tier": "manual_free_tier_attestation",
+  "invoice_verified": false,
+  "index_version": "9851b494ba14e5a4370604ac33064d65b40690b990118fce057e4fbcb5afc4a4",
+  "error_code": "eval_budget_exhausted",
+  "requests": {
+    "generateContent": 4,
+    "countTokens": 20
+  },
+  "cases_completed": 5,
+  "technical_errors": 1
+}

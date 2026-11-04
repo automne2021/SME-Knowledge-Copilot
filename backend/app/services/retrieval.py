@@ -74,7 +74,7 @@ def _snapshots(db, workspace_id, ids):
     return [dict(row) for row in db.execute(statement).mappings()]
 
 
-def search(db, user, payload, settings, runtime_factory):
+def search(db, user, payload, settings, runtime_factory, deadline=None):
     started = time.perf_counter()
     workspace_id = user.workspace_id
     if payload.mode != "dense":
@@ -133,9 +133,14 @@ def search(db, user, payload, settings, runtime_factory):
         if not runtime.lock.acquire(blocking=False):
             raise AppError(429, "retrieval_busy", "Bộ truy xuất đang bận; vui lòng thử lại.")
         try:
-            runtime.vector.check_collection(profile["embedding_hash"])
+            runtime.vector.check_collection(
+                profile["embedding_hash"],
+                **({"deadline": deadline} if deadline is not None else {}),
+            )
             before = time.perf_counter()
-            vector = runtime.embedder.encode_query(payload.query)
+            vector = runtime.embedder.encode_query(
+                payload.query, **({"deadline": deadline} if deadline is not None else {})
+            )
             validate_vectors([vector], 1)
             embedding_ms = (time.perf_counter() - before) * 1000
             before = time.perf_counter()
@@ -145,11 +150,14 @@ def search(db, user, payload, settings, runtime_factory):
                 [row["active_generation_id"] for row in allowed.values()],
                 profile["index_version"],
                 settings.retrieval_candidate_k,
+                **({"deadline": deadline} if deadline is not None else {}),
             )
             retrieval_ms = (time.perf_counter() - before) * 1000
         finally:
             runtime.lock.release()
     except WorkerError as exc:
+        if deadline is not None and time.monotonic() >= deadline:
+            raise AppError(504, "model_timeout", "Truy vấn vượt thời gian cho phép.") from None
         raise AppError(
             503, "retrieval_unavailable", "Bộ truy xuất tạm thời chưa sẵn sàng."
         ) from exc

@@ -1,0 +1,460 @@
+"""Explicitly authorized, bounded synthetic-dev oracle/API smoke. Never read holdout."""
+
+# ruff: noqa: E402 -- host entry point bootstraps backend/ before application imports
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+import threading
+import time
+import uuid
+from datetime import UTC, datetime
+from pathlib import Path
+from types import SimpleNamespace
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "backend"))
+
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine, delete, select, update
+from sqlalchemy.engine import URL
+from sqlalchemy.orm import sessionmaker
+
+from app.core.config import get_settings
+from app.core.db import get_db
+from app.core.errors import AppError
+from app.core.security import hash_password
+from app.main import create_app
+from app.models import (
+    AnswerCitation,
+    AuthToken,
+    ChatMessage,
+    ChatSession,
+    Chunk,
+    Document,
+    DocumentRevision,
+    ProcessingJob,
+    QueryRun,
+    SourceBlock,
+    User,
+    Workspace,
+)
+from app.services.answering import (
+    PROMPT_VERSION,
+    build_context,
+    generate_answer,
+    render_answer,
+)
+from app.services.chunking import E5TokenCounter
+from app.services.embeddings import LocalEmbedder, frozen_profile
+from app.services.gemini import GeminiProvider
+from app.services.jobs import JobQueue
+from app.services.vectors import QdrantIndex
+from app.worker import IngestionWorker
+from eval.parser_mapping import digest
+from tests.database_safety import validate_test_database_url
+
+
+def write_json(path, data):
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+class BudgetedProvider:
+    """Run-wide request ledger written BEFORE sending. Exhausted budgets fail closed."""
+
+    def __init__(self, settings, config, output, sleep=time.sleep):
+        self.provider = GeminiProvider(settings)
+        self.config, self.output, self.sleep = config, output, sleep
+        self.counts = {"generateContent": 0, "countTokens": 0}
+        self.last_request = 0
+
+    def reserve(self, action):
+        maximum = self.config[
+            "max_generation_calls" if action == "generateContent" else "max_count_tokens_calls"
+        ]
+        if self.counts[action] >= maximum:
+            raise AppError(503, "eval_budget_exhausted", "Approved request budget exhausted.")
+        pause = self.config["minimum_request_interval_seconds"] - (
+            time.monotonic() - self.last_request
+        )
+        if pause > 0:
+            self.sleep(pause)
+        self.counts[action] += 1
+        self.last_request = time.monotonic()
+        write_json(self.output / "request_ledger.json", self.counts)
+
+    def count_tokens(self, payload, deadline):
+        self.reserve("countTokens")
+        return self.provider.count_tokens(payload, deadline)
+
+    def generate(self, payload, deadline):
+        self.reserve("generateContent")
+        return self.provider.generate(payload, deadline)
+
+
+def oracle_context(case):
+    # This helper exists only in eval; app request extra=forbid blocks oracle input.
+    return [
+        {"chunk_id": f"{case['id']}-gold-{index}", "excerpt": text}
+        for index, text in enumerate(case["evidence"], 1)
+    ]
+
+
+def probes(case, result):
+    text = result.get("answer", "")
+    return {
+        "status_matches_fixture": result.get("answer_status") == case["expected_status"],
+        "required_literals_present": all(word in text for word in case["required_literals"]),
+        "minimum_citations_present": len(result.get("citations", []))
+        >= case["expected_min_citations"],
+        "conflict_flag_matches": result.get("conflict_detected", False)
+        == case.get("expected_conflict", False),
+        "injection_marker_absent_from_claims": not case.get("forbidden_literal")
+        or case["forbidden_literal"] not in text,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Requires a separately approved request batch",
+    )
+    args = parser.parse_args()
+    if not args.live:
+        parser.error("Explicit --live and user authorization required; unit tests never call this")
+    settings = get_settings()
+    # Check free-tier flags before creating resources or any request.
+    GeminiProvider(settings)
+    target = validate_test_database_url(settings.test_database_url, settings.database_url)
+    config_path = ROOT / "eval/configs/answering.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    expected = {
+        "prompt_version": PROMPT_VERSION,
+        "model": settings.llm_model,
+        "evidence_budget_tokens": settings.llm_evidence_budget_tokens,
+        "max_output_tokens": settings.llm_max_output_tokens,
+        "safety_margin_tokens": settings.llm_safety_margin_tokens,
+        "context_window_tokens": settings.llm_context_window_tokens,
+    }
+    if any(config[key] != value for key, value in expected.items()):
+        raise ValueError("Runtime differs from frozen answering config")
+    if config["max_generation_calls"] > 10 or config["max_count_tokens_calls"] > 20:
+        raise ValueError("Config exceeds authorized request batch")
+    run_id = datetime.now(UTC).strftime("answering_dev_%Y%m%dT%H%M%SZ_") + uuid.uuid4().hex[:8]
+    output = ROOT / "eval/reports" / run_id
+    output.mkdir(parents=True, exist_ok=False)
+    write_json(output / "config.json", config)
+    sources = list((ROOT / "backend/app").rglob("*.py")) + [Path(__file__), config_path]
+    snapshot = output / "source_snapshot"
+    snapshot.mkdir()
+    hashes = {}
+    for source in sources:
+        relative = source.relative_to(ROOT).as_posix()
+        (snapshot / (relative.replace("/", "__") + ".txt")).write_bytes(source.read_bytes())
+        hashes[relative] = digest(source)
+    write_json(output / "source_sha256.json", hashes)
+    provider = BudgetedProvider(settings, config, output)
+    saved = settings.storage_dir, settings.qdrant_collection
+    storage = ROOT / "backend/.cache/s8" / run_id[-8:]
+    settings.storage_dir, settings.qdrant_collection = storage, "s8_dev_" + run_id[-8:]
+    workspace_id, user_id = uuid.uuid4(), uuid.uuid4()
+    engine = create_engine(
+        URL.create(
+            "postgresql+psycopg",
+            username=target.username,
+            password=target.password,
+            host=target.host,
+            port=target.port,
+            database=target.database,
+        ),
+        connect_args={"connect_timeout": 5},
+    )
+    sessions = sessionmaker(engine, expire_on_commit=False)
+    vector = embedder = None
+    rows = []
+    report = {
+        "run_id": run_id,
+        "status": "running",
+        "synthetic": True,
+        "split": "dev-fixtures",
+        "test_queries_used": 0,
+        "human_review": "pending",
+        "cleanup_completed": False,
+        "config_sha256": digest(config_path),
+        "git_commit": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip(),
+        "working_tree_dirty": bool(
+            subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()
+        ),
+        "budget_usd": 0,
+        "account_tier": "manual_free_tier_attestation",
+        "invoice_verified": False,
+    }
+    try:
+        with sessions() as db:
+            if db.scalar(
+                select(ProcessingJob.id)
+                .where(
+                    ProcessingJob.kind == "ingest",
+                    ProcessingJob.status.in_(["queued", "running", "retry_wait"]),
+                )
+                .limit(1)
+            ):
+                raise RuntimeError("Do not run with unrelated tests/eval/worker jobs")
+        profile = frozen_profile(settings)
+        report["index_version"] = profile["index_version"]
+        vector = QdrantIndex(
+            settings.qdrant_url,
+            settings.qdrant_collection,
+            settings.vector_timeout_seconds,
+        )
+        vector.ensure_collection(profile["embedding_hash"])
+        embedder = LocalEmbedder(profile, settings)
+        counter = E5TokenCounter(settings.hf_home / "hub")
+        worker = IngestionWorker(JobQueue(sessions, settings), vector, embedder, counter, profile)
+        with sessions() as db:
+            db.add(Workspace(id=workspace_id, name="Synthetic Step 08 smoke"))
+            db.flush()
+            db.add(
+                User(
+                    id=user_id,
+                    workspace_id=workspace_id,
+                    username="s8." + user_id.hex,
+                    email=user_id.hex + "@example.invalid",
+                    display_name="Synthetic eval",
+                    role="knowledge_admin",
+                    password_hash=hash_password("synthetic-s8-eval-only-password"),
+                )
+            )
+            db.commit()
+        app = create_app()
+
+        def dependency():
+            with sessions() as db:
+                yield db
+
+        app.dependency_overrides[get_db] = dependency
+        app.state.provider_factory = lambda settings: provider
+        app.state.search_runtime = SimpleNamespace(
+            profile=profile,
+            vector=vector,
+            embedder=embedder,
+            counter=counter,
+            lock=threading.Lock(),
+            close=lambda: None,
+        )
+        with TestClient(app) as client:
+            login = client.post(
+                "/api/v1/auth/login",
+                json={
+                    "username": "s8." + user_id.hex,
+                    "password": "synthetic-s8-eval-only-password",
+                },
+            )
+            assert login.status_code == 200
+            auth = {"Authorization": "Bearer " + login.json()["data"]["access_token"]}
+            for name, text in config["api_documents"].items():
+                response = client.post(
+                    "/api/v1/documents",
+                    headers=auth,
+                    files={"file": (name, text.encode(), "text/plain")},
+                )
+                assert response.status_code == 202
+                terminal = worker.run_once()
+                assert terminal["status"] == "completed"
+            for case in config["cases"]:
+                started = time.monotonic()
+                row = {
+                    "id": case["id"],
+                    "mode": case["mode"],
+                    "question": case["question"],
+                }
+                try:
+                    if case["mode"] == "oracle":
+                        evidence, trace = build_context(
+                            case["question"],
+                            oracle_context(case),
+                            settings,
+                            provider,
+                            started + 150,
+                        )
+                        answer, attempts = generate_answer(
+                            case["question"],
+                            evidence,
+                            settings,
+                            provider,
+                            started + 150,
+                        )
+                        cited = {key for claim in answer.claims for key in claim.evidence_ids}
+                        result = answer.model_dump() | {
+                            "answer": render_answer(answer),
+                            "citations": [
+                                {
+                                    "evidence_id": e["evidence_id"],
+                                    "chunk_id": e["chunk_id"],
+                                }
+                                for e in evidence
+                                if e["evidence_id"] in cited
+                            ],
+                        }
+                        row.update(trace=trace, attempts=attempts)
+                    else:
+                        session = client.post(
+                            "/api/v1/chat/sessions", headers=auth, json={}
+                        ).json()["data"]["id"]
+                        response = client.post(
+                            "/api/v1/chat/query",
+                            headers=auth,
+                            json={
+                                "session_id": session,
+                                "client_request_id": str(uuid.uuid4()),
+                                "question": case["question"],
+                            },
+                        )
+                        if response.status_code != 200:
+                            error = response.json()["error"]
+                            raise AppError(response.status_code, error["code"], "Safe API failure")
+                        result = response.json()["data"]
+                        with sessions() as db:
+                            run = db.get(QueryRun, uuid.UUID(result["run_id"]))
+                            row["trace"] = run.retrieval_trace_json
+                        source_checks = []
+                        for citation in result["citations"]:
+                            opened = client.get(citation["chunk_url"], headers=auth)
+                            source_checks.append(
+                                opened.status_code == 200 and citation["excerpt"] in opened.text
+                            )
+                        row["source_api_checks"] = source_checks
+                    row.update(result=result, probes=probes(case, result), technical_error=None)
+                except AppError as exc:
+                    row["technical_error"] = exc.code
+                    if exc.code in {
+                        "model_unavailable",
+                        "model_timeout",
+                        "eval_budget_exhausted",
+                    }:
+                        rows.append(row)
+                        raise
+                row["elapsed_ms"] = round((time.monotonic() - started) * 1000, 3)
+                rows.append(row)
+                print(
+                    json.dumps(
+                        {
+                            "case": case["id"],
+                            "technical_error": row.get("technical_error"),
+                            "probes": row.get("probes"),
+                        }
+                    ),
+                    flush=True,
+                )
+        report["status"] = "completed"
+    except Exception as exc:  # noqa: BLE001 - persist safe failure type, never a successful run
+        report.update(
+            status="failed",
+            error_code=exc.code if isinstance(exc, AppError) else type(exc).__name__,
+        )
+    finally:
+        if embedder:
+            embedder.close()
+        try:
+            if vector:
+                vector._request("DELETE", allow_missing=True)
+            with sessions() as db:
+                ids = select(Document.id).where(Document.workspace_id == workspace_id)
+                revisions = select(DocumentRevision.id).where(DocumentRevision.document_id.in_(ids))
+                keys = list(
+                    db.scalars(
+                        select(DocumentRevision.storage_key).where(
+                            DocumentRevision.document_id.in_(ids)
+                        )
+                    )
+                )
+                chat_ids = select(ChatSession.id).where(ChatSession.workspace_id == workspace_id)
+                messages = select(ChatMessage.id).where(ChatMessage.session_id.in_(chat_ids))
+                db.execute(delete(AnswerCitation).where(AnswerCitation.message_id.in_(messages)))
+                db.execute(delete(ChatMessage).where(ChatMessage.session_id.in_(chat_ids)))
+                db.execute(delete(QueryRun).where(QueryRun.session_id.in_(chat_ids)))
+                db.execute(delete(ChatSession).where(ChatSession.id.in_(chat_ids)))
+                db.execute(
+                    update(Document)
+                    .where(Document.workspace_id == workspace_id)
+                    .values(
+                        status="failed",
+                        active_revision_id=None,
+                        active_generation_id=None,
+                    )
+                )
+                db.execute(delete(ProcessingJob).where(ProcessingJob.document_id.in_(ids)))
+                db.execute(delete(Chunk).where(Chunk.revision_id.in_(revisions)))
+                db.execute(delete(SourceBlock).where(SourceBlock.revision_id.in_(revisions)))
+                db.execute(delete(DocumentRevision).where(DocumentRevision.document_id.in_(ids)))
+                db.execute(delete(Document).where(Document.workspace_id == workspace_id))
+                db.execute(delete(AuthToken).where(AuthToken.user_id == user_id))
+                db.execute(delete(User).where(User.id == user_id))
+                db.execute(delete(Workspace).where(Workspace.id == workspace_id))
+                db.commit()
+            for key in keys:
+                path = (storage / key).resolve()
+                if not path.is_relative_to(storage.resolve()):
+                    raise ValueError("Unsafe cleanup path")
+                path.unlink(missing_ok=True)
+            report["cleanup_completed"] = True
+        except Exception as exc:  # noqa: BLE001 - cleanup failure must remain visible in manifest
+            report["cleanup_error_type"] = type(exc).__name__
+        finally:
+            if vector:
+                vector.close()
+            engine.dispose()
+            settings.storage_dir, settings.qdrant_collection = saved
+            report["requests"] = provider.counts
+            report["cases_completed"] = len(rows)
+            report["technical_errors"] = sum(bool(row.get("technical_error")) for row in rows)
+            write_json(output / "manifest.json", report)
+            (output / "per_question.jsonl").write_text(
+                "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+            write_json(
+                output / "metrics.json",
+                {
+                    "n": len(rows),
+                    "technical_errors": report["technical_errors"],
+                    "cases_with_all_fixture_probes": sum(
+                        bool(row.get("probes")) and all(row["probes"].values()) for row in rows
+                    ),
+                    "answer_accuracy": None,
+                    "human_review": "pending",
+                    "requests": provider.counts,
+                },
+            )
+            (output / "report.md").write_text(
+                f"# Step 08 synthetic dev smoke\n\nStatus: {report['status']}; "
+                f"{len(rows)} cases; requests: {provider.counts}.\n\n"
+                "Oracle uses supplied gold snippets; API uses real E5/SQL/Qdrant/Gemini. "
+                "Fixture literal/status probes are diagnostics, "
+                "not answer accuracy or a held-out benchmark. "
+                "Human review pending. Raw thoughts and secrets are not saved.\n",
+                encoding="utf-8",
+            )
+    print(
+        json.dumps(
+            {
+                "report": str(output.relative_to(ROOT)),
+                "status": report["status"],
+                "requests": provider.counts,
+                "cleanup": report["cleanup_completed"],
+            }
+        ),
+        flush=True,
+    )
+    return 0 if report["status"] == "completed" and report["cleanup_completed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -19,7 +19,12 @@ class OrphanCleaner:
             db.scalar(select(Document.id).where(Document.active_generation_id == generation))
             is not None
             or db.scalar(
-                select(AnswerCitation.id).where(AnswerCitation.generation_id == generation).limit(1)
+                select(AnswerCitation.id)
+                .where(
+                    AnswerCitation.generation_id == generation,
+                    AnswerCitation.source_status == "available",
+                )
+                .limit(1)
             )
             is not None
             or db.scalar(

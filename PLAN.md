@@ -1,12 +1,12 @@
 # PLAN — SME Knowledge Copilot
 
-> **Phiên bản:** 1.10 — hoàn thành search/dev retrieval Bước 07, 03/11/2026 (lập kế hoạch 01/11/2026)<br>
+> **Phiên bản:** 1.12 — hoàn thành delete/privacy Bước 09, 04/11/2026 (lập kế hoạch 01/11/2026)<br>
 > **Nguồn yêu cầu:** [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md), v2.1  
 > **Mục tiêu:** hoàn thành project RAG thuần có demo, test và benchmark tái lập; hướng tới M1 ngày 15/11/2026.  
 > **Nhân sự:** 2 người. Kế hoạch theo thứ tự phụ thuộc; thời lượng là ước lượng, không phải cam kết.  
-> **Trạng thái:** hoàn thành Bước 00–07 theo phạm vi; BGE có điều kiện hoãn. Bước 08–12 chưa thực hiện. Ingestion/search/source và dev retrieval benchmark đã có; chưa answering/held-out benchmark.<br>
+> **Trạng thái:** hoàn thành Bước 00–09 theo phạm vi; Bước 10–12 chưa thực hiện. Ingestion/search/answering/source/delete/cleanup APIs đã có; chưa UI/held-out benchmark.<br>
 
-**Tiến độ hiện tại: 56,1% / 100%.** [Bước 07](docs/search-retrieval-step07.md) có search/source APIs, active-generation SQL revalidation, canonical span matcher và dev benchmark thật: 13 answerable/2 unknown, Hit/Recall@5=1, MRR@5≈0,923, 0/15 technical errors. Đây là corpus nhỏ, không phải answering accuracy/held-out result. **222 backend + 86 eval tests đạt** ở hai suites riêng; Ruff/pip check đạt. Giữ E5350/50/candidate20/top5/cutoff None, BGE hoãn. Không LLM calls/UI/commit/push. [KNOWLEDGE K-055–060](KNOWLEDGE.md); Bước 08 cần xác nhận riêng.
+**Tiến độ hiện tại: 75,6% / 100%.** Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending. [Báo cáo Bước 09](docs/deletion-privacy-step09.md), [KNOWLEDGE K-068–072](KNOWLEDGE.md). Bước 10 là UI, cần nhắc và xác nhận riêng trước sửa frontend.
 
 ### Quy ước báo tiến độ project
 
@@ -22,8 +22,10 @@ Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/
 | 05 | 12 | 7/7 — upload/parser/chunker/source mapping; worker ready thuộc 06 | 12 |
 | 06 | 10 | 6/6 — durable worker/local E5/index/publish/recovery/measurement | 10 |
 | 07 | 10 | 6/6 mục bắt buộc; mục 6 challenger có điều kiện hoãn | 10 |
-| 08–12 | 45 | 0% | 0 |
-| Tổng | 102,5 | `(1,5 + 4 + 7 + 5 + 8 + 12 + 10 + 10) / 102,5` | **56,1% / 100%** |
+| 08 | 10 | 7/7 đầu việc triển khai/smoke; human quality review/held-out còn Bước11 | 10 |
+| 09 | 10 | 6/6 — disable/redaction/cleanup/retry/fault-race/retention | 10 |
+| 10–12 | 25 | 0% | 0 |
+| Tổng | 102,5 | `(1,5 + 4 + 7 + 5 + 8 + 12 + 10 + 10 + 10 + 10) / 102,5` | **75,6% / 100%** |
 
 Đầu việc đang làm/chưa xác minh không tính hoàn thành; đóng gate còn cần các điều kiện của từng bước. Cách chia đều đầu việc trong một bước là ước lượng quản lý, không phải giờ thực tế đã tiêu hay độ chính xác AI. Nếu chỉ giải thích/đọc, giữ nguyên %; chỉ ghi file tiến độ trong đợt thay đổi đã xác nhận. Bước 02 đã đạt khoảng 12,2% trước cộng embedding/tokenizer Bước 03.
 
@@ -449,6 +451,8 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 **Đầu ra:** `/chat/query` trả answer có nguồn hoặc trạng thái lỗi/thiếu bằng chứng đúng.  
 **Gate:** AT-R11–15, AT-R19–20; logs không chứa secret/full context mặc định. Không để eval oracle context trở thành shortcut trong app.
 
+**Trạng thái 04/11/2026 — hoàn thành 7/7 phạm vi triển khai Bước08:** POST/chat/query, token counting Gemini trên full request, E IDs sau packing, schema strict/status/claims, backend citations, bounded repair và technical failures; owner/idempotency/session locks, expiry recovery, atomic publish/source revalidation/replay/history. **276 backend +91 eval tests đạt**, Ruff check/format 108 files/pip check đạt. AT-R11–15/19–20 có fixture contract tests; model thật có3 oracle +2 API synthetic dev cases qua2runs, không coi là full human-quality/held-out acceptance. Run đầu chạm trần20 count calls trước generation cuối do2files→3chunks, giữ failed report; sửa runner preflight theo chunks và retest riêng unknown sau xác nhận bổ sung. Tổng5 generate+25count calls, không repair trong5 model outputs; human review pending. [Report/giới hạn](docs/answering-step08.md), [config](eval/configs/answering.json). Backend/prompt/model không đổi giữa hai runs; reviewed/mapping/reports cũ bất biến. Không tải model/paid fallback/UI/delete/commit/push. Trọng số giữ10/tổng102,5 → **65,9% / 100%**; chờ đợt Bước09.
+
 ### Bước 09 — Delete, privacy và kiểm thử lỗi liên tầng
 
 1. Delete transaction chặn retrieval trước rồi tạo cleanup job; delete lặp idempotent.
@@ -460,6 +464,8 @@ Artifacts và hướng dẫn review: [dataset README](eval/datasets/README.md), 
 
 **Đầu ra:** document lifecycle hoàn chỉnh và báo cáo fault/recovery tests.  
 **Gate:** AT-R16–18 cùng regression AT-R06–09/13–15/19; 0 vi phạm scope, citation-ID hoặc deleted-source trong bộ test bắt buộc.
+
+**Trạng thái 04/11/2026 — hoàn thành 6/6 phạm vi Bước 09:** delete idempotent/admin/workspace scope, SQL disable và revoke ingest lease atomic với redaction/job; cleanup multi-collection/file/blocks/chunks/snapshots, retry/exhaustion/manual retry, lost commit acknowledgment và tombstone reconciliation. Trace mặc định giữ IDs/hash/spans, source revalidation trước generation và publish; legacy full/debug copies được scrub khi nguồn bị xóa. **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Barriers kiểm tra delete tại count/generate/upsert; Qdrant/file/DB failures, expired leases, cross-workspace/role và search/source/history/replay có assertions. CLI cleanup-only chạy với model cache không tồn tại; worker xử lý durable jobs trước maintenance lỗi. [Report/giới hạn](docs/deletion-privacy-step09.md), [ADR RAG-08](docs/decisions/0008-document-deletion-and-retention.md). Không LLM calls, downloads, UI, commit/push; human-quality/held-out vẫn Bước 11. `(67,5+10)/102,5` → **75,6% /100%**. Bước 10 cần xác nhận UI riêng.
 
 ### Bước 10 — UI và một luồng end-to-end hoàn chỉnh
 

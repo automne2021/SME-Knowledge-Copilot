@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 
 from app.api.router import api_router
+from app.core.config import get_settings
 from app.core.errors import register_error_handlers
 
 
@@ -19,6 +20,7 @@ def create_app() -> FastAPI:
 
     app = FastAPI(title="SME Knowledge Copilot API", version="0.3.0", lifespan=lifespan)
     app.state.search_init_lock = threading.Lock()
+    app.state.llm_capacity = threading.BoundedSemaphore(get_settings().llm_max_concurrency)
 
     @app.middleware("http")
     async def add_request_id(request: Request, call_next):

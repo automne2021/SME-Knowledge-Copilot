@@ -172,9 +172,16 @@ class IngestionWorker:
 
 
 def main():
+    from app.services.cleanup import CleanupQueue, CleanupWorker
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--once", action="store_true", help="Recover/sweep, process at most one job"
+    )
+    parser.add_argument(
+        "--cleanup-only",
+        action="store_true",
+        help="Delete/reconcile without model weights or inference",
     )
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -184,13 +191,34 @@ def main():
         signal.signal(signum, lambda *_: stop.set())
     vector = embedder = None
     try:
-        profile = frozen_profile(settings)
+        queue = JobQueue(get_sessionmaker(), settings)
+        cleanup_queue = CleanupQueue(queue.sessions, settings)
         vector = QdrantIndex(
             settings.qdrant_url, settings.qdrant_collection, settings.vector_timeout_seconds
         )
+        cleanup = CleanupWorker(cleanup_queue, vector, stop)
+        if args.cleanup_only:
+            swept = 0.0
+            while not stop.is_set():
+                try:
+                    cleanup_queue.recover_expired()
+                    result = cleanup.run_once()
+                    if time.monotonic() - swept >= settings.worker_sweep_seconds:
+                        cleanup.reconcile_deleted()
+                        swept = time.monotonic()
+                    if args.once:
+                        return 0
+                    if result is None:
+                        stop.wait(settings.worker_poll_seconds)
+                except Exception as exc:
+                    logger.error("cleanup_poll_failed type=%s", type(exc).__name__)
+                    if args.once:
+                        return 1
+                    stop.wait(settings.worker_poll_seconds)
+            return 0
+        profile = frozen_profile(settings)
         vector.ensure_collection(profile["embedding_hash"])
         embedder = LocalEmbedder(profile, settings)
-        queue = JobQueue(get_sessionmaker(), settings)
         worker = IngestionWorker(
             queue, vector, embedder, E5TokenCounter(settings.hf_home / "hub"), profile, stop
         )
@@ -199,10 +227,15 @@ def main():
         while not stop.is_set():
             try:
                 queue.recover_expired()
+                cleanup_queue.recover_expired()
+                # A failing sweep must not starve durable cleanup/ingestion attempts.
+                result = cleanup.run_once()
+                if result is None:
+                    result = worker.run_once()
                 if time.monotonic() - swept >= settings.worker_sweep_seconds:
                     cleaner.sweep()
+                    cleanup.reconcile_deleted()
                     swept = time.monotonic()
-                result = worker.run_once()
                 if args.once:
                     break
                 if result is None:

@@ -11,7 +11,7 @@
 
 **Quan hệ với tài liệu cũ:** tài liệu này xác định yêu cầu cho hướng sản phẩm mới. [Spec Operations v1.1](SME_AI_Operations_Copilot_Specification.md) là mẫu về độ chi tiết và tài liệu lịch sử; các yêu cầu audio, agent, proposal, approval và task không được kế thừa vào MVP RAG. [CLAUDE.md](CLAUDE.md) và hướng dẫn repository đã đồng bộ sang RAG trong Bước 00 ngày 02/11/2026; hiện trạng code và các giới hạn kiểm chứng được ghi trong [audit chuyển tiếp](docs/rag-transition-audit.md). Spec vẫn là thiết kế đích, không xác nhận pipeline RAG đã triển khai.
 
-**Tiến độ triển khai 03/11/2026: 56,1% / 100%** theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). Bước 00–07 hoàn thành theo phạm vi; [Bước 07](docs/search-retrieval-step07.md) có search/source APIs, active-gen SQL revalidation và dev retrieval E5 thật: 13 answerable/2 unknown, Recall@5=1/MRR@5≈0,923/0 technical errors. **222 backend + 86 eval tests đạt**, Ruff/pip check đạt. Đây là corpus nhỏ, chưa answering accuracy/held-out result. Freeze dense config/cutoff None/BGE hoãn; chưa answering/delete/UI. Reviewed/mapping/reports cũ bất biến, không LLM calls/tải model/UI ở Bước 07. Bước 08 cần xác nhận riêng; trước code UI nhắc/chờ xác nhận. Tỷ lệ là khối lượng, không phải accuracy.
+**Tiến độ triển khai 04/11/2026: 75,6% /100%** theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending. [Bước 09](docs/deletion-privacy-step09.md). Bước 10 cần nhắc và xác nhận UI riêng; tỷ lệ là khối lượng, không phải accuracy.
 
 **Cách đọc:** mục 3 xác định phạm vi; mục 5 là yêu cầu chức năng và bất biến; mục 7–10 là contract triển khai; mục 14–15 xác định cách đo và nghiệm thu. `P0/M1` là bắt buộc cho demo, `P1/M2` là nâng cao; các giá trị cấu hình khởi đầu có thể thay đổi nhưng phải lưu cùng kết quả đo.
 
@@ -517,6 +517,8 @@ Mặc định khởi đầu: tối đa 3 attempts/job (gồm lần đầu), expo
 
 **Lịch sử chat:** khi một nguồn được dùng trong answer bị xóa, API che toàn bộ answer đó bằng thông báo `source_unavailable` và không trả excerpt snapshot. Cleanup loại nội dung answer bị ảnh hưởng và snapshots, giữ IDs/timestamps; câu hỏi người dùng và answer không liên quan giữ lại. Chính sách này tránh hồi sinh text đã xóa qua lịch sử, nhưng không tuyên bố xóa được bản người dùng đã tải hoặc dữ liệu provider đã nhận.
 
+**Implementation Bước 09 (04/11/2026):** DELETE/documents/{id} và POST/jobs/{id}/retry có admin/workspace scope. SQL disable/lease revoke/redaction/job atomic; cleanup xác minh scoped vectors, unlink canonical files, xóa blocks/chunks/snapshots, retire revisions và giữ tombstone. Default trace chỉ provenance IDs/hash/spans; full context ở RAM. Revalidate/register evidence trước generation và revalidate khi publish; deleted-source replay/history bị che. CLI --cleanup-only không cần weights/cache; reconciliation dọn late upserts. [Report/tests/giới hạn](docs/deletion-privacy-step09.md), [ADR RAG-08](docs/decisions/0008-document-deletion-and-retention.md). Không tuyên bố thu hồi bytes đã gửi provider/browser hoặc secure erase WAL/backups.
+
 | Partial failure | Recovery / kết quả bắt buộc |
 |---|---|
 | File đã lưu, tạo DB record thất bại | Dọn orphan file; không trả upload thành công |
@@ -944,6 +946,7 @@ Multipart field bắt buộc là `file`; filename hiển thị được sanitize
 | `retrieval_unavailable` | Vector DB lỗi | 503, không trả lời giả |
 | `model_timeout` | LLM vượt deadline | 504, có request ID |
 | `model_unavailable` | Provider lỗi hoặc tạm hết khả năng phục vụ | 503, không giả thành abstention |
+| `model_busy` | Hết capacity model trong API process | 429, không xếp hàng vô hạn hoặc fallback |
 | `invalid_model_output` | Sai schema/citation sau repair | 502, không publish draft |
 | `invalid_filter` | Field filter không hỗ trợ/sai kiểu | 422 |
 | `not_found` | Resource không tồn tại hoặc ngoài scope | 404, không lộ metadata |
@@ -1581,6 +1584,8 @@ LLM_TIMEOUT_SECONDS=120
 **Lưu ý:** `host.docker.internal` là cách thường dùng trên Docker Desktop Windows/macOS; trên Linux Docker engine có thể cần cấu hình host gateway hoặc URL khác. Model phải thật sự hỗ trợ API mà adapter yêu cầu; không mặc định endpoint local tương thích hoàn toàn với mọi provider.
 
 Mẫu local trên là ví dụ cấu hình, không bắt buộc dùng LLM local làm baseline. Chọn một provider/model thực tế trước demo và lưu trong eval config. `<...>` là placeholder phải được thay; không có model/key/context window thật thì startup báo thiếu cấu hình, không tự trả mock answer. `MAX_UPLOAD_MB`/các giới hạn MB ở đây được quy ước là MiB (1.048.576 bytes), UI ghi đơn vị tương ứng.
+
+**Runtime Bước 08 (04/11/2026):** native Gemini `gemini-3.5-flash-lite`, key riêng và flags `LLM_FREE_TIER_CONFIRMED`/`LLM_QUOTA_CONFIRMED`; search/health không cần LLM key, query có evidence nhưng thiếu cấu hình trả503. Tên biến thực trong [.env.example](.env.example) là `LLM_EVIDENCE_BUDGET_TOKENS=4000`, `LLM_MAX_OUTPUT_TOKENS=800`, `LLM_CONTEXT_WINDOW_TOKENS=32768`, `LLM_SAFETY_MARGIN_TOKENS=256`, `LLM_CALL_TIMEOUT_SECONDS=120`, `QUERY_TIMEOUT_SECONDS=150`, `LLM_MAX_CONCURRENCY=2`. Prompt `rag-v1-claims`, repair≤1 và thinking MINIMAL pin trong code/config, không nhận từ client. Context32768 là app ceiling dưới model input limit, không phải thông số tối đa model. Mẫu local/BGE phía trên là phương án khác, không được dùng thay profile E5/Gemini hiện tại nếu chưa đổi fingerprint/adapter/eval. Xem [Bước 08](docs/answering-step08.md).
 
 **Validation cấu hình:** `0 ≤ overlap < chunk_size`; token budget phải hợp context window; `candidate_k ≥ final_k ≥ 1`; heartbeat nhỏ hơn lease; timeout/retry/concurrency phải dương; dimension và fingerprint phải khớp collection. `RETRIEVAL_SCORE_THRESHOLD` rỗng nghĩa là tắt cutoff. API key có thể rỗng chỉ khi local adapter được cấu hình cho phép; không in secrets trong logs/config reports.
 

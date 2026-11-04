@@ -18,7 +18,7 @@ from app.services.worker_errors import LeaseLost, WorkerError
 class Attempt:
     job_id: uuid.UUID
     document_id: uuid.UUID
-    revision_id: uuid.UUID
+    revision_id: uuid.UUID | None
     workspace_id: uuid.UUID
     generation_id: uuid.UUID
     lease_token: uuid.UUID
@@ -30,6 +30,8 @@ class Attempt:
 
 
 class JobQueue:
+    kind = "ingest"
+
     def __init__(self, sessions, settings):
         self.sessions, self.settings = sessions, settings
 
@@ -41,14 +43,19 @@ class JobQueue:
         with self.sessions() as db:
             now = self._now(db)
             eligible = (
-                ProcessingJob.kind == "ingest",
+                ProcessingJob.kind == self.kind,
                 ProcessingJob.status.in_(["queued", "retry_wait"]),
                 or_(ProcessingJob.next_retry_at.is_(None), ProcessingJob.next_retry_at <= now),
             )
             document = db.scalar(
                 select(Document)
                 .join(ProcessingJob, ProcessingJob.document_id == Document.id)
-                .where(*eligible, Document.status.in_(["queued", "processing"]))
+                .where(
+                    *eligible,
+                    Document.status.in_(
+                        ["deleting"] if self.kind == "cleanup" else ["queued", "processing"]
+                    ),
+                )
                 .order_by(ProcessingJob.created_at, ProcessingJob.id)
                 .limit(1)
                 .with_for_update(of=Document, skip_locked=True)
@@ -62,33 +69,37 @@ class JobQueue:
             )
             if job is None:
                 return None
-            revision = db.get(DocumentRevision, job.revision_id)
-            if revision is None or job.attempts >= self.settings.job_max_attempts:
+            revision = db.get(DocumentRevision, job.revision_id) if job.revision_id else None
+            if (
+                revision is None and self.kind == "ingest"
+            ) or job.attempts >= self.settings.job_max_attempts:
                 job.status, job.error_code, job.finished_at = (
                     "failed",
                     "job_attempts_exhausted",
                     now,
                 )
-                document.status = "failed"
+                if self.kind == "ingest":
+                    document.status = "failed"
                 db.commit()
                 return None
-            job.status, job.stage = "running", "validate"
+            job.status, job.stage = "running", "cleanup" if self.kind == "cleanup" else "validate"
             job.attempts += 1
             job.lease_token, job.generation_id = uuid.uuid4(), uuid.uuid4()
             job.lease_expires_at = now + timedelta(seconds=self.settings.job_lease_seconds)
             job.started_at, job.finished_at, job.next_retry_at = now, None, None
             job.error_code, job.error_message, job.retryable = None, None, False
             job.attempt_manifest_json = {}
-            document.status, revision.status = "processing", "staging"
+            if self.kind == "ingest":
+                document.status, revision.status = "processing", "staging"
             attempt = Attempt(
                 job.id,
                 document.id,
-                revision.id,
+                revision.id if revision else None,
                 document.workspace_id,
                 job.generation_id,
                 job.lease_token,
                 document.lifecycle_version,
-                revision.storage_key,
+                revision.storage_key if revision else "",
                 document.sha256,
                 document.mime,
                 now.timestamp(),
@@ -113,7 +124,8 @@ class JobQueue:
             or job.lease_expires_at is None
             or job.lease_expires_at <= now
             or job.revision_id != attempt.revision_id
-            or document.status != "processing"
+            or job.kind != self.kind
+            or document.status != ("deleting" if self.kind == "cleanup" else "processing")
             or document.lifecycle_version != attempt.lifecycle_version
         ):
             raise LeaseLost()
@@ -299,8 +311,9 @@ class JobQueue:
             job.next_retry_at = now + timedelta(seconds=random.uniform(delay / 2, delay))
         else:
             job.status, job.finished_at, job.next_retry_at = "failed", now, None
-            document.status = "needs_ocr" if error.code == "needs_ocr" else "failed"
-            if job.revision_id:
+            if self.kind == "ingest":
+                document.status = "needs_ocr" if error.code == "needs_ocr" else "failed"
+            if self.kind == "ingest" and job.revision_id:
                 db.get(DocumentRevision, job.revision_id).status = "failed"
 
     def fail(self, attempt, error):
@@ -315,7 +328,7 @@ class JobQueue:
             ids = db.execute(
                 select(ProcessingJob.id, ProcessingJob.document_id)
                 .where(
-                    ProcessingJob.kind == "ingest",
+                    ProcessingJob.kind == self.kind,
                     ProcessingJob.status == "running",
                     ProcessingJob.lease_expires_at <= func.clock_timestamp(),
                 )
@@ -338,7 +351,9 @@ class JobQueue:
                 now = self._now(db)
                 if job is None or job.status != "running" or job.lease_expires_at > now:
                     continue
-                if document.status in {"deleting", "deleted"}:
+                if (self.kind == "ingest" and document.status in {"deleting", "deleted"}) or (
+                    self.kind == "cleanup" and document.status != "deleting"
+                ):
                     job.status, job.finished_at = "cancelled", now
                     job.lease_token, job.lease_expires_at = None, None
                 else:

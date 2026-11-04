@@ -870,12 +870,152 @@ Git index là snapshot sẽ được commit, có thể khác working tree, nên 
 
 Push thông thường lên origin/main giữ lịch sử; không force-push hoặc amend các commits đã công bố. Sau push đối chiếu local HEAD với remote branch và kiểm tra working tree. Nếu remote đi trước, phải fetch/đánh giá divergence trước tích hợp, không dùng force để vượt non-fast-forward. Git checkpoint không hoàn thành thêm đầu việc sản phẩm, nên tiến độ giữ **56,1% / 100%**. Bước 08 vẫn cần phạm vi/xác nhận riêng; kết quả SHA/push thực được báo sau khi Git xác nhận.
 
+### K-062 — Final context và token budget phải thuộc tokenizer của LLM
+
+**Ngày / loại:** 04/11/2026 — thiết kế và triển khai Bước 08, sau xác nhận của người dùng. Liên quan [spec 8.6–8.7](SME_Knowledge_Copilot_RAG_Specification.md), [context builder](backend/app/services/answering.py), [config](eval/configs/answering.json).
+
+Token không đồng nghĩa ký tự hay từ. E5 có tokenizer và giới hạn 512 riêng; dùng số token E5 để tính context Gemini sẽ sai đơn vị. Chọn Gemini native `countTokens` trên toàn `generateContentRequest`, gồm system, question, evidence wrappers và schema/config gửi thật. Budget gồm input + output tối đa 800 + margin256 trong app ceiling32768; evidence ceiling4000. Ceiling này là giới hạn chủ động của app, không phải context tối đa của model. Đếm bản repair trong lúc packing và kiểm tra lại prompt thường trước generate. Reserved output bao gồm cả thinking, nên không cộng 800 text ngoài giới hạn thinking/output của provider.
+
+Giữ nguyên chunk: chunk lớn bị bỏ, xét chunk tiếp theo; E1… chỉ được cấp sau packing. Lưu retrieved IDs, excluded IDs, final IDs, prompt SHA và map text/chunk/revision/generation/lifecycle/source spans đã gửi. Citation vào một candidate bị loại vẫn là reference sai. Không âm thầm cắt giữa điều kiện chính sách hoặc truncate question. Riêng E5 query budget vẫn được kiểm tra trước retrieval; vượt giới hạn trả422.
+
+Phương án khác: `len(text)/4` rẻ nhưng chỉ gần đúng, đặc biệt với tiếng Việt; tokenizer E5 không thay được tokenizer Gemini. Tokenizer local tương thích model có thể giảm round trips nhưng chưa có bản pin/kiểm chứng cho cấu hình này, nên chưa dùng. Đổi sang local token counter chỉ sau khi so với provider trên prompt thường/repair/schema/tiếng Việt. Đánh đổi hiện tại là nhiều HTTP count calls; tối đa `top_k+2` khi có evidence, đã nằm trong deadline/concurrency. Test fake character counter chỉ chứng minh nhánh budget, không phải số token thật.
+
+Nguồn chính thức kiểm tra 04/11/2026: [counting tokens](https://ai.google.dev/gemini-api/docs/tokens), [model limits](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite), [thinking](https://ai.google.dev/gemini-api/docs/thinking). Public docs không xác minh billing/quota của tài khoản.
+
+### K-063 — Typed claims, citation metadata do backend sở hữu và bounded repair
+
+**Ngày / loại:** 04/11/2026 — triển khai [schema](backend/app/schemas/answer.py), [prompt/validation](backend/app/services/answering.py); thay schema smoke rút gọn bằng contract sản phẩm trong runtime, giữ smoke/report cũ bất biến.
+
+Structured output làm hình dạng JSON dự đoán được; backend vẫn kiểm tra kiểu strict, extra=forbid, tối đa12 claims/1000 ký tự, ID hợp lệ trong final context, không duplicate ID/marker tự chèn. grounded cần claim; partial cần giới hạn/điều kiện thiếu; insufficient có claims rỗng. Conflict khai báo cần partial và ít nhất hai evidence IDs, nhưng quy tắc cấu trúc này không chứng minh model đã hiểu đúng hai phía. Không tự chọn chính sách theo ngày upload hoặc filename.
+
+Model chỉ nhận question và evidence ID/text; tên file, location, revision/version, excerpt và URLs của citation được backend dựng từ SQL. `answer` ghép claims với markers backend; limitations/missing information vẫn cần kiểm tra faithfulness bằng rubric. Với abstention, backend chỉ công bố mẫu cố định, bỏ giải thích tự do của model. Text từ tài liệu là dữ liệu không có quyền chỉ dẫn, không có tools hoặc fetch URL; JSON/plain text chưa thay thế yêu cầu escape/sanitize UI ở Bước10.
+
+Sai JSON/schema/reference hoặc finishReason khác STOP cho phép tối đa một lần tạo lại trên cùng question/evidence map, dùng deadline còn lại. Repair instruction cố định, không echo raw output hoặc lỗi Pydantic chứa dữ liệu. Lỗi quota/mạng/provider không đi vào repair. Output bị cắt không được nối dấu ngoặc hoặc tự điền dữ kiện. Hai lần không hợp lệ trả502 và không có assistant message thành công. Không chọn cách xóa citation lỗi rồi giữ kết luận vì kết luận khi đó mất chứng cứ. Chưa thêm judge/entailment model vì tốn tài nguyên và vẫn cần hiệu chỉnh/human review; schema pass không phải answer đúng.
+
+Nguồn: [Gemini structured outputs](https://ai.google.dev/gemini-api/docs/structured-output), [GenerateContent usage/finish reason](https://ai.google.dev/api/generate-content). Kiểm chứng bằng [schema/budget tests](backend/tests/test_answering.py), [provider MockTransport tests](backend/tests/test_gemini_provider.py) và report Bước08 khi hoàn tất.
+
+### K-064 — Idempotency, session concurrency và transaction công bố câu trả lời
+
+**Ngày / loại:** 04/11/2026 — triển khai [chat service](backend/app/services/chat.py), [API](backend/app/api/chat.py). Tận dụng schema Bước04, không sửa migration đã áp dụng.
+
+Idempotency giải quyết retry sau mất response: hash question đã trim + session + filters UUID sắp xếp + mode/top-k input; unique(session,client_request_id) và partial unique running/session là bảo vệ DB. Khóa session ngắn bằng NOWAIT để serialize lúc tạo run, rồi commit user message/run trước inference. Cùng ID/input replay kết quả; khác input409; running409 kèm run ID; failed phải dùng ID mới. Default top-k được pin trong config lần đầu; input bỏ qua top-k giữ null trong hash để replay không phụ thuộc default mới. Mỗi câu hỏi độc lập, không đưa answer cũ vào prompt.
+
+Không giữ transaction/row lock khi embed, count hoặc generate. Sau model: khóa documents theo thứ tự UUID rồi session/run, đọc lại ready/active revision/generation/lifecycle/text; nguồn đổi409. Ghi assistant message + citations + completed trong một transaction. Commit thất bại trả lỗi DB; nếu commit đã thành công nhưng mất acknowledgment, replay vẫn tìm kết quả đã lưu và không gọi model lần hai. Không trả draft chưa lưu như thành công.
+
+Run có deadline DB, recovery khi GET run hoặc query tiếp theo đánh failed cho running hết hạn; process chết không khiến session busy vĩnh viễn. Final publish kiểm tra cả monotonic deadline và trạng thái/deadline DB, nên request cũ không publish sau recovery. Chưa thêm queue query/streaming vì làm phức tạp cancellation/idempotency; P0 đồng bộ, một run/session, capacity model2/app process. Khi chạy nhiều API workers cần giới hạn phân tán nếu muốn trần toàn deployment là2.
+
+Bằng chứng quan trọng: [real PostgreSQL chat tests](backend/tests/test_chat.py) kiểm tra concurrent requests, cross-session, owner scope kể cả admin, no locks trong inference, failed publication và lost commit ack. Fixture embeddings/provider không phải quality benchmark.
+
+### K-065 — Deadline và lỗi kỹ thuật không phải thiếu bằng chứng
+
+**Ngày / loại:** 04/11/2026 — [native Gemini adapter](backend/app/services/gemini.py), [retrieval](backend/app/services/retrieval.py), [embedding](backend/app/services/embeddings.py), [Qdrant adapter](backend/app/services/vectors.py).
+
+HTTPX timeout theo phase có thể không chặn tổng thời gian của một response truyền chậm. Dùng AsyncClient bên trong `asyncio.timeout`, gọi từ sync endpoint qua asyncio.run để giới hạn wall clock HTTP theo min(call cap120, query time còn lại). Không redirects, trust_env=False, không SDK retry hoặc provider fallback. Path/model pin, key chỉ trong header, flags free-tier/quota mặc định false. Hai flags là xác nhận thủ công, không phải billing cap từ Google; không hứa tài khoản vẫn free nếu chủ tài khoản bật billing sau đó.
+
+Deadline chung150 giây truyền vào E5 startup/batch poll và Qdrant check/query; quá hạn không publish. Model subprocess timeout terminate/join có cleanup grace, SQL/OS scheduling cũng có overhead;150 là work/publication budget, không phải hard SLA mọi byte HTTP trả về đúng150. Search-only giữ đường chạy không cần LLM/config key. Empty ready scope không init model hoặc gọi Gemini. Qdrant/embedding/provider lỗi trả503/504; chỉ thiếu evidence thật mới thành200 insufficient_evidence. Quota429 của provider thành503 model_unavailable, không thử lại tự động; capacity nội bộ thành429 model_busy.
+
+Chưa dùng async toàn bộ SQL/embedding vì hiện runtime đồng bộ và subprocess đã có timeout; chuyển toàn stack cần benchmark/kiểm tra cancellation riêng. Không tạo thread bỏ chạy cùng Session khi deadline hết vì có thể tiếp tục ghi dữ liệu sau response. Logs/error envelopes không chứa key, provider body, full prompt hoặc raw output; chỉ usage/model/finish reason an toàn. Token usage chưa có thì null, không giả0.
+
+### K-066 — Oracle context chỉ là công cụ chẩn đoán trong eval
+
+**Ngày / loại:** 04/11/2026 — [script](eval/run_answering_eval.py), [protocol](eval/configs/answering.json), [offline tests](eval/tests/test_answering_eval.py).
+
+Oracle mode cấp gold snippets trực tiếp cho production context builder/generation validator: nếu câu trả lời vẫn sai thì lỗi thuộc prompt/schema/budget/model, chưa đủ cơ sở đổi retriever. Helper chỉ nằm trong eval; ChatQuery extra=forbid từ chối oracle_context/evidence/model URL từ client. Dùng5 ca synthetic dev: multi-source, thiếu điều kiện, mâu thuẫn (oracle); injection và unknown (API E5/SQL/Qdrant/Gemini thật). Không đọc query test holdout hoặc chỉnh reviewed snapshot.
+
+Người dùng xác nhận riêng trần10 generateContent (5ca×tối đa2),20 countTokens,0USD. Ledger ghi trước mỗi request, giới hạn chung cả oracle/API/repair và cách các request tối thiểu5giây. Fixture này dự kiến19 count calls nếu đủ cả5ca, nhưng số thực phải lấy ledger. Gặp quota/mạng/timeout dừng run, không fallback. Mỗi đợt chạy mới vẫn cần phê duyệt; CLI --live không thay xác nhận người dùng.
+
+Freeze config/cases và source snapshot/hash trước request đầu, lưu outputs/usage/timings/trace thật rồi cleanup workspace/collection test riêng. Literal/status probes chỉ là diagnostics hữu hạn, không chứng minh entailment/answer accuracy hoặc injection an toàn tổng quát. Không tự đánh dấu human review xong; kết quả này không thay held-out eval Bước11. Phương án gọi LLM judge chưa chọn vì trần0USD và judge cũng cần đối chiếu nhãn người. Báo cáo thật và phạm vi nghiệm thu ghi ở mục tiếp theo sau khi kiểm chứng.
+
+### K-067 — Kết quả Bước08, lỗi dự toán count requests và tính toàn vẹn artifacts
+
+**Ngày / loại:** 04/11/2026 — đã kiểm chứng, giữ nguyên các lần lỗi. [Report tổng hợp](docs/answering-step08.md), [run đầu](eval/reports/answering_dev_20261104T031918Z_fd3953b6/manifest.json), [retest riêng](eval/reports/answering_dev_20261104T032524Z_a2800bde/manifest.json).
+
+Backend **276 passed/1 warning** trong276,31giây; eval riêng **91 passed/1 warning**, Ruff check/format 108 files và pip check đạt. Warning Starlette/httpx giữ nguyên, không skip hoặc ẩn. Không cài dependencies/model, không sửa UI/schema/applied migrations. Tests backend gồm cả lost commit acknowledgment, two sessions, expired run fencing, source change/replay/history và owner restriction; không coi fake provider/embedding là quality model.
+
+Run đầu status **failed**:5 attempts,4outputs validate/probes đạt, ca unknown gặp eval_budget_exhausted trước generation. Nguyên nhân do tôi ước lượng2 files tạo2 chunks, nhưng MD có heading riêng nên thực tế3chunks. Với base+candidate counts+normal final check, full protocol cần21count calls thay vì19 dự kiến ở K-066. Ledger chặn đúng request21, đã dùng20counts+4generation, không vượt trần người dùng. Nếu chỉ nhìn số docs hoặc số generation thì bỏ sót quota của tokenizer HTTP. Test dự toán cũ dựa số files cũng sai; thay bằng parser/tokenizer thật tái hiện3chunks và upper bound theo số chunks.
+
+Sửa **eval runner**, không đổi backend/prompt/model/cases: preflight chunk-aware trước model requests, chọn --case và caps ghi execution.json, phân biệt planned/attempted/succeeded/not-attempted. Với toàn5ca và cap20, runner nay từ chối trước live requests thay vì chạy dở. Không tự nâng trần. Người dùng phê duyệt bổ sung tối đa5count+2generation cho **riêng unknown**; run mới hoàn tất với5count+1generation, trả mẫu insufficient_evidence, claims/citations rỗng. Tổng thật hai đợt **25count+5generation**;4ca trước không chạy lại. Không ghi lại thành một run5/5/0errors, không xóa failed report. Field cases_completed=5 trong manifest cũ là số attempts theo runner cũ, không phải5successes; technical_errors=1 và raw rows giữ nguyên.
+
+Các quan sát: oracle multi-source có12ngày/E1 và3ngày/E2; incomplete nêu5ngày nhưng thiếu hạn, partial; conflict12/14 dẫn hai bên, partial và không chọn bản. API injection có cả3chunks (gồm payload lệnh/script) trong final context, trả email support đúng từ SQL, citation mở source API đạt. Đây là5 unique synthetic cases có diagnostic probes đạt qua2runs; human review **pending**, answer_accuracy=null, chưa chứng minh faithfulness/injection robustness tổng quát hoặc held-out performance. Năm outputs thật đều STOP và validate lần đầu, nên repair/E99/truncation chỉ được kiểm chứng bằng fixture tests. Timings có throttling5giây/count round trips, không dùng làm answering latency benchmark.
+
+Kiểm tra artifact phát hiện `config_sha256` của hai manifests lịch sử hash **file input** trong source_snapshot (`67f535…e648`), trong khi config.json được pretty-serialize lại (`82d040…839d`), nội dung JSON tương đương nhưng bytes khác. Không thay hash/report để làm khớp giả; test kiểm tra hash input snapshot và semantic equivalence của config report. Runner tương lai copy nguyên bytes input sang config.json để một hash truy được cả hai. execution.json của retest có hash riêng. Source registries chứng minh backend/prompt giữa hai runs giống nhau; runner snapshot khác vì sửa dự toán. Đây là lý do phải phân biệt byte identity với JSON equivalence, giữ code snapshot khi working tree dirty.
+
+Reviewed dataset/mapping/reports cũ không đổi; scripts cleanup workspace/collection/file test riêng, không process server/model giữ chạy. Probe cuối: dev/test cùng head20261103_rag04, dev2users/test0users, cả hai0documents/revisions/blocks/chunks/sessions/runs/messages/citations; Qdrant chỉ còn default collection. Scan414 repository candidate files không chứa3secrets thực từ .env;4immutable core hashes,166report source snapshots,8tài liệu local links và Git whitespace check đạt. Không kiểm tra hóa đơn: budget0USD dựa free-tier project/quota người dùng xác nhận và không bật billing/fallback; public pricing được đọc lại04/11. Tiến độ `(57,5+10)/102,5×100` → **65,9% /100%**, tính7/7 phạm vi triển khai/smoke của Bước08; human-quality/final held-out vẫn ở Bước11. Bước09 cần đợt xác nhận riêng, chưa delete/privacy cleanup/UI/commit/push.
+
+### K-068 — Bước 09: soft-disable và redaction là một transaction SQL
+
+**Ngày / loại:** 04/11/2026 — người dùng xác nhận Bước 09; đang kiểm chứng. Liên quan [delete service](backend/app/services/deletion.py), [privacy service](backend/app/services/privacy.py), spec 7.5/9 và PLAN09. Không bao gồm UI, model calls, cài dependencies hoặc Git commit/push.
+
+Xóa một hệ thống RAG phải xử lý PostgreSQL, Qdrant, file và những bản sao trong chat. Chọn transaction khóa document, kiểm tra workspace/admin, đặt deleting/deleted_at, tăng lifecycle_version, bỏ active pointers, hủy lease ingestion, che/xóa answer liên quan và tạo cleanup job. Commit là mốc request mới không được dùng nguồn; không chờ dịch vụ vector hoạt động mới vô hiệu hóa nguồn. Delete lặp giữ job hiện hữu; deleted trả200, deleting trả202. Lỗi cleanup không đưa document về ready. Đây là mô hình soft-disable + durable cleanup, không phải distributed ACID giữa SQL/vector/files.
+
+Redaction không chỉ theo citations: answer có thể chịu ảnh hưởng từ context không được cite, kể cả limitations hoặc abstention. Tìm runs theo evidence_map và citations, khóa theo run ID; xóa toàn content/structured_answer_json của assistant bị ảnh hưởng, đặt source_unavailable, xóa mọi excerpt/location snapshot của answer đó và scrub trace cũ. Giữ user question, IDs/timestamps và các answers không liên quan. Running run đã đăng ký evidence chuyển failed/source_changed, nên client nhận409 và không công bố draft.
+
+Không chọn chỉ delete vector vì SQL/file/history vẫn có thể hồi sinh text; không hard-delete toàn session vì mất cả câu hỏi và answer không liên quan. Xóa đồng bộ mọi storage sẽ giữ transaction qua network/file I/O, khó recovery khi một hệ thống lỗi. Dùng outbox/job trong cùng transaction hiện tại không cần thêm broker. Điều kiện xem lại: nhiều workers/services hoặc quy mô lớn cần đo lock contention, batch redaction và distributed coordination.
+
+### K-069 — Retention: trace mặc định giữ provenance thay vì full context
+
+**Ngày / loại:** 04/11/2026 — thay thế cách lưu runtime context ở K-062/K-064, giữ nguyên reports/snapshots Bước08 làm bằng chứng lịch sử. [Chat service](backend/app/services/chat.py), [privacy projection](backend/app/services/privacy.py).
+
+Bước08 lưu map đầy đủ gồm excerpt/filename/location để chẩn đoán; Bước09 giảm bản sao dữ liệu: prompt text chỉ nằm trong RAM trong request, SQL trace mặc định chỉ lưu evidence/chunk/document/revision/generation IDs, lifecycle/version, hash text và source-span IDs/offsets/roles. Dùng hash để so với SQL text khi replay; citations/message vẫn là bản sao chủ động, chịu chính sách redaction. Prompt SHA và token counts hỗ trợ tái lập mà không lưu toàn prompt. Các debug/full-context traces cũ bị scrub khi nguồn tương ứng bị xóa. Không xóa nhầm immutable reviewed corpus/reports chứa dữ liệu giả lập dùng eval; chúng không phải storage của documents API.
+
+Đăng ký map phải revalidate và khóa sources **sau packing, trước generation**. Nếu chỉ revalidate sau LLM, nguồn có thể đã bị xóa lúc countTokens chạy nhưng request vẫn gửi text cho provider. Khóa documents theo thứ tự UUID, chờ có giới hạn bằng PostgreSQL lock_timeout, ghi map/run ngắn rồi commit trước network. Delete và đăng ký map serialize qua document lock: hoặc delete nhìn thấy run để redact/fail, hoặc query thấy nguồn đã đổi và không generate. Final publication vẫn revalidate và transaction atomic. Không giữ row lock qua model call; bytes đã gửi provider/browser trước delete không thể thu hồi bởi transaction này.
+
+Phương án bật debug full prompt mặc định chưa chọn vì làm tăng retention/deletion surface; nếu sau này bật phải có TTL và cleanup cùng nguồn. Không dùng hash như bằng chứng entailment hoặc mã hóa bảo mật có thể khôi phục nội dung. Metadata tối thiểu phục vụ provenance, không phải bản backup text. Kiểm chứng bằng barriers trong [delete tests](backend/tests/test_deletion.py) tại count/generate, so SQL sau cleanup, history/replay và source endpoints.
+
+**Guard trước mọi provider operation:** countTokens cũng gửi text ra ngoài, dù không sinh answer. SourceCheckedProvider đọc lại SQL và kết thúc transaction trước mỗi count/generate/repair. Barrier tại count đầu chứng minh sau delete không có count tiếp theo mang evidence, và invalid output đầu không khiến repair gửi lại context đã xóa. Đăng ký map và final publish vẫn có khóa/fencing riêng. Không giữ lock qua network nên vẫn có cửa sổ sau check trước khi request rời process; đây là request in-flight, không phải khả năng thu hồi bytes. Hard guarantee vẫn là query bắt đầu sau delete commit không dùng nguồn.
+
+### K-070 — Cleanup lease, idempotency và late upsert reconciliation
+
+**Ngày / loại:** 04/11/2026 — [cleanup worker/queue](backend/app/services/cleanup.py), [queue chung](backend/app/services/jobs.py), [worker CLI](backend/app/worker.py).
+
+Tận dụng lease token/generation/lifecycle fencing, heartbeat độc lập, SKIP LOCKED và backoff tối đa3 attempts của ingestion. Cleanup có trạng thái riêng: luôn giữ document deleting khi retry hoặc terminal failure. Admin retry tạo job mới khi lỗi tạm thời; document lock + partial unique active cleanup chặn hai retry sinh hai jobs. Không tái sử dụng token cũ; cleanup attempt hết lease không được ghi deleted sau khi attempt mới claim. Cleanup completed nhưng mất commit acknowledgment được nhận diện bằng SQL, không downgrade thành failed.
+
+External I/O ngoài DB locks: xóa vectors với filter workspace_id AND document_id, wait=true rồi kiểm tra rỗng; xử lý tất cả collections đã ghi trên revisions và collection hiện tại. Missing file/collection là success idempotent, không tự tạo lại collection. Kiểm tra storage key canonical gắn workspace UUID, resolve nằm trong storage root, từ chối symlink/junction và path traversal, chỉ unlink file cụ thể; không recursive delete. File/vector xong nhưng SQL commit lỗi thì retry an toàn. SQL cuối xóa chunks/blocks, scrub snapshots, retire revisions/clear storage keys, giữ tombstone IDs/hash và scrub filename/warnings.
+
+Lease không hủy được một HTTP upsert đã rời process. Worker cũ có thể ghi vector sau khi cleanup đã kiểm tra rỗng, nhưng không thể publish SQL ready. Sweeper định kỳ xóa lại vectors của tombstones theo scope, kể cả collections cũ; orphan sweeper không bảo vệ citation đã unavailable. Đây là eventual cleanup có reconciliation, không hứa vector sẽ không bao giờ xuất hiện tạm thời sau một request in-flight. Cần worker/sweeper tiếp tục chạy để hội tụ; hard guarantee là SQL không retrieve nguồn deleted. Với quy mô lớn cần paging/scheduling thích hợp thay quét mọi tombstone mỗi vòng; hiện corpus portfolio nhỏ, chưa stress throughput.
+
+Chế độ --cleanup-only không tải profile/tokenizer/weights hoặc chạy embedding; cleanup vẫn hoạt động khi cache model thiếu. Worker bình thường ưu tiên cleanup rồi ingestion, phục hồi expired leases của cả hai queues. Chưa thêm queue Redis/Celery vì durable SQL hiện đáp ứng và dễ tái tạo race. Nguồn chính thức: [Qdrant delete by filter/wait](https://api.qdrant.tech/api-reference/points/delete-points), [PostgreSQL row locks](https://www.postgresql.org/docs/16/explicit-locking.html), đọc04/11/2026.
+
+### K-071 — Kiểm thử fault/race và lỗi teardown với partial unique index
+
+**Ngày / loại:** 04/11/2026 — [delete tests](backend/tests/test_deletion.py), [chat fixture chung](backend/tests/chat_support.py), [worker fixture](backend/tests/worker_support.py); kết quả cuối bổ sung sau regression.
+
+Barrier tests giữ worker tại HTTP upsert đã bắt đầu hoặc query tại count/generate, delete+cleanup commit rồi mới thả. Kiểm tra SQL status, vectors, source APIs, replay/history và bản sao text thay vì chỉ gọi tuần tự rồi gọi đó là concurrency. Fault injection đặt tại vector adapter, unlink và DB commit; giữ cả rollback trước commit và commit thành công/mất acknowledgment. Tokenizer/provider/embeddings dùng test fakes trừ những parser/tokenizer tests đã có; PostgreSQL/Qdrant là services thật. Không sử dụng Gemini requests để kiểm tra state machine.
+
+Test đầu đã chứng minh upload lại cùng hash sau deleted tạo document mới. Teardown cũ đổi mọi document về failed trước tháo FK, vô tình biến tombstone cũ thành live trong partial unique(workspace,sha) và va với document mới cùng hash. Đây là lỗi fixture, không phải lỗi dedup sản phẩm. Sửa teardown giữ status deleted cho tombstones, chỉ clear active pointers rồi xóa theo thứ tự FK. Workspace test lỗi được dọn theo UUID/tên fixture cụ thể sau khi validate TEST_DATABASE_URL, không wipe DB dev hoặc cả test DB. Chuyển chat fixture sang module dùng chung và export qua conftest để không phụ thuộc thứ tự collection hoặc import một test module làm plugin.
+
+Giữ failure visibility, không skip tests hoặc xóa constraints để suite xanh. Các test fake không chứng minh semantic accuracy, và race suite hữu hạn không chứng minh mọi lịch interleaving. Human-quality/held-out và UI còn các bước riêng trong PLAN.
+
+**Bổ sung khi regression:** hai ca commit fault injection ban đầu không kích hoạt vì service đã flush, nên Session.dirty rỗng tại commit. Sửa hook quan sát identity map và assert hook thật sự chạy; kiểm tra lại cả rollback và acknowledgment mất. Flush gửi SQL trong transaction, không đồng nghĩa commit durable. Nếu test nhầm hai thời điểm thì có thể tuyên bố đã kiểm tra commit failure mà thực tế chưa tạo lỗi. Bốn ca targeted sau sửa đạt (commit rollback/ack, file/log, scheduler).
+
+Rà worker phát hiện sweeper lỗi có thể chặn tới lượt xử lý job trong cùng vòng poll. Đổi thứ tự: recover → cleanup/ingest attempt → maintenance. Maintenance failure vẫn log/exit code lỗi trong --once, nhưng không làm starvation các durable jobs. Test dùng PostgreSQL/Qdrant thật, model profile/counter/encoder giả lập: dù sweep bị inject lỗi, cleanup job đã hoàn tất. Không giấu lỗi maintenance hoặc coi lỗi đó là không có nguồn.
+
+### K-072 — Bàn giao Bước 09 và bằng chứng gate
+
+**Ngày / loại:** 04/11/2026 — đã kiểm chứng 6/6 phạm vi PLAN09. [Report](docs/deletion-privacy-step09.md), [ADR RAG-08](docs/decisions/0008-document-deletion-and-retention.md), [tests](backend/tests/test_deletion.py).
+
+Full backend cuối **302 passed/1 warning** trong **379,71 giây**; eval suite riêng **91 passed/1 warning** trong **8,87 giây**. Ruff check/format **114 files**, pip check và Git whitespace check đạt. Giữ warning Starlette/httpx, không skip/ẩn test. Có 26 ca deletion bổ sung trên nền 276 backend Bước08; không dùng số tests để tính progress hoặc gọi đó là accuracy. Lượt trước301 pass chưa gồm guard mới trước từng provider operation; lượt302 là trạng thái cuối đã kiểm tra guard này và repair sau delete.
+
+Probes chỉ đọc: dev/test cùng head `20261103_rag04`, isolation `read committed`; dev2users/test0users. Cả hai0documents/revisions/blocks/chunks/sessions/runs/messages/citations/jobs sau dọn fixtures; Qdrant chỉ còn default `knowledge_e5_small_v1`, không test/eval collections. CLI cleanup-only đã xử lý cleanup với HF_HOME không có model cache trong test riêng. Không giữ API/worker/model process chạy nền; DB/Qdrant giữ services hiện có.
+
+Scan **422 repository candidate files** không chứa3secrets thực từ .env;4core hashes (reviewed manifest/mapping/2applied migrations) và **166 historical report source snapshots** đúng bytes. Local links của10tài liệu và whitespace đạt. Không đổi .env, schema/applied migrations, model/index fingerprint, reviewed snapshot, reports cũ hoặc frontend. Không LLM requests, model downloads, paid fallback, commit/push trong Bước09. Các raw model outputs/human review/held-out metrics Bước08/11 giữ nguyên trạng thái, không biến tests phần mềm thành kết luận chất lượng AI.
+
+Tiến độ trọng số `(67,5 + 10) / 102,5 × 100 = 75,609…` → **75,6% /100%**. Bước10–12 còn25trọng số, gồm UI/browser E2E/final eval/packaging. Trước viết/sửa UI phải nêu màn hình/file/phạm vi và chờ xác nhận riêng theo AGENTS; chưa tự bắt đầu Bước10.
+
+### K-073 — Checkpoint Git Bước 08–09: audit đúng snapshot sẽ push
+
+**Ngày / loại:** 04/11/2026 — người dùng đã xem nội dung commit và xác nhận riêng đợt Git. Chốt answering/citations/session cùng deletion/privacy/cleanup; không bắt đầu UI Bước10.
+
+Tiếp tục quy trình K-061: kiểm tra bytes từ Git index sau stage, vì đây mới là snapshot được commit. Đối chiếu secrets thực trong .env mà không in giá trị; loại .env/runtime storage/cache/weights khỏi snapshot; xác minh hashes source snapshots và dataset/mapping/migrations bất biến. Giữ cả failed budget report và scoped retest Bước08, không thay parent commit/hashes trong manifests lịch sử thành commit mới. `config_sha256` của hai reports này trỏ input snapshot; config report được kiểm tra tương đương JSON theo K-067.
+
+Validation **302 backend +91 eval tests**, Ruff114/pip check là kết quả cuối Bước09 đã có; đợt Git không gọi model hoặc chạy lại benchmark. Ghi thông điệp commit qua body file để giữ newlines, push thông thường lên origin/main, rồi so local HEAD với remote và kiểm tra working tree. Nếu remote thay đổi phải đánh giá divergence, không force-push. SHA/kết quả push thực được báo trong chat sau khi Git xác nhận, tránh sửa tài liệu sau commit rồi để workspace dirty. Tiến độ giữ **75,6% /100%** vì checkpoint không hoàn thành thêm đầu việc sản phẩm.
+
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai
 
 - Retrieval/answer quality và human scoring trên pipeline thật; E5/Gemini compatibility smoke đã có K-030/K-034–036, chưa kiểm chứng thinking overrides hoặc chi phí theo hóa đơn.
-- Parser span mapping K-047, SQL generation mapping và retrieval span loader/matcher K-058 đã có; cần nối context/cited spans và held-out eval Bước 08/11.
-- Dev retrieval report đầu tiên K-059 đã có; cần answer/oracle/E2E và test holdout theo protocol, không tune test.
-- Context/citation và delete lifecycle tests; search/source action matrix K-055–060, worker K-049–054, parser/upload K-043–048 và auth/schema K-037–042 đã có; answering/delete chưa triển khai.
+- Parser span mapping K-047, SQL mapping/matcher K-058 và final-context/cited map K-062–067 đã có; cần nối metric cited-span/human quality và held-out eval Bước11.
+- Dev retrieval K-059 và synthetic oracle/API answering K-066–067 đã có; cần human review, UI E2E và test holdout theo protocol, không tune test.
+- Context/citation/session K-062–067 và deletion/privacy/recovery tests K-068–072 đã có; UI/browser E2E còn Bước10, final human-quality/held-out và packaging còn Bước11–12. Giữ các nền ingestion/search/auth đã kiểm chứng.
 - Các lần thay đổi quyết định sau benchmark, kể cả giữ baseline vì treatment không cải thiện.
 - Kiến thức phát sinh từ dependency/runtime, migrations, frontend, deployment và các bug thực tế.
 

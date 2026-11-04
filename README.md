@@ -2,7 +2,7 @@
 
 Project portfolio AI Engineering của nhóm 2 người, xây ứng dụng tìm kiếm và hỏi đáp tài liệu nội bộ tiếng Việt bằng **Retrieval-Augmented Generation (RAG)**, với nguồn dẫn có thể mở kiểm tra.
 
-> **Cập nhật 03/11/2026 — tiến độ 56,1% / 100%:** Bước 00–07 hoàn thành theo phạm vi. Ingestion/search/source APIs và dev retrieval benchmark E5 thật đã có; **222 backend + 86 eval tests đạt**. Dev 13 answerable/2 unknown: Recall@5=1/MRR@5≈0,923, 0 technical errors; không phải answering accuracy/held-out result. Chưa answering/delete/UI, không LLM calls/tải model mới/sửa UI ở Bước 07.<br>
+> **Cập nhật 04/11/2026 — tiến độ 75,6% / 100%:** Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending.<br>
 
 - Contract: [Spec RAG v2.1](SME_Knowledge_Copilot_RAG_Specification.md).
 - Trình tự thực hiện: [PLAN.md](PLAN.md); [audit chuyển tiếp và backlog P0](docs/rag-transition-audit.md).
@@ -13,6 +13,8 @@ Project portfolio AI Engineering của nhóm 2 người, xây ứng dụng tìm 
 - Upload/parser/chunker và gold mapping: [Bước 05](docs/parsing-upload-step05.md). Trước khi code UI sẽ nhắc và chờ xác nhận riêng.
 - Worker/E5/Qdrant/publish/recovery và số đo 1+10 documents: [Bước 06](docs/worker-index-step06.md). Chạy host từ backend/: `python -B -m app.worker`, CPU locks dành Windows.
 - Search/source APIs, dev retrieval metrics và lựa chọn baseline/cutoff: [Bước 07](docs/search-retrieval-step07.md).
+- Context/answering/citations/session, smoke thật và lỗi dự toán quota đã xử lý: [Bước 08](docs/answering-step08.md).
+- Delete/privacy/cleanup, retry/recovery và fault/race tests: [Bước 09](docs/deletion-privacy-step09.md), [ADR RAG-08](docs/decisions/0008-document-deletion-and-retention.md).
 - Giải thích kiến thức/lựa chọn: [KNOWLEDGE.md](KNOWLEDGE.md).
 - Quy tắc workspace: [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md). Mọi đợt thay đổi cần người dùng xác nhận **“Thực hiện đi”** trước khi thực hiện.
 
@@ -91,7 +93,7 @@ npm.cmd run lint
 npm.cmd run build
 ```
 
-Fixture có guard driver/host/test-name/query và chặn tên DB trùng dev trước tạo/migrate; vẫn xác minh DB test riêng trước chạy. Unit/API DB fixtures rollback; worker/concurrency/search tests có transactions thật và cleanup workspace/collection riêng. Trên Windows dùng basetemp mới/đường dẫn ngắn trong .cache theo report Bước 06 khi Temp ACL bị chặn. Hiện **222 backend/86 eval tests đạt** ở hai suites riêng; baseline64 ngày02/11 giữ lịch sử. Worker/search/source/span metrics đã kiểm tra, còn answering/delete/E2E cần các bước sau; không coi đây là toàn bộ AT-R01–23/M1 hoặc AT-R24–26/M2.
+Fixture có guard driver/host/test-name/query, DB test riêng và cleanup workspace/collection. **302 backend +91 eval tests đạt** ở hai suites riêng; cảnh báo Starlette/httpx giữ nguyên. Delete/retry/query/upsert races dùng barriers, PostgreSQL/Qdrant thật và model fakes; không coi đó là semantic accuracy hoặc toàn bộ M1. Windows dùng basetemp mới dưới backend/.cache theo report, không chạy dev worker chung queue test/eval. Các baseline cũ giữ lịch sử.
 
 ## Cấu trúc
 
@@ -104,9 +106,9 @@ docs/       Audit chuyển tiếp và hướng dẫn ADR
 
 ## Kết quả đánh giá
 
-Dev retrieval đã đo ở Bước 07, ingestion 1+10 documents ở Bước 06; chưa có answering/held-out/E2E benchmark. Theo [eval/README.md](eval/README.md), mỗi run lưu manifest/config, per-question outputs, metrics và report dưới eval/reports/<run_id>/. Hiện có Hit/Recall/MRR/All-evidence/latency/errors cho dev retrieval; correctness/citations/abstention của answering còn bước sau. Không dùng số minh họa trong spec hoặc recall để trình bày thành accuracy trả lời.
+Dev retrieval đã đo ở Bước07, ingestion1+10 documents ở Bước06; [Bước08](docs/answering-step08.md) có3 oracle +2 API synthetic dev cases thật qua2runs. Run đầu4outputs đạt và1eval_budget_exhausted; retest riêngunknown đạt, giữ lỗi lịch sử. Tổng5generate+25countTokens theo xác nhận riêng,0USD/free tier; chưa answering accuracy/held-out/UI E2E benchmark. Mỗi run lưu manifest/config/source snapshots, outputs/metrics/report dưới eval/reports/<run_id>/. Không dùng literal probes hoặc recall làm accuracy trả lời.
 
-Snapshot [reviewed-v1](eval/snapshots/reviewed-v1/corpus_manifest.json) có **10 tài liệu, 45/45 câu human-approved, 8 fixtures**, hash cả review ledger. **86 eval tests pass** sau Bước 07; canonical mapping đủ45 câu/47 references và dev retrieval benchmark đã có; answering/held-out/E2E AT-R22 còn sau. E5 CPU smoke lịch sử đạt35 passages/5 dev queries,384 chiều, peak RSS mẫu~723MiB. Gemini run đầu4/5 outputs hợp lệ, conflict retest riêng1/1 đạt; giữ failure/giới hạn, không gọi đây là5/5 cùng prompt v2 hay RAG accuracy. [Báo cáo Bước 03](docs/model-smoke-step03.md); tiến độ theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project).
+Snapshot [reviewed-v1](eval/snapshots/reviewed-v1/corpus_manifest.json) có **10 tài liệu, 45/45 câu human-approved, 8 fixtures**, hash cả review ledger. **86 eval tests pass** sau Bước 07; canonical mapping đủ45 câu/47 references và dev retrieval benchmark đã có; answering smoke có ở Bước08; human-quality/held-out/UI E2E AT-R22 còn sau. E5 CPU smoke lịch sử đạt35 passages/5 dev queries,384 chiều, peak RSS mẫu~723MiB. Gemini run đầu4/5 outputs hợp lệ, conflict retest riêng1/1 đạt; giữ failure/giới hạn, không gọi đây là5/5 cùng prompt v2 hay RAG accuracy. [Báo cáo Bước 03](docs/model-smoke-step03.md); tiến độ theo [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project).
 
 ## Roadmap
 
@@ -118,13 +120,15 @@ Snapshot [reviewed-v1](eval/snapshots/reviewed-v1/corpus_manifest.json) có **10
 - **Bước 05:** upload/parser/chunker và canonical source mapping hoàn thành; tổng tiến độ 36,6%, chưa chạy worker.
 - **Bước 06:** worker/lease/generation, E5/Qdrant, publish ready/retry/recovery đã chạy; ingestion thật 1+10 documents và 8 fixtures đạt, tổng tiến độ 46,3%.
 - **Bước 07:** search/source endpoints, SQL revalidation/span matcher/dev benchmark đạt; E5 baseline/cutoff None, BGE hoãn, tổng tiến độ 56,1%.
-- **Tiếp theo — Bước 08:** context/answering/citations/session và abstention; cần xác nhận riêng, budget 0 USD.
+- **Bước08:** context/answering/citations/session và abstention đã có, smoke thật và lỗi quota ledger giữ nguyên; tổng tiến độ65,9%.
+- **Bước 09:** delete/privacy/cleanup/recovery và fault/race tests hoàn thành theo phạm vi, tiến độ 75,6%.
+- **Tiếp theo — Bước 10 (UI):** Login, Documents, Knowledge Chat và Source Preview; phải nhắc phạm vi/file và chờ xác nhận riêng trước code frontend.
 - **P0/M1 — hướng tới 15/11/2026:** auth → upload/index → dense search → Q&A có nguồn → source preview → delete/cleanup; evaluation baseline và E2E.
 - **P1/M2:** reindex/update revision, hybrid/reranker, follow-up/metadata nâng cao, inspector/eval UI; triển khai khi baseline đủ ổn định.
 
 ## Known limitations
 
-- Auth/metadata/upload/worker/index/retry/search/source APIs đã có; UI vẫn placeholder, chưa login/upload/chat/preview. RAG answering/citations/delete workflow còn thiếu.
+- Backend ingestion/search/answering/citation/session/delete/cleanup đã có; UI vẫn placeholder. Browser E2E, final human-quality/held-out evaluation và packaging còn các bước sau.
 - PostgreSQL/Qdrant local đã dùng thật ở Bước 06; API smoke dùng TestClient/PostgreSQL test/Qdrant collection riêng, cleanup đúng scope. Worker host Windows; Linux worker image/concurrency stress chưa kiểm chứng. Không giữ API/frontend server chạy thường trực.
 - Parser đã kiểm tra text-based PDF/DOCX/TXT/MD và bảng đơn giản; OCR/bảng/layout phức tạp ngoài P0. Chưa stress tài liệu cực đại hoặc đo throughput production, xem giới hạn Bước 05.
 - RAG/citation không loại bỏ hallucination; chất lượng tiếng Việt, latency và tài nguyên phải đo bằng corpus riêng.

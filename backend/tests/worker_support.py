@@ -6,7 +6,7 @@ import uuid
 from types import SimpleNamespace
 
 import pytest
-from sqlalchemy import delete, select, update
+from sqlalchemy import case, delete, select, update
 from sqlalchemy.orm import sessionmaker
 from starlette.datastructures import UploadFile
 
@@ -113,7 +113,11 @@ def worker_env(db_engine, tmp_path):
             db.execute(
                 update(Document)
                 .where(Document.workspace_id == workspace_id)
-                .values(status="failed", active_revision_id=None, active_generation_id=None)
+                .values(
+                    status=case((Document.status == "deleted", "deleted"), else_="failed"),
+                    active_revision_id=None,
+                    active_generation_id=None,
+                )
             )
             db.execute(delete(ProcessingJob).where(ProcessingJob.document_id.in_(ids)))
             db.execute(delete(Chunk).where(Chunk.revision_id.in_(revisions)))

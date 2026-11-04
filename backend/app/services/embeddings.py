@@ -145,9 +145,12 @@ class LocalEmbedder:
         self.process = self.connection = None
         self.load_seconds = 0.0
 
-    def _receive(self):
+    def _receive(self, deadline=None):
         try:
-            if not self.connection.poll(self.settings.embedding_timeout_seconds):
+            timeout = self.settings.embedding_timeout_seconds
+            if deadline is not None:
+                timeout = max(0, min(timeout, deadline - time.monotonic()))
+            if not self.connection.poll(timeout):
                 self.close()
                 raise WorkerError("embedding_timeout", retryable=True)
             payload = self.connection.recv()
@@ -158,7 +161,7 @@ class LocalEmbedder:
             raise WorkerError(payload["error"])
         return payload
 
-    def encode(self, texts, kind="passage"):
+    def encode(self, texts, kind="passage", deadline=None):
         if kind not in {"query", "passage"}:
             raise WorkerError("embedding_configuration_error")
         if self.process is None:
@@ -172,7 +175,7 @@ class LocalEmbedder:
             )
             self.process.start()
             child.close()
-            if not self._receive().get("ready"):
+            if not self._receive(deadline).get("ready"):
                 raise WorkerError("embedding_configuration_error")
             self.load_seconds = time.perf_counter() - started
         try:
@@ -180,12 +183,12 @@ class LocalEmbedder:
         except (EOFError, BrokenPipeError, OSError) as exc:
             self.close()
             raise WorkerError("embedding_process_failed", retryable=True) from exc
-        vectors = self._receive()["vectors"]
+        vectors = self._receive(deadline)["vectors"]
         validate_vectors(vectors, len(texts))
         return vectors
 
-    def encode_query(self, query):
-        return self.encode([query], kind="query")[0]
+    def encode_query(self, query, deadline=None):
+        return self.encode([query], kind="query", deadline=deadline)[0]
 
     def close(self):
         if self.process:

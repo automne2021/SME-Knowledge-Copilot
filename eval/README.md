@@ -2,6 +2,10 @@
 
 Nguồn yêu cầu: [Spec RAG mục 14–15](../SME_Knowledge_Copilot_RAG_Specification.md), [PLAN bước 02, 07, 11](../PLAN.md). Mục tiêu là đo retrieval/answering có thể tái lập, gồm cả thiếu bằng chứng và lỗi kỹ thuật. Các kế hoạch đánh giá STT/action items cũ không còn là tiêu chí của project RAG.
 
+**Cập nhật Bước 09 — tiến độ75,6% /100%:** 302 backend +91 eval tests đạt; deletion/privacy/cleanup/fault-race được kiểm tra bằng PostgreSQL/Qdrant thật, provider/embeddings fakes. Không model calls hoặc thay đổi quality metrics/holdout. [Report](../docs/deletion-privacy-step09.md). Các reports dưới đây giữ nguyên lịch sử; human review vẫn pending.
+
+**Lịch sử04/11/2026 — Bước08, tiến độ65,9% /100%:** [answering report](../docs/answering-step08.md) có3 oracle +2 API synthetic dev cases qua2runs. Run đầu4outputs validate/probes đạt,1eval_budget_exhausted trước generation; retest riêngunknown đạt. Tổng5generate+25countTokens đúng các xác nhận riêng,0USD/free tier, không sửa backend/prompt/model để retest. **276 backend +91 eval tests đạt** ở hai suites riêng; human review pending, không phải answer accuracy/held-out result. Giữ các reports lịch sử bên dưới. Runner đếm budget từ số chunks sau ingestion, hỗ trợ --case/per-run caps; full5ca cần21count calls nên cap20 mặc định từ chối preflight. Không tự tăng trần hoặc chạy lại model để kiểm tra artifacts.
+
 **Trạng thái 03/11/2026:** reviewed-v1/gold mapping giữ nguyên 10 docs/45 approved questions/47 references. [Bước 07](../docs/search-retrieval-step07.md) có [dev retrieval run thật](reports/retrieval_dev_20261103T101104Z_968416c5/manifest.json): 15 queries (13 answerable/2 unknown), Recall@5=1/MRR@5≈0,923/0 errors; không answering accuracy hoặc held-out result. **86 eval tests pass**, backend suite riêng **222 pass**. Không LLM calls/tải model mới/test queries; ingestion/model reports lịch sử giữ nguyên. Tiến độ **56,1% / 100%**, Bước 08 chưa bắt đầu.
 
 ## Công cụ đã triển khai ở Bước 02

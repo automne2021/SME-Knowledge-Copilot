@@ -58,6 +58,15 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
     llm_model: str | None = None
     llm_api_key: SecretStr | None = None
+    llm_free_tier_confirmed: bool = False
+    llm_quota_confirmed: bool = False
+    llm_evidence_budget_tokens: int = Field(default=4000, ge=1, le=32000)
+    llm_max_output_tokens: int = Field(default=800, ge=128, le=8192)
+    llm_safety_margin_tokens: int = Field(default=256, ge=64)
+    llm_context_window_tokens: int = Field(default=32768, ge=1024, le=1_048_576)
+    llm_call_timeout_seconds: float = Field(default=120, gt=0, le=120)
+    query_timeout_seconds: float = Field(default=150, gt=0, le=150)
+    llm_max_concurrency: int = Field(default=2, ge=1, le=2)
     stt_model: str = "small"
 
     @field_validator("retrieval_score_threshold", mode="before")
@@ -67,6 +76,11 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def chunk_budget(self):
+        if (
+            self.llm_max_output_tokens + self.llm_safety_margin_tokens
+            >= self.llm_context_window_tokens
+        ):
+            raise ValueError("LLM output and margin must fit the context window")
         if self.embedding_device != "cpu":
             raise ValueError("The frozen E5 worker profile requires CPU")
         if self.job_heartbeat_seconds * 2 >= self.job_lease_seconds:

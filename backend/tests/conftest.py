@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from tests.chat_support import chat_env  # noqa: F401
 from tests.database_safety import SafeDatabaseTarget, validate_test_database_url
 from tests.worker_support import worker_env  # noqa: F401
 

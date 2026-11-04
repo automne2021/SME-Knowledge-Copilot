@@ -8,7 +8,7 @@ from app.core.errors import AppError
 from app.models import Document, DocumentRevision, ProcessingJob
 
 
-def retry_document(db, document_id, user):
+def retry_document(db, document_id, user, expected_job_id=None):
     document = db.scalar(
         select(Document)
         .where(Document.id == document_id, Document.workspace_id == user.workspace_id)
@@ -39,6 +39,7 @@ def retry_document(db, document_id, user):
         or latest.status != "failed"
         or not latest.retryable
         or latest.revision_id is None
+        or (expected_job_id is not None and latest.id != expected_job_id)
     ):
         raise AppError(409, "retry_not_allowed", "Tài liệu không thể retry với lỗi hiện tại.")
     revision = db.get(DocumentRevision, latest.revision_id)

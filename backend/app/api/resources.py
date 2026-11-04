@@ -17,9 +17,11 @@ from app.models import (
     Document,
     DocumentRevision,
     ProcessingJob,
+    QueryRun,
 )
 from app.schemas.identity import SessionCreate
-from app.services.access import document_for_user, job_for_user, run_for_user, session_for_user
+from app.services.access import document_for_user, job_for_user, session_for_user
+from app.services.chat import read_run, run_data
 
 router = APIRouter(tags=["resources"])
 PageLimit = Annotated[int, Query(ge=1, le=100)]
@@ -205,7 +207,16 @@ def messages(
                 or citation_status != "available"
             ):
                 hidden.add(message_id)
-    # No citation snapshots/config traces are exposed by this foundation endpoint.
+    answers = {}
+    for row in rows:
+        if row.role == "assistant" and row.structured_answer_json is not None:
+            run = db.get(QueryRun, row.query_run_id)
+            answer = run_data(db, user, run)
+            if answer.get("source_unavailable"):
+                hidden.add(row.id)
+            else:
+                answers[row.id] = answer
+    # Expose the validated answer, never private retrieval/config traces.
     return success(
         request,
         {
@@ -215,6 +226,10 @@ def messages(
                     "role": row.role,
                     "content": "" if row.source_unavailable or row.id in hidden else row.content,
                     "source_unavailable": row.source_unavailable or row.id in hidden,
+                    "query_run_id": row.query_run_id,
+                    "answer": None
+                    if row.source_unavailable or row.id in hidden
+                    else answers.get(row.id),
                     "created_at": row.created_at,
                 }
                 for row in rows
@@ -225,13 +240,4 @@ def messages(
 
 @router.get("/chat/runs/{run_id}")
 def query_run(run_id: uuid.UUID, db: DbSession, user: CurrentUser, request: Request) -> dict:
-    row = run_for_user(db, run_id, user)
-    return success(
-        request,
-        {
-            "id": row.id,
-            "session_id": row.session_id,
-            "status": row.status,
-            "error_code": row.error_code,
-        },
-    )
+    return success(request, read_run(db, user, run_id))

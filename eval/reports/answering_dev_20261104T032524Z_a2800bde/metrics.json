@@ -1,0 +1,11 @@
+{
+  "n": 1,
+  "technical_errors": 0,
+  "cases_with_all_fixture_probes": 1,
+  "answer_accuracy": null,
+  "human_review": "pending",
+  "requests": {
+    "generateContent": 1,
+    "countTokens": 5
+  }
+}
