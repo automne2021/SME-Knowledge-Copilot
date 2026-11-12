@@ -362,7 +362,9 @@ def publish(db, user, run_id, evidence, answer, trace, reason, timings, deadline
     return run_data(db, user, run)
 
 
-def query(db, user, payload, settings, runtime_factory, provider_factory, capacity):
+def query(
+    db, user, payload, settings, runtime_factory, provider_factory, capacity, *, observer=None
+):
     if payload.retrieval_mode != "dense":
         raise AppError(422, "unsupported_retrieval_mode", "P0 chỉ hỗ trợ dense retrieval.")
     # Pin a settings snapshot rather than reading mutable global config between calls.
@@ -390,6 +392,8 @@ def query(db, user, payload, settings, runtime_factory, provider_factory, capaci
         hits = source_state(db, user, result["hits"])
         trace = result["trace"] | {"retrieved_ids": [row["chunk_id"] for row in hits]}
         db.commit()
+        if observer is not None:
+            observer.retrieved({**result, "hits": hits})
         evidence, attempts, answer = [], [], abstention()
         reason = result["reason_code"]
         before_generation = time.monotonic()
@@ -428,6 +432,8 @@ def query(db, user, payload, settings, runtime_factory, provider_factory, capaci
                 db.commit()
                 if recorded.rowcount != 1:
                     raise AppError(504, "model_timeout", "Truy vấn đã hết hạn.")
+                if observer is not None:
+                    observer.context(evidence)
                 if evidence:
                     answer, attempts = generate_answer(
                         payload.question, evidence, settings, provider, deadline
