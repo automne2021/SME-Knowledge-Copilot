@@ -1464,6 +1464,31 @@ Audit bàn giao cuối:384protected file hashes không đổi,455candidate files
 
 **Commit theo nhóm** (backend, eval tooling, UI, launcher, evidence, docs) để reviewer đọc được từng phần, và giữ lịch sử thật thay vì squash thành một commit lớn.
 
+### K-102 — Topology M1: storage trong Compose, compute trên host; cài sạch phải cô lập thật
+
+**Ngày / loại:** 12/11/2026. Người dùng chọn phương án A và xác nhận R2. Đã triển khai và kiểm chứng. [Report](docs/fresh-setup-20261112.md), commit `0c1862b`.
+
+**Bối cảnh:** service `backend` trong Compose build từ `requirements.lock`, không có Torch/Transformers. API cần E5 để embed câu hỏi, nên container đó chỉ trả được health/auth, không search hay answer được. Lock worker hiện chỉ pin wheel Torch cho Windows/CPython 3.12.
+
+**Lựa chọn:**
+- Compose chỉ chạy PostgreSQL và Qdrant (image pin digest, volume persistent, port loopback).
+- API, worker và frontend chạy trên host bằng lockfile và launcher có sẵn.
+- Migration và seed là bước tường minh; bỏ `alembic upgrade` khỏi `CMD` của Dockerfile.
+
+**Phương án khác và lý do chưa chọn:**
+- **B, container hóa đầy đủ:** cần lock Linux mới cho Torch CPU, tải wheel vài trăm MB, volume cho model cache, và kiểm thử lại worker (subprocess parser, lease) trên Linux. Rủi ro trễ hạn 15/11 cao, trong khi giá trị demo không đổi.
+- **Giữ service `backend` hỏng:** dễ khiến người đọc tưởng API đã container hóa. Đây là "nói quá khả năng".
+
+Điều kiện xem xét lại: sau M1, khi cần deploy lên server Linux hoặc demo không phụ thuộc Windows.
+
+**Cài sạch thế nào mới là "sạch":**
+- Clone từ Git, không copy working tree. Như vậy file chưa commit hay file bị ignore không lọt vào.
+- Compose project riêng (`-p smefresh`) với volume mới và port khác. Không xóa volume dev để giả clean install.
+- Venv và `node_modules` mới, cài từ lockfile; dùng chung cache tải về để tiết kiệm băng thông. Cache không phải trạng thái ứng dụng.
+- Dùng chung model cache là điểm không sạch có chủ đích, và được ghi rõ. Trên máy mới phải tải E5 đúng revision theo runbook.
+
+**Bài học từ script kiểm tra:** script của tôi so tên file bằng trường không tồn tại (`file_name`), nên báo 0 trúng, và phép kiểm tra "tài liệu đã xóa không quay lại" cũng thành rỗng nghĩa. Một kiểm tra phủ định ("không có X") với trường sai **luôn pass**. Vì vậy cần in schema hit trước, và kiểm tra phủ định bằng thuộc tính chắc chắn tồn tại (`document_id` ⊆ tập tài liệu ready). Đã chạy lại bằng `document_id`, chỉ đọc, và giữ cả kết quả sai lẫn kết quả đúng trong report.
+
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai
 
 - Retrieval/answer quality và human scoring trên pipeline thật; E5/Gemini compatibility smoke đã có K-030/K-034–036, chưa kiểm chứng thinking overrides hoặc chi phí theo hóa đơn.
