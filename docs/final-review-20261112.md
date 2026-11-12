@@ -19,7 +19,7 @@ Phạm vi: 537 file được track. Quét theo 6 giá trị bí mật thật tro
 
 | Phát hiện | Đánh giá |
 |---|---|
-| `copilot_dev_password` trong `.env.example` và `compose.yaml` | Mật khẩu dev **mặc định, công khai từ đầu**, không phải secret bị lộ. **Khuyến nghị:** `.env` trên máy đang dùng đúng giá trị mặc định này cho DB dev. DB chỉ bind `127.0.0.1` nên rủi ro thấp; nếu muốn, đổi `POSTGRES_PASSWORD` và `DATABASE_URL` trong `.env` (cần tạo lại volume DB hoặc đổi mật khẩu trong Postgres). Chưa tự đổi. |
+| `copilot_dev_password` trong `.env.example` và `compose.yaml` | Mật khẩu dev **mặc định, công khai từ đầu**, không phải secret bị lộ. **Khuyến nghị chung:** khi cài, đặt `POSTGRES_PASSWORD` riêng trong `.env` thay vì dùng giá trị mặc định, dù DB chỉ bind `127.0.0.1`. |
 | `Bearer aaaa…` trong JUnit | Token giả làm tham số test 401 |
 | Thông tin cá nhân (email, tên máy, đường dẫn người dùng) | Không có |
 | `.env`, model weights, SQLite, file lớn | Không có; file lớn nhất là PDF corpus khoảng 600KB |

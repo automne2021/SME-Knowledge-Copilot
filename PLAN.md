@@ -19,7 +19,7 @@
 **Đợt rà soát R5a được xác nhận 12/11:** [report](docs/final-review-20261112.md).
 - Sửa 112 link vào `.cache/`: 34 link trỏ sang bằng chứng đã đưa vào repo, 78 link thành ghi chú "local". Còn 0 link hỏng.
 - Đồng bộ trạng thái trong CLAUDE/AGENTS/HANDOFF; số cũ được đánh dấu lịch sử.
-- Quét toàn bộ 537 file: không có secret thật. Khuyến nghị đổi mật khẩu DB dev mặc định trong `.env` local.
+- Quét toàn bộ 537 file: không có secret thật. Khuyến nghị dùng mật khẩu DB riêng thay vì giá trị mặc định.
 - Số trong README khớp bằng chứng; Definition of Done MVP có bằng chứng cho 13/13 điều kiện.
 - Kịch bản video và case study lưu ở file riêng, không commit.
 
