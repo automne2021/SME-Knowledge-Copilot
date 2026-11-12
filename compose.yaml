@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-copilot}
     ports:
       # Cổng 5433 trên máy host để tránh trùng với PostgreSQL cài sẵn.
-      - "127.0.0.1:5433:5432"
+      - "127.0.0.1:${DB_HOST_PORT:-5433}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -22,7 +22,7 @@ services:
     environment:
       QDRANT__TELEMETRY_DISABLED: "true"
     ports:
-      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:${QDRANT_HOST_PORT:-6333}:6333"
     volumes:
       - qdrant_data:/qdrant/storage
     healthcheck:
@@ -41,28 +41,10 @@ services:
       retries: 10
       start_period: 10s
 
-  backend:
-    build: ./backend
-    env_file:
-      - path: .env
-        required: false
-    environment:
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-copilot}:${POSTGRES_PASSWORD:-copilot_dev_password}@db:5432/${POSTGRES_DB:-copilot}
-      STORAGE_DIR: /app/storage
-      FILE_STORAGE_DIR: /app/storage
-      QDRANT_URL: http://qdrant:6333
-    ports:
-      - "127.0.0.1:8000:8000"
-    volumes:
-      - ./storage:/app/storage
-    depends_on:
-      db:
-        condition: service_healthy
-      qdrant:
-        condition: service_healthy
-
-  # CPU worker runs on the Windows host: backend/.venv/Scripts/python.exe -B -m app.worker
-  # requirements-worker-cpu.lock pins the Windows wheel; do not reuse it in a Linux image.
+  # M1 topology (option A, 12/11/2026): Compose runs only storage. API, ingestion worker and
+  # frontend run on the Windows host (start-web.cmd or the commands in README), because E5 needs
+  # requirements-worker-cpu.lock, which pins Windows Torch wheels. A Linux API/worker image is
+  # Roadmap. Migrations and seed are explicit steps, never part of service startup.
 
 volumes:
   db_data:
