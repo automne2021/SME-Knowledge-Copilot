@@ -18,7 +18,7 @@ Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng 
 
 ## Nguồn yêu cầu
 
-- Contract hiện hành: [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md) v2.1. Spec Operations v1.1 là tài liệu lịch sử.
+- Contract hiện hành: [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md) v2.1. Spec Operations v1.1 là tài liệu lịch sử, đã xóa khỏi repo ngày 12/11/2026 (xem `git show 9b96102:SME_AI_Operations_Copilot_Specification.md`).
 - Thứ tự triển khai: [PLAN.md](PLAN.md); baseline lịch sử: [audit Bước 00](docs/rag-transition-audit.md); môi trường hiện tại: [Bước 01](docs/environment-step01.md).
 - Trước khi code một tính năng: đọc mục liên quan trong spec, tóm tắt ngắn interface + edge cases, rồi mới sửa.
 - Nếu business rule chưa rõ hoặc cần thay contract: nêu vấn đề và đề xuất cụ thể để người dùng quyết định; không âm thầm đổi spec.

@@ -23,7 +23,7 @@ Project portfolio AI Engineering của nhóm 2 người, xây ứng dụng tìm 
 - Giải thích kiến thức/lựa chọn: [KNOWLEDGE.md](KNOWLEDGE.md).
 - Quy tắc workspace: [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md). Mọi đợt thay đổi cần người dùng xác nhận **“Thực hiện đi”** trước khi thực hiện.
 
-Spec Operations cũ giữ làm tài liệu lịch sử. Audio/STT, agent và proposal/approval/task nằm ngoài hướng sản phẩm RAG này.
+Spec Operations cũ đã được xóa khỏi repo ngày 12/11/2026 và chỉ còn trong lịch sử Git. Audio/STT, agent và proposal/approval/task nằm ngoài hướng sản phẩm RAG này.
 
 ## Kiến trúc
 

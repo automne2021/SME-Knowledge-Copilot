@@ -21,7 +21,7 @@
 - Working tree khớp 167/167 hash acceptance; blob đã commit giống hệt sau chuẩn hóa line-ending.
 - Quét secret: 0 trùng. Hostname trong JUnit đã được che ở bản đưa vào repo.
 - Không gọi model, không ghi DB.
-- Việc xóa spec Operations chưa được commit; chờ người dùng quyết định.
+- Spec Operations cũ: theo quyết định của người dùng, đã xóa hẳn khỏi repo; các link được sửa sang lịch sử Git (`9b96102`).
 
 Bước 11 đạt **6/7** (mục 6 conditional chưa cộng) → **94,0% / 100%**. Bước 12 vẫn 0/6. Các đoạn 92,9% bên dưới là lịch sử.
 
