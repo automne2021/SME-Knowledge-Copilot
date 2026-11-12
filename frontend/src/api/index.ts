@@ -1,0 +1,64 @@
+import { apiBlob, apiFetch } from "./client";
+import type {
+  Answer,
+  ChatMessage,
+  ChatQuery,
+  ChatSession,
+  DocumentOperation,
+  Job,
+  KnowledgeDocument,
+  SourceChunk,
+  User,
+} from "./types";
+
+const id = encodeURIComponent;
+export const api = {
+  login: (username: string, password: string, signal?: AbortSignal) =>
+    apiFetch<{ access_token: string; expires_in: number }>("/auth/login", {
+      auth: false,
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+      signal,
+    }),
+  me: (signal?: AbortSignal) => apiFetch<User>("/auth/me", { signal }),
+  documents: (signal?: AbortSignal) =>
+    apiFetch<{ items: KnowledgeDocument[] }>("/documents?limit=100", { signal }),
+  document: (key: string, signal?: AbortSignal) =>
+    apiFetch<KnowledgeDocument>(`/documents/${id(key)}`, { signal }),
+  job: (key: string, signal?: AbortSignal) => apiFetch<Job>(`/jobs/${id(key)}`, { signal }),
+  upload: (file: File, signal?: AbortSignal) => {
+    const data = new FormData();
+    data.append("file", file);
+    return apiFetch<DocumentOperation>("/documents", {
+      method: "POST",
+      body: data,
+      timeout: 90000,
+      signal,
+    });
+  },
+  retry: (key: string, signal?: AbortSignal) =>
+    apiFetch<DocumentOperation>(`/jobs/${id(key)}/retry`, { method: "POST", signal }),
+  remove: (key: string, signal?: AbortSignal) =>
+    apiFetch<DocumentOperation>(`/documents/${id(key)}`, { method: "DELETE", signal }),
+  sessions: (signal?: AbortSignal) =>
+    apiFetch<{ items: ChatSession[] }>("/chat/sessions?limit=100", { signal }),
+  createSession: (title: string, signal?: AbortSignal) =>
+    apiFetch<ChatSession>("/chat/sessions", {
+      method: "POST",
+      body: JSON.stringify({ title }),
+      signal,
+    }),
+  messages: (key: string, signal?: AbortSignal) =>
+    apiFetch<{ items: ChatMessage[] }>(`/chat/sessions/${id(key)}/messages?limit=100`, { signal }),
+  query: (payload: ChatQuery, signal?: AbortSignal) =>
+    apiFetch<Answer>("/chat/query", {
+      method: "POST",
+      body: JSON.stringify(payload),
+      timeout: 175000,
+      signal,
+    }),
+  run: (key: string, signal?: AbortSignal) => apiFetch<Answer>(`/chat/runs/${id(key)}`, { signal }),
+  chunk: (doc: string, chunk: string, signal?: AbortSignal) =>
+    apiFetch<SourceChunk>(`/documents/${id(doc)}/chunks/${id(chunk)}`, { signal }),
+  content: (doc: string, signal?: AbortSignal) => apiBlob(`/documents/${id(doc)}/content`, signal),
+};
