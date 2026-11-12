@@ -111,7 +111,7 @@ Người dùng xác nhận đợt này ("Thực hiện đi").
 **Dữ liệu ghi vào DB dev:**
 - 10 tài liệu corpus giả lập (`eval/datasets/corpus`) upload bằng `demo.admin`; cả 10 đều `ready`.
 - 1 phiên chat với một truy vấn kết thúc **503**, vì model bị chặn.
-- Các token probe được logout sau mỗi lần chụp.
+- ~~Các token probe được logout sau mỗi lần chụp.~~ **Đính chính 12/11/2026:** câu này sai. Script chụp gọi `POST /auth/logout`, nhưng API không có endpoint này (trả 404, script bỏ qua kết quả), nên token probe **không** bị thu hồi lúc đó. Chúng tự hết hạn sau 1 giờ (TTL), và ngày 12/11 toàn bộ token của hai tài khoản demo đã bị xóa khi đổi mật khẩu demo.
 - Không xóa tài liệu nào; hộp thoại xóa chỉ được mở để chụp.
 
 **Chụp màn hình:** dùng Edge headless qua DevTools Protocol, token lấy qua API và không in ra. Ảnh lưu ở `.cache/ui-review/screens-20261106/` (Git ignore). Các màn hình đã chụp:
