@@ -1,0 +1,33 @@
+{
+  "baseline_id": "reviewed-v1-dense-e5-rag-v1-final-candidate",
+  "production_top_k": 5,
+  "evaluation_top_k": 10,
+  "expected_index_version": "9851b494ba14e5a4370604ac33064d65b40690b990118fce057e4fbcb5afc4a4",
+  "candidate_k": 20,
+  "score_threshold": null,
+  "model": "intfloat/multilingual-e5-small",
+  "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+  "dimension": 384,
+  "chunk_size_tokens": 350,
+  "chunk_overlap_tokens": 50,
+  "llm_model": "gemini-3.5-flash-lite",
+  "llm_base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "llm_evidence_budget_tokens": 4000,
+  "llm_max_output_tokens": 800,
+  "llm_safety_margin_tokens": 256,
+  "llm_context_window_tokens": 32768,
+  "llm_call_timeout_seconds": 120.0,
+  "query_timeout_seconds": 150.0,
+  "prompt_version": "rag-v1-claims",
+  "expected_test_queries": 30,
+  "concurrency": 1,
+  "minimum_query_interval_seconds": 5,
+  "budget_usd": 0,
+  "request_pacing": {
+    "window_seconds": 61,
+    "max_requests": 12,
+    "min_interval_seconds": 5.1,
+    "max_input_tokens": 200000,
+    "input_tokens_per_generation": 40000
+  }
+}
