@@ -1,0 +1,1160 @@
+[
+  {
+    "id": "q016",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "cb00b0e2c77b2565816f75b27e7521c88c6e775b4d49805b2b36f4bdec3e23c2",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q017",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "2e2c6f5f39816c1db83b92a1d6e77d99bd3adca85d2adca843641ba5a2338507",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q018",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "7c76304078f357040c429b13010b8f48553a514acfdd37ffb8e409846e364ca6",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q019",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "43ab9ac9006a086f8aa88be1f5bc951f790249f5b543b1cda81246bda410a9b9",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q020",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "2cb8be7e269f47a4575728557a7e6ba4ca9fad384a59aa48daa2745b91e91937",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q021",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "cd8f803ce3076eee59356bc4acb08d938f31d0ad73752ff824f4078dcfe9a235",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q022",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "c63fabe73e837c2dc2e4813e90476a2733d1578bfc6d11ec0b69bc7491830ec9",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true,
+                "E2": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true,
+                "E2": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q024",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "b8149f130caf9a30966bb4ddae9e9cb8f4950acab22bc51d86ea799d546a6eaa",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E3": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E3": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q025",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "e69b63f3022a53655a1c2a7a3c9cef84133b04575c72fc8ffd535c4490115c96",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q026",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "be4b5a0f271ac9e890e31fa78b9f0fc8c7b91bd9ff8a593e64d5a3347e176aa6",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q027",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "3e4af02df6a4450ab1dd9688c7188f7535e28b6b7af9c105094f93fd268b4465",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q028",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "96bdad748f68b325cdb5c079f21299897133621df23e6df19f6aa326d4dfd6f5",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q029",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "a7d9fbbff45fc4cb95f1216f2eef17bf6031bba7a877adcc7fa965f33517885f",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q030",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "508559b1e303930b81cf2e3d12a7c77e83763ac152b169aadc1e6561f1e0dcd4",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q031",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "f86d9fe28971759f6b124f94e376d648cc99a9e9cabc1e15ab0f0c2047f5cb97",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q032",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "534cc6b96951ec461d95742afcdf080b184307999d2a7f630d9572a8600e000a",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true,
+                "E2": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true,
+                "E2": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q033",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "4d5f015485a3a1bd4fbcddb1785e4087ede9f206e98b92fc8d8b26defb378b8f",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q034",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "cc407536875758ba89a7bb51af9b1723de433a46ab95e6f2c3cc0a6671a5983b",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q035",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "9242fffefbac73564f8eb46b282125b7c2ebc5a64a787dfba1d2bb33be0b3a7e",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q036",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "9b49f76493779df95bcf11eb3f3522eff92e6b9a2f2ff82e81e545e4a5b37da1",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q037",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "02ad7e8631df70ce1994fd1db619580d26f1ba7730eaeea5010ef3932b90a769",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q038",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "01675283121cba077a791a60c728e6c152cb83e7a4a52d1aa834a3bf8030574d",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q039",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "9087f78a238ac4e5133b6904b424c139f2b145ee35433857626827250b57a834",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q040",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "72e631da6f7934e78a11fa3c0d401f074f32706e488f780a2c6c3432cb88b092",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q041",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "94d5b03673e786dfb2553dc0c79525131b709033dc978b15992c13bda8a9cd0c",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E2": true
+              }
+            },
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q042",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "d2036f18fba4271ebbc2b47dda8229535e1a041aeac07ad5ab821b16ba9e20c2",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q043",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "8910e26fae4e79d2138cf551f96eaed5e6aadc607ce01bbe5a069adea98d463a",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q044",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "9a45c372dbf8fb6b891f8c367f2b53c2ad1d5f99fd8714f4837b5e79f43bdb41",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "q045",
+    "run_id": "offline_replay_1183a4c02b204744b58b042eed56c802",
+    "output_sha256": "8db96e58c9215caed5a1cfe90118e1ddc16d5d3c460b7e89ab8cc06dad921273",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  }
+]

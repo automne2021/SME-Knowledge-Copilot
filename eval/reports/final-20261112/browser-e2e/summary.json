@@ -1,0 +1,47 @@
+{
+  "scope": "browser-e2e-20261110",
+  "request_caps": {
+    "generateContent": 8,
+    "countTokens": 28
+  },
+  "budget_usd": 0,
+  "invoice_cost_verified_usd": null,
+  "api_events": [],
+  "worker": [],
+  "cleanup_completed": true,
+  "human_review": "pending",
+  "native_http_events": [],
+  "ledger": {
+    "grant_sha256": "c014b82fe265ad5db231815d065dc0183641447b9e70388dbb4b2d443881ba4e",
+    "total": {
+      "countTokens": 0,
+      "generateContent": 0
+    },
+    "batches": {
+      "admin-abstain": {
+        "countTokens": 0,
+        "generateContent": 0
+      },
+      "admin-after-delete": {
+        "countTokens": 0,
+        "generateContent": 0
+      },
+      "admin-answer": {
+        "countTokens": 0,
+        "generateContent": 0
+      },
+      "member-abstain": {
+        "countTokens": 0,
+        "generateContent": 0
+      },
+      "member-after-delete": {
+        "countTokens": 0,
+        "generateContent": 0
+      },
+      "member-answer": {
+        "countTokens": 0,
+        "generateContent": 0
+      }
+    }
+  }
+}

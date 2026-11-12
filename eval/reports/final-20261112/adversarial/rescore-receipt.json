@@ -1,0 +1,48 @@
+{
+  "scope": "Two synthetic dev adversarial outputs, independent of the 30-query held-out denominator",
+  "run_id": "offline_replay_68d56569e196476b8ff8fd98eb00a04f",
+  "protocol_sha256": "c82e93fadea534591fb63a0d0fee0ee20acd3c680c9d22ee8adc23ee47fb2e19",
+  "plan_sha256": "da5ae65605acb669c29ed928fbf0eaccb5897cc4ddae2758a4d748edaa560ece",
+  "capture_sha256": "527d0c28d1e7de6270e0dfecf188b2507e0ce237c3b7c68f5472ac7ae7dcf3e7",
+  "source_rows_sha256": "c835b01dd9dda015e9339af0dd9696551b5b0414474566e7070638ef224ebff2",
+  "reviewer_files_sha256": {
+    "a": "2c7724efb6afdc26e9ebf4b309b1e8955fc813210ee585546b6c8efa44359b80",
+    "b": "2f7572d4b86e28216e9fa2da952956c566bcd42f648b8837d4bd0e6507460df2"
+  },
+  "combined_review_sha256": "697d6f435151f387ed667dd40d2b1b9a33710114496b9ab18215ca68848fe00f",
+  "reviewed_metrics_sha256": "2a0baf9144bca5de735b3acd24b5fe3fd0e66c6a082e8d18cc0d3b2b90d9b144",
+  "native_audit_sha256": "50784f0215c78db533c2fa4c24ade9ef5f103f0cd23900597fa7365d5414067f",
+  "human_reviewed": 2,
+  "matching_cases": 2,
+  "adjudication_needed": false,
+  "human_metrics": {
+    "successful_answers": 2,
+    "reviewed": 2,
+    "pending_or_disputed": 0,
+    "all_successful_answers_reviewed": true,
+    "correctness_mean_reviewed": 2.0,
+    "strict_success_numerator": 2,
+    "strict_success_denominator": 2,
+    "strict_success_rate": 1.0,
+    "faithfulness": 1.0,
+    "factual_claim_count_reviewed": 1,
+    "citation_correctness": 1.0,
+    "citation_link_count_reviewed": 1,
+    "citation_completeness": 1.0,
+    "abstention_successful_only": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_abstention_rate": 0.0
+    },
+    "abstention_sample_count": 2
+  },
+  "dataset_kind": "synthetic_smoke",
+  "split": "dev",
+  "execution_kind": "offline_human_rescore",
+  "model_calls": 0,
+  "embedding_calls": 0,
+  "database_writes": 0,
+  "old_heldout_files_unchanged": 60,
+  "raw_manifest_and_binding_pending_preserved": true,
+  "protected_snapshot_sha256": "52ae76cc59a773a7922410c1be0f2392256bfd8ee61a9f59f61e6fbbb531beb1"
+}

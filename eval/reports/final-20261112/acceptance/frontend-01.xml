@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="36" failures="0" errors="0" time="4.5136151">
+    <testsuite name="src/App.test.tsx" timestamp="2026-11-12T04:22:47.812Z" hostname="redacted" tests="10" failures="0" errors="0" skipped="0" time="2.6037084">
+        <testcase classname="src/App.test.tsx" name="requires login before any document API call" time="0.1221138">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="authenticates with server identity and removes tab data on logout" time="0.7458563">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="does not give members write controls" time="0.0600694">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="opens authenticated source bytes from the document list" time="0.314894">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="creates a real session request, queries, and opens the returned citation" time="0.3607108">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="preserves an unsent draft when the window regains focus" time="0.2668783">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="keeps a technical answering failure distinct from insufficient evidence" time="0.2845357">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="prevents new messages from exceeding the backend history cap" time="0.3111347">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="fills the composer from a suggestion without sending a query" time="0.1125446">
+        </testcase>
+        <testcase classname="src/App.test.tsx" name="hides suggestions when no document is ready" time="0.0233003">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/api/client.test.ts" timestamp="2026-11-12T04:22:47.817Z" hostname="redacted" tests="6" failures="0" errors="0" skipped="0" time="0.017334">
+        <testcase classname="src/api/client.test.ts" name="authenticated API boundary &gt; adds bearer and JSON headers while preserving multipart boundaries" time="0.0078266">
+        </testcase>
+        <testcase classname="src/api/client.test.ts" name="authenticated API boundary &gt; does not log out a new session on a stale 401" time="0.0022949">
+        </testcase>
+        <testcase classname="src/api/client.test.ts" name="authenticated API boundary &gt; discards late JSON bodies after account changes" time="0.0008484">
+        </testcase>
+        <testcase classname="src/api/client.test.ts" name="authenticated API boundary &gt; expires only the matching credential and keeps error details" time="0.0019744">
+        </testcase>
+        <testcase classname="src/api/client.test.ts" name="authenticated API boundary &gt; refuses HTML source bodies and never creates blob URLs" time="0.0011883">
+        </testcase>
+        <testcase classname="src/api/client.test.ts" name="authenticated API boundary &gt; does not send credentials on login or accept remote paths" time="0.0015839">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ui/Dialog.test.tsx" timestamp="2026-11-12T04:22:47.818Z" hostname="redacted" tests="2" failures="0" errors="0" skipped="0" time="0.0649355">
+        <testcase classname="src/components/ui/Dialog.test.tsx" name="ignores a stale close event that arrives after the dialog reopened" time="0.0569851">
+        </testcase>
+        <testcase classname="src/components/ui/Dialog.test.tsx" name="still reports a real close" time="0.0056905">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/features/chat/AnswerView.test.tsx" timestamp="2026-11-12T04:22:47.820Z" hostname="redacted" tests="6" failures="0" errors="0" skipped="0" time="0.2458586">
+        <testcase classname="src/features/chat/AnswerView.test.tsx" name="opens backend citations and renders untrusted strings as text" time="0.1827893">
+        </testcase>
+        <testcase classname="src/features/chat/AnswerView.test.tsx" name="separates partial support from missing information" time="0.010854">
+        </testcase>
+        <testcase classname="src/features/chat/AnswerView.test.tsx" name="never shows cached text or citations for a revoked answer" time="0.0034151">
+        </testcase>
+        <testcase classname="src/features/chat/AnswerView.test.tsx" name="distinguishes abstention from malformed citations" time="0.0121891">
+        </testcase>
+        <testcase classname="src/features/chat/AnswerView.test.tsx" name="numbers citations by backend order and labels grounding without a score" time="0.024477">
+        </testcase>
+        <testcase classname="src/features/chat/AnswerView.test.tsx" name="shows a partial badge, and no grounding badge for abstention" time="0.0103128">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/features/chat/useChat.test.tsx" timestamp="2026-11-12T04:22:47.821Z" hostname="redacted" tests="5" failures="0" errors="0" skipped="0" time="0.4224125">
+        <testcase classname="src/features/chat/useChat.test.tsx" name="retries an uncertain query with exactly the same request identity" time="0.0971978">
+        </testcase>
+        <testcase classname="src/features/chat/useChat.test.tsx" name="discards an old session response after navigation" time="0.0853127">
+        </testcase>
+        <testcase classname="src/features/chat/useChat.test.tsx" name="hides cached answers before revalidating deleted sources" time="0.1550227">
+        </testcase>
+        <testcase classname="src/features/chat/useChat.test.tsx" name="restores a pending snapshot after reload without generating automatically" time="0.0781671">
+        </testcase>
+        <testcase classname="src/features/chat/useChat.test.tsx" name="recovers a known running run by polling without another generate request" time="0.0054455">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/features/sources/SourcePanel.test.tsx" timestamp="2026-11-12T04:22:47.822Z" hostname="redacted" tests="3" failures="0" errors="0" skipped="0" time="0.3410544">
+        <testcase classname="src/features/sources/SourcePanel.test.tsx" name="clears revoked excerpts immediately on document invalidation" time="0.1124893">
+        </testcase>
+        <testcase classname="src/features/sources/SourcePanel.test.tsx" name="revokes PDF URLs when the source closes" time="0.0604045">
+        </testcase>
+        <testcase classname="src/features/sources/SourcePanel.test.tsx" name="does not use snapshot source URLs from citations" time="0.1658412">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/features/documents/DocumentDialogs.test.tsx" timestamp="2026-11-12T04:22:47.823Z" hostname="redacted" tests="3" failures="0" errors="0" skipped="0" time="0.781111">
+        <testcase classname="src/features/documents/DocumentDialogs.test.tsx" name="requires an exact filename before destructive submission" time="0.6157439">
+        </testcase>
+        <testcase classname="src/features/documents/DocumentDialogs.test.tsx" name="rejects unsupported uploads before contacting the API" time="0.0709836">
+        </testcase>
+        <testcase classname="src/features/documents/DocumentDialogs.test.tsx" name="shows duplicate-document recovery instead of a fake success" time="0.0922324">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/features/documents/useDocuments.test.tsx" timestamp="2026-11-12T04:22:47.824Z" hostname="redacted" tests="1" failures="0" errors="0" skipped="0" time="0.0372007">
+        <testcase classname="src/features/documents/useDocuments.test.tsx" name="polls active jobs and stops after terminal publication" time="0.0359232">
+        </testcase>
+    </testsuite>
+</testsuites>

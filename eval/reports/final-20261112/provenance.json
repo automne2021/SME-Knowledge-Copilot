@@ -1,0 +1,139 @@
+{
+  "created_utc": "2026-11-12T07:43:42.927621+00:00",
+  "note": "Curated copies of local evidence in ignored .cache/. Originals unchanged; verify source_sha256 against .cache when available.",
+  "files": [
+    {
+      "published": "eval/reports/final-20261112/heldout/reviewed-metrics.json",
+      "source": ".cache/final-heldout-scoring-20261112/reviewed-metrics.json",
+      "source_sha256": "0868716e1ae64a59d2bc9aadf65cb708fa153027b7c83ed0d93e1090f5c1a5ed",
+      "published_sha256": "0868716e1ae64a59d2bc9aadf65cb708fa153027b7c83ed0d93e1090f5c1a5ed",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/heldout/rescore-receipt.json",
+      "source": ".cache/final-heldout-scoring-20261112/rescore-receipt.json",
+      "source_sha256": "b19df0da9ec6a3cd6f0a615c593e508d129e9b366c324d9780220727637f9c81",
+      "published_sha256": "b19df0da9ec6a3cd6f0a615c593e508d129e9b366c324d9780220727637f9c81",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/heldout/combined-review.json",
+      "source": ".cache/final-heldout-scoring-20261112/combined-review.json",
+      "source_sha256": "84d4b8a1c59eb2089eb2d98a5c4f9a31b3988628e9e2fc982483434153762f96",
+      "published_sha256": "84d4b8a1c59eb2089eb2d98a5c4f9a31b3988628e9e2fc982483434153762f96",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/adversarial/reviewed-metrics.json",
+      "source": ".cache/adversarial-at14-scoring-20261112/reviewed-metrics.json",
+      "source_sha256": "2a0baf9144bca5de735b3acd24b5fe3fd0e66c6a082e8d18cc0d3b2b90d9b144",
+      "published_sha256": "2a0baf9144bca5de735b3acd24b5fe3fd0e66c6a082e8d18cc0d3b2b90d9b144",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/adversarial/rescore-receipt.json",
+      "source": ".cache/adversarial-at14-scoring-20261112/rescore-receipt.json",
+      "source_sha256": "dc7bb6024366ff7dbd5a56deadf9a5006704ebf64a80f269ce7a4cb338994d34",
+      "published_sha256": "dc7bb6024366ff7dbd5a56deadf9a5006704ebf64a80f269ce7a4cb338994d34",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/adversarial/combined-review.json",
+      "source": ".cache/adversarial-at14-scoring-20261112/combined-review.json",
+      "source_sha256": "697d6f435151f387ed667dd40d2b1b9a33710114496b9ab18215ca68848fe00f",
+      "published_sha256": "697d6f435151f387ed667dd40d2b1b9a33710114496b9ab18215ca68848fe00f",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/acceptance-matrix.json",
+      "source": ".cache/adversarial-at14-scoring-20261112/acceptance-matrix.json",
+      "source_sha256": "249e368b653266024e54a472bb43606c34869bf56e966c6dd9a83776514a3314",
+      "published_sha256": "249e368b653266024e54a472bb43606c34869bf56e966c6dd9a83776514a3314",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/source-manifest.json",
+      "source": ".cache/at-20261112/source-manifest.json",
+      "source_sha256": "f3e6f2e489457aeb54336885efee07520618bbe40edfe1f6eeb11fb18172df33",
+      "published_sha256": "f3e6f2e489457aeb54336885efee07520618bbe40edfe1f6eeb11fb18172df33",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/backend-01.xml",
+      "source": ".cache/at-20261112/backend-01.xml",
+      "source_sha256": "73bf72ce0f139e7d7a549a808a86ef5e6a77b653d8555256b0415bc64f65d4c0",
+      "published_sha256": "60dd29d1ea420cce7832d1e83a8c5955eaf541ed2a6363b6e75b875bbd21e4cc",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/backend-02.xml",
+      "source": ".cache/at-20261112/backend-02.xml",
+      "source_sha256": "225698be150db00ff85f8c2b073904f5347e7d2988a72cdfb33cb98cd84445d6",
+      "published_sha256": "66bab9c562ef63151cf27781887d700cd3385643e50f9d8036bb859ed3583b17",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/backend-03.xml",
+      "source": ".cache/at-20261112/backend-03.xml",
+      "source_sha256": "c8107037ac1c388755bdf3b641ee4ce9de2a2edb6c8f4db51d2109edc5d7fef3",
+      "published_sha256": "3b0b1d53e9d9b4519cd5abbe8c8cdddce7b05d2397ac110f0a48625044264b8f",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/backend-04.xml",
+      "source": ".cache/at-20261112/backend-04.xml",
+      "source_sha256": "ae631c7863be1cacdc668897289ba2aa67d6a7fefeacc566933df4b0f9b3ee46",
+      "published_sha256": "d16b1390660483a81fc46bd80188f214f1ba54f3571867f19f475a00a76f9214",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/gaps-01.xml",
+      "source": ".cache/at-20261112/gaps-01.xml",
+      "source_sha256": "c981c6be9a1cb7e78aa2748e794e5c5119526aa49b8f34c1005b57b3134b9082",
+      "published_sha256": "1393de0d25ec9cc19ae5f41894cf0d162ab36aca2503f3e3cc1b9940092d3845",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/eval-01.xml",
+      "source": ".cache/at-20261112/eval-01.xml",
+      "source_sha256": "c6ff8a6eea274b17f0367eb954cc010a9b385b7d2e490e309f493f605e886c3f",
+      "published_sha256": "e79289d81a25a7a30d1a1184b6f26506fbd6842d4d91293de6ff6ed675712e00",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/acceptance/frontend-01.xml",
+      "source": ".cache/at-20261112/frontend-01.xml",
+      "source_sha256": "f2904351edec85163464dbad6b28f089108417a71212779255e152c621d392b9",
+      "published_sha256": "b2183c88780ff192a0db561953160fb6c8e6a36a64f4f7778310cd96d700bd00",
+      "redaction": "junit hostname -> redacted"
+    },
+    {
+      "published": "eval/reports/final-20261112/browser-e2e/summary.json",
+      "source": ".cache/browser-e2e-20261110/summary.json",
+      "source_sha256": "76962dec93c309b750e19a6e95e23794af92cd4434bc3382ff8c16ac9f9b9d7f",
+      "published_sha256": "76962dec93c309b750e19a6e95e23794af92cd4434bc3382ff8c16ac9f9b9d7f",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/browser-e2e/retry-01-metrics.json",
+      "source": ".cache/browser-e2e-20261110/retry-01/evaluation/metrics.json",
+      "source_sha256": "14faa8f368427b60ced68d35b437eca4f75ec0bc630e4dec572332ce30b79fc9",
+      "published_sha256": "14faa8f368427b60ced68d35b437eca4f75ec0bc630e4dec572332ce30b79fc9",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/browser-e2e/retry-01-report.md",
+      "source": ".cache/browser-e2e-20261110/retry-01/evaluation/report.md",
+      "source_sha256": "c4d3a0b370c6ac65b6fc08c5ef47e599f9ae58406a4e9e7ef382a6362ab409bf",
+      "published_sha256": "c4d3a0b370c6ac65b6fc08c5ef47e599f9ae58406a4e9e7ef382a6362ab409bf",
+      "redaction": null
+    },
+    {
+      "published": "eval/reports/final-20261112/browser-e2e/retry-01-manifest.json",
+      "source": ".cache/browser-e2e-20261110/retry-01/evaluation/manifest.json",
+      "source_sha256": "e7c5fbcdc75b46b883df7f67e2427923cb8f8e5b82b3c148dde5c10c0d6010ea",
+      "published_sha256": "e7c5fbcdc75b46b883df7f67e2427923cb8f8e5b82b3c148dde5c10c0d6010ea",
+      "redaction": null
+    }
+  ]
+}

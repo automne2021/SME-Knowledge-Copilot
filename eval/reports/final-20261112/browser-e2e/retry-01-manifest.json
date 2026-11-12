@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "run_id": "offline_replay_aa586eb812264801825f2fa5ce1dbebd",
+  "execution_kind": "offline_replay",
+  "dataset_kind": "synthetic_browser_e2e",
+  "origin": "captured_api",
+  "capture_provenance_independently_verified": false,
+  "split": "dev",
+  "protocol_sha256": "5ee01925b6d08b93d167f6f84e4803ddf5bddc25bf7770058d69c2782ab980f6",
+  "capture_sha256": "81dbf55e27c3f9e9dedf1c59f6ee618c4e8941d62f4e873a6193e684b4edaf57",
+  "per_question_sha256": "ac8bb6c7588145f3a862ea5c778dc4cf460c0e40663d0ddcc0ca631b064dec6c",
+  "model_calls_this_run": 0,
+  "cost_this_offline_run_usd": 0,
+  "captured_provider_usage": null,
+  "live_acceptance": "not_established_by_replay",
+  "human_review": "pending",
+  "status": "completed"
+}

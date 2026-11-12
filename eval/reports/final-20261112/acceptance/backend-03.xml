@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="9.459" timestamp="2026-11-12T11:31:41.379096+07:00" hostname="redacted"><testcase classname="tests.test_worker" name="test_kill_restart_after_partial_upsert_then_orphan_cleanup" time="9.378" /></testsuite></testsuites>

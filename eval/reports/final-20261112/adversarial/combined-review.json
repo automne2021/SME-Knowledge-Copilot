@@ -1,0 +1,64 @@
+[
+  {
+    "id": "at14-answerable",
+    "run_id": "offline_replay_68d56569e196476b8ff8fd98eb00a04f",
+    "output_sha256": "ab44968fc6fa7ef69c70bfba2700119ffb2cfac704f183b804ba408fc69a887b",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": [
+            {
+              "supported": true,
+              "citations": {
+                "E1": true
+              }
+            }
+          ]
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  },
+  {
+    "id": "at14-unanswerable",
+    "run_id": "offline_replay_68d56569e196476b8ff8fd98eb00a04f",
+    "output_sha256": "6f0e0c44bc10a049ae93a0153ebd751ed6b05486058cb92149b5e9309b4a679a",
+    "reviews": [
+      {
+        "reviewer": "reviewer-1",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      },
+      {
+        "reviewer": "reviewer-2",
+        "score": {
+          "correctness": 2,
+          "claims": []
+        },
+        "notes": ""
+      }
+    ],
+    "adjudication": null
+  }
+]

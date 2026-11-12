@@ -1,0 +1,140 @@
+{
+  "planned": 6,
+  "attempted": 6,
+  "not_attempted": 0,
+  "succeeded": 6,
+  "technical_errors": 0,
+  "technical_error_rate_attempted": 0.0,
+  "attempt_coverage": 1.0,
+  "captured_answer_latency_ms": {
+    "count": 6,
+    "p50": 9984.327000000001,
+    "p95_nearest_rank": 17478.208,
+    "max": 17478.208
+  },
+  "retrieval": {
+    "query_count": 6,
+    "answerable_count": 2,
+    "unanswerable_count": 4,
+    "technical_failures": 0,
+    "technical_error_rate": 0.0,
+    "successful_answerable": {
+      "1": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      },
+      "3": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      },
+      "5": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      },
+      "10": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      }
+    },
+    "strict_all_answerable": {
+      "1": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      },
+      "3": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      },
+      "5": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      },
+      "10": {
+        "count": 2,
+        "hit": 1,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "all_evidence": 1
+      }
+    },
+    "multi_evidence_successful": {
+      "1": {
+        "count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null,
+        "all_evidence": null
+      },
+      "3": {
+        "count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null,
+        "all_evidence": null
+      },
+      "5": {
+        "count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null,
+        "all_evidence": null
+      },
+      "10": {
+        "count": 0,
+        "hit": null,
+        "recall": null,
+        "mrr": null,
+        "all_evidence": null
+      }
+    },
+    "latency_ms": {
+      "count": 6,
+      "p50": 1839.5225,
+      "p95_nearest_rank": 1975.036,
+      "max": 1975.036
+    },
+    "not_attempted": 0
+  },
+  "human": {
+    "successful_answers": 6,
+    "reviewed": 0,
+    "pending_or_disputed": 6,
+    "all_successful_answers_reviewed": false,
+    "correctness_mean_reviewed": null,
+    "strict_success_numerator": 0,
+    "strict_success_denominator": 6,
+    "strict_success_rate": null,
+    "faithfulness": null,
+    "factual_claim_count_reviewed": 0,
+    "citation_correctness": null,
+    "citation_link_count_reviewed": 0,
+    "citation_completeness": null,
+    "abstention_successful_only": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_abstention_rate": 0.0
+    },
+    "abstention_sample_count": 6
+  }
+}

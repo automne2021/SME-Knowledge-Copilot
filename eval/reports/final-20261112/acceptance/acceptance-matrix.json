@@ -1,0 +1,398 @@
+{
+  "scope": "AT-R01-23 consolidated evidence: original test runs and inherited native/Chrome evidence plus two native dev adversarial outputs with completed two-person review; no single all-native rerun",
+  "cases": [
+    {
+      "id": "AT-R01",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[acceptance]": "backend-01",
+        "test_search::test_pdf_bytes_and_docx_extracted_text_source[acceptance]": "backend-01",
+        "test_worker::test_complete_generation_has_exact_sql_vector_and_source_mapping": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R02",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[leave]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[security]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[support]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[discount_v1]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[discount_v2]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[approvals]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[onboarding]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[acceptance]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[expenses]": "backend-01",
+        "test_parsing_chunking::test_real_corpus_chunk_round_trip[forms]": "backend-01",
+        "test_parsing_chunking::test_docx_table_header_and_order_have_provenance": "backend-01",
+        "test_search::test_pdf_bytes_and_docx_extracted_text_source[leave]": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R03",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_parsing_chunking::test_parser_fixture_errors[scan.pdf-needs_ocr]": "backend-01",
+        "test_parsing_chunking::test_parser_fixture_errors[blank.pdf-no_extractable_text]": "backend-01",
+        "test_parsing_chunking::test_parser_fixture_errors[encrypted.pdf-encrypted_document]": "backend-01",
+        "test_parsing_chunking::test_parser_fixture_errors[malformed.pdf-parse_failed]": "backend-01",
+        "test_parsing_chunking::test_parser_fixture_errors[spoofed.pdf-unsupported_file_type]": "backend-01",
+        "test_parsing_chunking::test_parser_fixture_errors[malformed.docx-parse_failed]": "backend-01",
+        "test_parsing_chunking::test_mixed_pdf_keeps_actual_page_warning": "backend-01",
+        "test_worker::test_parser_errors_are_real_terminal_job_states[scan.pdf-needs_ocr-needs_ocr]": "backend-01",
+        "test_worker::test_parser_errors_are_real_terminal_job_states[blank.pdf-failed-no_extractable_text]": "backend-01",
+        "test_worker::test_parser_errors_are_real_terminal_job_states[encrypted.pdf-failed-encrypted_document]": "backend-01",
+        "test_worker::test_parser_errors_are_real_terminal_job_states[malformed.pdf-failed-parse_failed]": "backend-01",
+        "test_worker::test_parser_errors_are_real_terminal_job_states[mixed.pdf-ready-None]": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R04",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_uploads::test_file_validation[../escape.txt-policy-text/plain-422]": "backend-01",
+        "test_uploads::test_file_validation[C:\\\\outside.txt-policy-text/plain-422]": "backend-01",
+        "test_uploads::test_file_validation[fake.pdf-plain text-application/pdf-415]": "backend-01",
+        "test_uploads::test_file_validation[payload.txt-%PDF-1.7-text/plain-415]": "backend-01",
+        "test_uploads::test_file_validation[payload.exe-code-application/octet-stream-415]": "backend-01",
+        "test_uploads::test_file_validation[wrong.txt-text-application/pdf-415]": "backend-01",
+        "test_uploads::test_file_validation[empty.txt--text/plain-202]": "backend-01",
+        "test_uploads::test_extra_fields_rejected_and_stream_size_bounded": "backend-01",
+        "test_parsing_chunking::test_archive_limits_checked_before_xml": "backend-01",
+        "test_parsing_chunking::test_limits_and_hard_timeout": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R05",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_uploads::test_concurrent_duplicate_real_transactions": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R06",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_worker::test_kill_restart_after_partial_upsert_then_orphan_cleanup": "backend-03"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R07",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_worker::test_old_attempt_is_fenced_after_recovery": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R08",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_worker::test_publish_rollback_never_marks_staging_ready_then_retries": "backend-01",
+        "test_search::test_document_filter_and_real_qdrant_scope_exclude_orphan_points": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R09",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_uploads::test_member_and_anonymous_cannot_upload": "backend-01",
+        "test_deletion::test_foreign_workspace_delete_and_cleanup_retry_return_404": "backend-01",
+        "test_chat::test_owner_scope_even_admin_cannot_query_another_members_session": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R10",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_gap_contracts::test_search_endpoint_with_disabled_llm_never_constructs_provider": "gaps-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R11",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_chat::test_grounded_trusted_citations_and_unchanged_replay": "backend-01",
+        "test_chat::test_partial_conflict_and_model_abstention_has_no_free_form_claims": "backend-01"
+      },
+      "inherited_receipts": {
+        ".cache/final-heldout-scoring-20261112/rescore-receipt.json": "b19df0da9ec6a3cd6f0a615c593e508d129e9b366c324d9780220727637f9c81",
+        ".cache/at-20261112/inherited-native-rebuild.json": "d0dadc07504e2b63ccbd4bfe411f1d9cc8928df8c600949ea3b359d0718dd716"
+      },
+      "limitation": null
+    },
+    {
+      "id": "AT-R12",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_chat::test_no_sources_abstains_without_provider_and_replays": "backend-01",
+        "test_search::test_empty_scope_does_not_call_embedding_or_qdrant": "backend-01",
+        "test_chat::test_all_chunks_budget_excluded_does_not_generate": "backend-01"
+      },
+      "inherited_receipts": {
+        ".cache/final-heldout-scoring-20261112/rescore-receipt.json": "b19df0da9ec6a3cd6f0a615c593e508d129e9b366c324d9780220727637f9c81"
+      },
+      "limitation": null
+    },
+    {
+      "id": "AT-R13",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_chat::test_repair_once_then_success_and_citation_from_final_context_only": "backend-01",
+        "test_answering::test_invalid_second_response_is_technical_and_provider_error_not_repaired": "backend-01",
+        "test_answering::test_whole_chunk_budget_and_renumber_after_exclusion": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R14",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_parsing_chunking::test_adversarial_document_remains_inert_data": "backend-01",
+        "test_answering::test_repair_keeps_same_question_context_and_does_not_echo_invalid_output": "backend-01",
+        "src/App.test.tsx::opens authenticated source bytes from the document list": "frontend-01",
+        "src/features/chat/AnswerView.test.tsx::opens backend citations and renders untrusted strings as text": "frontend-01"
+      },
+      "inherited_receipts": {
+        ".cache/at-20261112/historical-injection-text-comparison.json": "bb6fc7011291fcd3953b1c766ee578bb700bf115f9b96bb355158a9e0e5eb9c4",
+        ".cache/adv-validation-20261112/final-audit.json": "50784f0215c78db533c2fa4c24ade9ef5f103f0cd23900597fa7365d5414067f",
+        ".cache/adversarial-at14-20261112/coverage.json": "609b9e7d0880effc14a5fe5bca47c97f0285c3d1ebbeadfc932b42a1046776ce",
+        ".cache/adversarial-at14-scoring-20261112/rescore-receipt.json": "dc7bb6024366ff7dbd5a56deadf9a5006704ebf64a80f269ce7a4cb338994d34",
+        ".cache/adversarial-at14-scoring-20261112/combined-review.json": "697d6f435151f387ed667dd40d2b1b9a33710114496b9ab18215ca68848fe00f",
+        ".cache/adversarial-at14-scoring-20261112/reviewed-metrics.json": "2a0baf9144bca5de735b3acd24b5fe3fd0e66c6a082e8d18cc0d3b2b90d9b144"
+      },
+      "limitation": "Two synthetic dev cases only; literal rendering/no-XSS is inherited component evidence, not a new browser run or universal injection safety guarantee",
+      "human_reviewed": 2,
+      "native_run_id": "offline_replay_68d56569e196476b8ff8fd98eb00a04f"
+    },
+    {
+      "id": "AT-R15",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_search::test_technical_failure_is_not_empty_success[vector_timeout]": "backend-01",
+        "test_search::test_technical_failure_is_not_empty_success[vector_fingerprint_mismatch]": "backend-01",
+        "test_search::test_technical_failure_is_not_empty_success[invalid_embedding]": "backend-01",
+        "test_worker::test_typed_failure_retry_budget[vector_unavailable-True]": "backend-01",
+        "test_worker::test_typed_failure_retry_budget[embedding_timeout-True]": "backend-01",
+        "test_worker::test_typed_failure_retry_budget[invalid_embedding-False]": "backend-01",
+        "test_gemini_provider::test_hard_timeout_includes_slow_response": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R16",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_deletion::test_delete_ready_hides_source_then_cleans_all_layers_and_reupload": "backend-01",
+        "test_deletion::test_cleanup_failure_stays_hidden_exhausts_and_concurrent_admin_retry": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R17",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_deletion::test_delete_during_generation_fails_without_resurrecting_trace_or_answer": "backend-01",
+        "test_deletion::test_delete_during_counting_prevents_any_generation_and_registration": "backend-01",
+        "test_deletion::test_late_upsert_after_delete_is_not_published_and_is_reconciled": "backend-01",
+        "test_deletion::test_delete_after_invalid_first_output_prevents_repair_resending_context": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R18",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_deletion::test_legacy_full_context_and_uncited_source_copies_are_redacted": "backend-01",
+        "src/features/sources/SourcePanel.test.tsx::clears revoked excerpts immediately on document invalidation": "frontend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R19",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_chat::test_idempotency_input_owner_and_strict_validation": "backend-01",
+        "test_chat::test_in_progress_busy_cross_session_and_deadline_recovery": "backend-01",
+        "test_chat::test_lost_commit_ack_replays_persisted_answer_without_second_call": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R20",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_gap_contracts::test_ambiguous_followup_keeps_previous_assistant_out_of_model_context": "gaps-01",
+        "test_answering::test_question_over_budget_is_not_truncated": "backend-01",
+        "test_chat::test_all_chunks_budget_excluded_does_not_generate": "backend-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R21",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "test_span_metrics::test_overlap_union_does_not_double_count_and_clips_boundaries": "eval-01",
+        "test_span_metrics::test_group_completes_at_rank_that_union_reaches_eighty_percent": "eval-01",
+        "test_final_eval::test_empty_claim_denominators_remain_null": "eval-01",
+        "test_final_eval::test_partial_capture_keeps_planned_denominator_and_errors_are_not_abstentions": "eval-01"
+      },
+      "inherited_receipts": {},
+      "limitation": null
+    },
+    {
+      "id": "AT-R22",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {},
+      "inherited_receipts": {
+        ".cache/at-20261112/inherited-native-rebuild.json": "d0dadc07504e2b63ccbd4bfe411f1d9cc8928df8c600949ea3b359d0718dd716"
+      },
+      "limitation": null
+    },
+    {
+      "id": "AT-R23",
+      "status": "passed_with_scoped_evidence",
+      "test_cases": {
+        "src/features/sources/SourcePanel.test.tsx::revokes PDF URLs when the source closes": "frontend-01",
+        "src/api/client.test.ts::authenticated API boundary > does not log out a new session on a stale 401": "frontend-01",
+        "src/App.test.tsx::keeps a technical answering failure distinct from insufficient evidence": "frontend-01",
+        "src/features/sources/SourcePanel.test.tsx::clears revoked excerpts immediately on document invalidation": "frontend-01"
+      },
+      "inherited_receipts": {
+        ".cache/at-20261112/inherited-ui-and-pdf-evidence.json": "912305e0ee76063b31f061a8fa0c3faddcca8237175c26f84618ec3595c29774"
+      },
+      "limitation": null
+    }
+  ],
+  "passed_scoped": 23,
+  "partial": [],
+  "full_acceptance_pass": true,
+  "fresh_setup_pass": false,
+  "unique_passed_test_cases": 409,
+  "run_history": [
+    {
+      "run": "backend-01",
+      "tests": 302,
+      "failed": [
+        "test_deletion::test_cleanup_only_cli_has_no_model_cache_dependency",
+        "test_worker::test_kill_restart_after_partial_upsert_then_orphan_cleanup"
+      ],
+      "xml_sha256": "73bf72ce0f139e7d7a549a808a86ef5e6a77b653d8555256b0415bc64f65d4c0"
+    },
+    {
+      "run": "backend-02",
+      "tests": 2,
+      "failed": [
+        "test_worker::test_kill_restart_after_partial_upsert_then_orphan_cleanup"
+      ],
+      "xml_sha256": "225698be150db00ff85f8c2b073904f5347e7d2988a72cdfb33cb98cd84445d6"
+    },
+    {
+      "run": "backend-03",
+      "tests": 1,
+      "failed": [],
+      "xml_sha256": "c8107037ac1c388755bdf3b641ee4ce9de2a2edb6c8f4db51d2109edc5d7fef3"
+    },
+    {
+      "run": "backend-04",
+      "tests": 3,
+      "failed": [],
+      "xml_sha256": "ae631c7863be1cacdc668897289ba2aa67d6a7fefeacc566933df4b0f9b3ee46"
+    },
+    {
+      "run": "gaps-01",
+      "tests": 2,
+      "failed": [],
+      "xml_sha256": "c981c6be9a1cb7e78aa2748e794e5c5119526aa49b8f34c1005b57b3134b9082"
+    },
+    {
+      "run": "eval-01",
+      "tests": 69,
+      "failed": [],
+      "xml_sha256": "c6ff8a6eea274b17f0367eb954cc010a9b385b7d2e490e309f493f605e886c3f"
+    },
+    {
+      "run": "frontend-01",
+      "tests": 36,
+      "failed": [],
+      "xml_sha256": "f2904351edec85163464dbad6b28f089108417a71212779255e152c621d392b9"
+    }
+  ],
+  "backend_unique": 302,
+  "additional_contracts": 2,
+  "eval_unique": 69,
+  "frontend_unique": 36,
+  "new_gemini_calls": 0,
+  "project_progress_percent": 92.9,
+  "evidence_files_sha256": {
+    "audit-storage.py": "260b1d8da1ecec9487f1a086a2271031d2f29dff5c938d7729bc244bc009d32f",
+    "backend-01.txt": "4cd0e714fff1fc8e16a8c216769870b1c458745be66fb59b61470dab9b15666f",
+    "backend-01.xml": "73bf72ce0f139e7d7a549a808a86ef5e6a77b653d8555256b0415bc64f65d4c0",
+    "backend-02.txt": "fb94a67702059b1b4326f14fb3966ddf73811d60b7fd91475377141ba51a9773",
+    "backend-02.xml": "225698be150db00ff85f8c2b073904f5347e7d2988a72cdfb33cb98cd84445d6",
+    "backend-03.txt": "93d9e3a43871a89fb3cceb4032f199ec9f4203c19a8dfe513bcc3cdc04af3546",
+    "backend-03.xml": "c8107037ac1c388755bdf3b641ee4ce9de2a2edb6c8f4db51d2109edc5d7fef3",
+    "backend-04.txt": "4be5d03b660b64126b7702fc1017197aa1c33ce6ce98b4b951ac205fad672654",
+    "backend-04.xml": "ae631c7863be1cacdc668897289ba2aa67d6a7fefeacc566933df4b0f9b3ee46",
+    "build-matrix.py": "678cf83ba0a5d65859e28c1506c9b284997664cff35fe0630dc08dea0bf4fc3b",
+    "eval-01.txt": "4f00a27971623e659adc3b6b2905d0f167750766c50be481dba37a6726cedc02",
+    "eval-01.xml": "c6ff8a6eea274b17f0367eb954cc010a9b385b7d2e490e309f493f605e886c3f",
+    "frontend-01.txt": "798e793c485f5fdcd24222a292a10e12b0072eed6371fe73d37d5378a8562373",
+    "frontend-01.xml": "f2904351edec85163464dbad6b28f089108417a71212779255e152c621d392b9",
+    "frontend-build-01.txt": "2d64d6664aab67a5699e3108810346995f64742849605ea21615b6b81da75c58",
+    "frontend-lint-01.txt": "6436f419ea44be6a1925f788d3e5822a3b8a10addcdf4e4f4657c859eb790b9d",
+    "gaps-01.txt": "f302a9ec875aba387f4a03b984f5ad8e461ba1fbad0db32c0889c9e034d41c59",
+    "gaps-01.xml": "c981c6be9a1cb7e78aa2748e794e5c5119526aa49b8f34c1005b57b3134b9082",
+    "historical-injection-source-comparison.json": "5d66d8394199ef01ee2b98f4f865772666d4da95d49bc3fa6b074e64ae047533",
+    "historical-injection-text-comparison.json": "bb6fc7011291fcd3953b1c766ee578bb700bf115f9b96bb355158a9e0e5eb9c4",
+    "inherited-native-rebuild.json": "d0dadc07504e2b63ccbd4bfe411f1d9cc8928df8c600949ea3b359d0718dd716",
+    "inherited-ui-and-pdf-evidence.json": "912305e0ee76063b31f061a8fa0c3faddcca8237175c26f84618ec3595c29774",
+    "postrun-audit.json": "961b883d9f29cb5a471dc065c763372a27aa19e167dfda98c5df9325d6a2a0f1",
+    "run-backend-v1.py": "8a3edc64b11c67ee648ca80c358ef5451a4daed5c39a9980b528493d6c6a7eb8",
+    "run-backend-v2.py": "da8bb3d3057ebf2e1ecb15e83b425dd3f68eeffe34f0229e2c0bbfa3a3b3924a",
+    "run-backend.py": "af6359e6254cfe624f17ec3f8119457588a6eadd43ac8baef94e12c78bc7a49c",
+    "source-manifest.json": "f3e6f2e489457aeb54336885efee07520618bbe40edfe1f6eeb11fb18172df33",
+    "test_gap_contracts.py": "edc1a0e7ca886d5f4b1b5cfc3171895d4974df98c6c30c9053ca9c3c73c736ec"
+  },
+  "parent_matrix": ".cache/at-20261112/acceptance-matrix.json",
+  "parent_matrix_sha256": "abfb8dd3e6317916142bbeadcbc722936d9ca4e580ace6e23e17233352f0c08d",
+  "acceptance_basis": "All 23 M1 scenarios satisfied within documented evidence scopes; fresh setup and release remain separate open gates",
+  "release_frozen": false,
+  "m1_done": false,
+  "native_calls_this_review_batch": 0,
+  "progress_step11_completed_items": [
+    2,
+    3,
+    4,
+    5,
+    7
+  ],
+  "evidence_files_base": ".cache/at-20261112",
+  "original_test_counts_preserved_not_recounted": true
+}
