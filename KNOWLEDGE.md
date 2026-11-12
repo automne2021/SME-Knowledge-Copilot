@@ -1507,6 +1507,7 @@ Audit bàn giao cuối:384protected file hashes không đổi,455candidate files
 
 - **Link tới thư mục bị ignore:** report viết trên máy local hay link vào `.cache/`; trên GitHub các link này chết. Quy tắc mới: nếu có bản đã đưa vào repo thì link tới bản đó; nếu không thì ghi đường dẫn dạng code kèm "chỉ lưu ở máy local", không để link chết. Kiểm tra bằng script quét mọi link tương đối trong file `.md` được track.
 - **Quét secret theo giá trị thật:** quét mẫu (regex) không bắt được mật khẩu tự đặt, còn so với giá trị trong `.env` thì bắt được. Cần phân biệt giá trị mặc định công khai (có trong `.env.example`) với secret thật. Report công khai không nên mô tả cấu hình của máy local, kể cả khi rủi ro thấp.
+- **Đăng xuất phía server (phát hiện 12/11):** API không có `/auth/logout`. Nút "Đăng xuất" chỉ xóa token khỏi sessionStorage; token còn hiệu lực ở server tới hết TTL 1 giờ. Đây là giới hạn đã biết từ kế hoạch UI ("chưa revoke-token"), nay ghi vào README. Chưa thêm endpoint vì release đã freeze; làm sau M1 kèm cập nhật spec và test. Bài học phụ: script kiểm thử bỏ qua status code của request dọn dẹp đã khiến report ghi sai là token đã bị thu hồi; request dọn dẹp cũng phải kiểm tra kết quả.
 - **File chuẩn bị cá nhân** (bộ Q&A phỏng vấn, kịch bản video) chặn bằng `.git/info/exclude` thay vì `.gitignore`, để tên file không xuất hiện trên repo công khai.
 
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai

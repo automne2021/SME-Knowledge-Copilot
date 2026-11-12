@@ -64,7 +64,10 @@ Log nằm ở `.cache/fresh-setup-20261112/logs/` (local, bị Git ignore).
 ## 5. Phạm vi và giới hạn
 
 - **Có kiểm chứng:** setup từ Git → storage sạch → dependency từ lockfile → migrate → seed → ingest → search → phân quyền → lỗi kỹ thuật khi tắt LLM → delete/cleanup → frontend build/test → toàn bộ 302 backend tests.
-- **Chưa chạy trên bản clone:** 91 eval tests (eval/). Lượt trước của chúng vẫn ở báo cáo acceptance.
+- **Eval tests (bổ sung cùng ngày, theo xác nhận riêng):** chạy toàn bộ `eval/tests` trên bản clone, với Compose project `smefresh` được tạo lại bằng volume mới.
+  - Lần 1, đúng lệnh trong `eval/README.md`: **lỗi ở bước collect** (`ModuleNotFoundError: No module named 'tests'`). Các test `*_sql.py` import `tests.database_safety` từ `backend/tests/`, mà hướng dẫn không nói phải thêm `backend` vào `PYTHONPATH`. Acceptance trước không gặp lỗi này vì chạy qua harness có sẵn import path.
+  - Lần 2, thêm `PYTHONPATH=backend`, không sửa code: **277 passed**, 0 failed/skipped, 289,8 s, 1 cảnh báo Starlette/httpx (baseline).
+  - Đã bổ sung yêu cầu `PYTHONPATH` vào [eval/README](../eval/README.md). 277 là toàn bộ thư mục (gồm test SQL và các trường hợp parametrize); không so trực tiếp với các tập con 69/91 ở report trước.
 - **Không kiểm chứng:**
   - Câu trả lời thật từ Gemini (cần đợt có grant riêng).
   - Tải E5 từ Hugging Face trên máy mới: model cache được dùng chung; runbook có lệnh tải đúng revision, nhưng lần này không chạy.
