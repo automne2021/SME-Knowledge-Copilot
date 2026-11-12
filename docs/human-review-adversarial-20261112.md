@@ -4,7 +4,7 @@ Nhóm đã chấm hai output synthetic/dev. Đợt được xác nhận tiếp t
 
 ## Kết quả chấm và binding
 
-[Phiếu A](../.cache/adversarial-at14-20261112/review/reviewer-a.json) và [phiếu B](../.cache/adversarial-at14-20261112/review/reviewer-b.json) hợp lệ, hai reviewer IDs khác nhau; từng ID/run/output hash và schema điểm khớp exact published output. Hai phiếu khớp **2/2**, không pending/dispute, không cần adjudication. Agent dùng điểm người dùng đã điền, không tự chấm hoặc chọn điểm thay nhóm.
+Phiếu A (`.cache/adversarial-at14-20261112/review/reviewer-a.json`, chỉ lưu ở máy local) và phiếu B (`.cache/adversarial-at14-20261112/review/reviewer-b.json`, chỉ lưu ở máy local) hợp lệ, hai reviewer IDs khác nhau; từng ID/run/output hash và schema điểm khớp exact published output. Hai phiếu khớp **2/2**, không pending/dispute, không cần adjudication. Agent dùng điểm người dùng đã điền, không tự chấm hoặc chọn điểm thay nhóm.
 
 | Chỉ số | Kết quả và mẫu số |
 |---|---|
@@ -20,10 +20,10 @@ Câu `at14-answerable` giữ email policy chính thức và E1; câu `at14-unans
 
 Artifacts mới tại `.cache/adversarial-at14-scoring-20261112/`:
 
-- [Combined review](../.cache/adversarial-at14-scoring-20261112/combined-review.json) giữ hai scores/notes và không adjudication.
-- [Reviewed metrics](../.cache/adversarial-at14-scoring-20261112/reviewed-metrics.json) do `final_eval.rescore` tính, liên kết SHA combined review và published rows.
-- [Rescore receipt](../.cache/adversarial-at14-scoring-20261112/rescore-receipt.json) và [snapshot bảo vệ](../.cache/adversarial-at14-scoring-20261112/protected-before.json) ghi binding/hash và phạm vi.
-- [Ma trận acceptance mới](../.cache/adversarial-at14-scoring-20261112/acceptance-matrix.json), kế thừa nguyên 22 scoped passes từ [ma trận trước](../.cache/at-20261112/acceptance-matrix.json), chỉ bổ sung evidence/đổi AT-R14 từ partial sang passed_with_scoped_evidence.
+- [Combined review](../eval/reports/final-20261112/adversarial/combined-review.json) giữ hai scores/notes và không adjudication.
+- [Reviewed metrics](../eval/reports/final-20261112/adversarial/reviewed-metrics.json) do `final_eval.rescore` tính, liên kết SHA combined review và published rows.
+- [Rescore receipt](../eval/reports/final-20261112/adversarial/rescore-receipt.json) và snapshot bảo vệ (`.cache/adversarial-at14-scoring-20261112/protected-before.json`, chỉ lưu ở máy local) ghi binding/hash và phạm vi.
+- [Ma trận acceptance mới](../eval/reports/final-20261112/acceptance/acceptance-matrix.json), kế thừa nguyên 22 scoped passes từ ma trận trước (`.cache/at-20261112/acceptance-matrix.json`, chỉ lưu ở máy local), chỉ bổ sung evidence/đổi AT-R14 từ partial sang passed_with_scoped_evidence.
 
 Lệnh đã chạy từ repo bằng Python hiện có:
 
@@ -31,7 +31,7 @@ Lệnh đã chạy từ repo bằng Python hiện có:
 & 'C:/Program Files/PostgreSQL/17/pgAdmin 4/python/python.exe' -u -B .cache/adversarial-at14-scoring-20261112/merge-rescore.py
 ```
 
-[Helper lưu lại](../.cache/adversarial-at14-scoring-20261112/merge-rescore.py) gọi toolkit hiện hữu, kiểm hashes trước/sau, ghi output exclusive. Không chạy lại trên output đã tồn tại. Phiếu gốc, raw report/manifest/binding/capture/ledger không ghi đè. Raw manifest và binding còn `pending` theo thời điểm xuất phiếu; trạng thái review mới ở reviewed-metrics và receipt mới. Tương tự, audit cũ ghi human0/2 là snapshot trước khi nhóm chấm, không sửa lịch sử thành đã chấm từ đầu.
+Helper lưu lại (`.cache/adversarial-at14-scoring-20261112/merge-rescore.py`, chỉ lưu ở máy local) gọi toolkit hiện hữu, kiểm hashes trước/sau, ghi output exclusive. Không chạy lại trên output đã tồn tại. Phiếu gốc, raw report/manifest/binding/capture/ledger không ghi đè. Raw manifest và binding còn `pending` theo thời điểm xuất phiếu; trạng thái review mới ở reviewed-metrics và receipt mới. Tương tự, audit cũ ghi human0/2 là snapshot trước khi nhóm chấm, không sửa lịch sử thành đã chấm từ đầu.
 
 ## Cơ sở đóng AT-R14 và giới hạn
 

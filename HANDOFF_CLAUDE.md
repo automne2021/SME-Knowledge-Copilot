@@ -1,6 +1,6 @@
 # Bàn giao cho Claude — SME Knowledge Copilot
 
-> **Sau đợt R1 (12/11):** đã chốt release trên nhánh `release/m1`, PLAN v1.30, tiến độ **94,0%**. Xem [report release](docs/release-m1-20261112.md). Nội dung bên dưới là snapshot trước R1.
+> **Cập nhật cuối 12/11 (sau R1–R3 và rà soát):** release đã merge vào `main`, Compose theo phương án A, cài sạch đạt ([report](docs/fresh-setup-20261112.md)), README mới. PLAN v1.30, tiến độ **96,4%**. Còn video, đóng góp cá nhân và rà soát cuối. Nội dung bên dưới là snapshot trước R1, giữ để tham khảo.
 
 **Cập nhật:** 12/11/2026. **Nguồn trạng thái:** PLAN v1.29. **Tiến độ: 92,9% /100%**, là ước lượng khối lượng theo person-hours, không phải accuracy AI. Chưa M1 Done.
 
@@ -50,9 +50,9 @@ Khi cần triển khai/setup, đọc thêm [final validation plan](docs/final-va
 
 ## 4. Artifacts và ràng buộc khi tiếp quản
 
-- Artifacts held-out đã chấm: [scoring folder](.cache/final-heldout-scoring-20261112/), đặc biệt `reviewed-metrics.json`, `rescore-receipt.json`.
-- Native adversarial: [capture/review folder](.cache/adversarial-at14-20261112/); hai phiếu đã hoàn tất, không chấm lại.
-- Kết quả cuối: [scoring folder adversarial](.cache/adversarial-at14-scoring-20261112/), gồm `combined-review.json`, `reviewed-metrics.json`, `acceptance-matrix.json`, `rescore-receipt.json`, `handoff-final.json`.
+- Artifacts held-out đã chấm: scoring folder (`.cache/final-heldout-scoring-20261112/`, chỉ lưu ở máy local), đặc biệt `reviewed-metrics.json`, `rescore-receipt.json`.
+- Native adversarial: capture/review folder (`.cache/adversarial-at14-20261112/`, chỉ lưu ở máy local); hai phiếu đã hoàn tất, không chấm lại.
+- Kết quả cuối: scoring folder adversarial (`.cache/adversarial-at14-scoring-20261112/`, chỉ lưu ở máy local), gồm `combined-review.json`, `reviewed-metrics.json`, `acceptance-matrix.json`, `rescore-receipt.json`, `handoff-final.json`.
 - Ma trận acceptance cũ tại `.cache/at-20261112/` giữ lịch sử22/23. Ma trận mới ở scoring folder adversarial ghi23/23. Đợt merge cuối kiểm958 protected files không đổi, gồm source/config167 files và60 protected held-out files.
 - `.cache/` có artifacts local có thể không nằm trong Git. Nếu chuyển máy/workspace, bàn giao có chọn lọc và xác minh hashes theo receipts; không xóa cache/archives/ledgers để làm sạch repo. Không đưa `.env` hoặc secrets vào tài liệu/Git.
 - Ngân sách **free tier, tối đa0USD**, không bật billing/paid fallback. Held-out ledger đã dùng30generation/210count, count allowance đã hết. Native adversarial dùng2generation/6count trong grant riêng4/14. Không retry q023, reset/rebind ledger hoặc chạy lại scope one-shot để cấp thêm lượt. Calls mới cần scope/xác nhận/free-tier/quota phù hợp; invoice cost verified vẫn null.

@@ -60,9 +60,9 @@ Process exit code **0** chỉ xác nhận orchestration đã xuất artifacts/cl
 
 Run `offline_replay_8a31dc4aed934244922e060f6c900063`: evaluator là offline replay của **capture API native thật**, không phải fake inference. Provenance flag độc lập trong manifest vẫn false; audit kỹ thuật không được biến thành third-party attestation. Capture SHA-256 `f05ecad5e0ec60509e2b982c41a533629da76b6bca82bc4dc0b73dfac4196bcf`, per-question SHA-256 `f9ba364992887651e121d0bb1bc76b57573e63253a56414cd0fc190a49ce8a65`.
 
-- [Metrics gốc](../.cache/final-reviewed-baseline-20261111-paced/execution/evaluation/metrics.json), [summary](../.cache/final-reviewed-baseline-20261111-paced/execution/summary.json), [final audit](../.cache/final-live-validation-20261111/final-audit.json): nguồn counts/coverage/usage/hash; không ghi đè rescore vào report gốc.
-- [Storage audit độc lập](../.cache/final-live-validation-20261111/postrun-storage-audit.json):12bảng fixture0rows,0final_collections,0ownedcanonicalfiles. DB/schema/containers/artifacts và ledger giữ lại.
-- [Worksheet mới](../.cache/final-heldout-review-20261111/worksheet.md), [phiếu A](../.cache/final-heldout-review-20261111/reviewer-a.json), [phiếu B](../.cache/final-heldout-review-20261111/reviewer-b.json):7outputs để hai người chấm độc lập, toàn bộ điểm/reviewer mới null. Binding còn giữ1failed+22not_attempted. Hai phiếu thực hành6câu trước không bị sửa hoặc dùng thay phiếu này.
+- Metrics gốc (`.cache/final-reviewed-baseline-20261111-paced/execution/evaluation/metrics.json`, chỉ lưu ở máy local), summary (`.cache/final-reviewed-baseline-20261111-paced/execution/summary.json`, chỉ lưu ở máy local), final audit (`.cache/final-live-validation-20261111/final-audit.json`, chỉ lưu ở máy local): nguồn counts/coverage/usage/hash; không ghi đè rescore vào report gốc.
+- Storage audit độc lập (`.cache/final-live-validation-20261111/postrun-storage-audit.json`, chỉ lưu ở máy local):12bảng fixture0rows,0final_collections,0ownedcanonicalfiles. DB/schema/containers/artifacts và ledger giữ lại.
+- Worksheet mới (`.cache/final-heldout-review-20261111/worksheet.md`, chỉ lưu ở máy local), phiếu A (`.cache/final-heldout-review-20261111/reviewer-a.json`, chỉ lưu ở máy local), phiếu B (`.cache/final-heldout-review-20261111/reviewer-b.json`, chỉ lưu ở máy local):7outputs để hai người chấm độc lập, toàn bộ điểm/reviewer mới null. Binding còn giữ1failed+22not_attempted. Hai phiếu thực hành6câu trước không bị sửa hoặc dùng thay phiếu này.
 
 ## Bước tiếp theo sau đợt này
 

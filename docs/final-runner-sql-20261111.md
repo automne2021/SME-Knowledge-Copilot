@@ -33,8 +33,8 @@ Artifacts trong `.cache/final-runner-sql-validation-20261111/`:
 
 - `sql-tests-06.txt`, `pytest-06/`: lượt5/5 cuối và từng summary/capture/evaluation/ledger.
 - `regression-02.txt`:148/148; regression-01 sai tên module nên không chạy tests.
-- [Storage audit](../.cache/final-runner-sql-validation-20261111/storage-audit.json), [helper](../.cache/final-runner-sql-validation-20261111/audit-storage.py): audit độc lập, không chứa DSN/key.
-- [Candidate replacement](../.cache/final-runner-sql-validation-20261111/candidate-replacement.json), `freeze-replacement.txt`: hashes/provenance/pending gate.
+- Storage audit (`.cache/final-runner-sql-validation-20261111/storage-audit.json`, chỉ lưu ở máy local), helper (`.cache/final-runner-sql-validation-20261111/audit-storage.py`, chỉ lưu ở máy local): audit độc lập, không chứa DSN/key.
+- Candidate replacement (`.cache/final-runner-sql-validation-20261111/candidate-replacement.json`, chỉ lưu ở máy local), `freeze-replacement.txt`: hashes/provenance/pending gate.
 
 Lệnh đã đạt (chỉ chạy lại trong đợt được duyệt, dùng basetemp mới):
 

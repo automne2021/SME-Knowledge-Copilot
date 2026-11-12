@@ -16,10 +16,10 @@
 
 ## Artifacts mới và tính bất biến
 
-- [Combined review](../.cache/final-review-practice-20261111/combined-review.json): hai điểm gốc cho từng output, adjudication null vì hai người đồng ý.
-- [Reviewed metrics](../.cache/final-review-practice-20261111/reviewed-metrics.json): kết quả offline rescore, gắn run `offline_replay_aa586eb812264801825f2fa5ce1dbebd`.
-- [Receipt](../.cache/final-review-practice-20261111/rescore-receipt.json): hashes trước/sau của hai phiếu, binding và báo cáo E2E gốc; tất cả giữ nguyên.
-- [Helper một lần](../.cache/final-review-practice-20261111/merge-and-rescore.py): exclusive writes; không chạy lại trên các output đã tồn tại.
+- Combined review (`.cache/final-review-practice-20261111/combined-review.json`, chỉ lưu ở máy local): hai điểm gốc cho từng output, adjudication null vì hai người đồng ý.
+- Reviewed metrics (`.cache/final-review-practice-20261111/reviewed-metrics.json`, chỉ lưu ở máy local): kết quả offline rescore, gắn run `offline_replay_aa586eb812264801825f2fa5ce1dbebd`.
+- Receipt (`.cache/final-review-practice-20261111/rescore-receipt.json`, chỉ lưu ở máy local): hashes trước/sau của hai phiếu, binding và báo cáo E2E gốc; tất cả giữ nguyên.
+- Helper một lần (`.cache/final-review-practice-20261111/merge-and-rescore.py`, chỉ lưu ở máy local): exclusive writes; không chạy lại trên các output đã tồn tại.
 
 Hai phiếu gốc giữ SHA-256 `d87e8c5b8397c90b860a3abdb91df640688bb7360968badd900fec0533845eb3` và `e7ab7644879c18138c03226b8b9fda2bd8731f95623945e3563ab5f3c300accd`. Combined review: `20c022e028e4e5bb77fbddc21565334d9906249472c3018ebfaf67241d3e581f`. Reviewed metrics: `24eece66eb6b53fb2284d585c683c5e63c2bb8b06cda00021454b6d4a141c4d4`.
 

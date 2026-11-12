@@ -26,6 +26,13 @@ Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng 
 
 ## Mốc hiện tại: **M1 RAG — mục tiêu 15/11/2026**
 
+**Trạng thái 12/11/2026 (PLAN v1.30): 96,4% / 100%.**
+- Bước 00–10 hoàn thành. Bước 11 đạt 6/7: release trên `main`/`release/m1`, held-out 29/30 đã có human review, acceptance 23/23 theo phạm vi.
+- Bước 12 đạt 3/6: Compose theo phương án A, cài sạch (302 backend + 36 frontend tests đạt trên bản clone), README mới.
+- Còn mở: video demo (người dùng tự quay sau khi đổi UI), đóng góp cá nhân (ngoài README), rà soát cuối.
+
+Các dòng "Tiến độ", "UI05/11" và số liệu cũ bên dưới là lịch sử. Xem [PLAN](PLAN.md) và các report mới nhất trong `docs/`.
+
 **Máy nhận bàn giao 05/11/2026:** đọc [runbook khôi phục](docs/workspace-restoration-20261105.md) trước khi setup/chạy. Python 3.12.1, Node 24.11.1/npm 11.6.2; cache hiện tại ở `<repo>/.cache/` trên ổ C, đường dẫn tuyệt đối trong `.env`. Các paths/số đo ổ D và môi trường ngày 02–04/11 trong reports là lịch sử. Kết quả kiểm chứng mới được ghi riêng trong runbook, không thay bằng kết quả máy cũ.
 
 Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
@@ -34,11 +41,11 @@ Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 - **P1/M2:** reindex/update revision, hybrid/reranker, filter nâng cao, follow-up retrieval-aware, structured comparison và inspector/eval UI; chỉ làm sau baseline P0 và xác nhận riêng.
 - **Ngoài hướng RAG:** STT/audio/meeting intelligence, agent tool loop, proposal/approval/task. Không đưa workflow Operations cũ trở lại M1/M2 RAG.
 
-**Tiến độ 04/11/2026: 75,6% /100%.** Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending. [Bước 09](docs/deletion-privacy-step09.md). DB head20261103_rag04/reviewed/mapping/reports bất biến; trace runtime mới chỉ IDs/hash/spans. Host API/worker cùng cwd/storage backend/, không chạy chung queue DB với tests/eval. Cleanup-only không cần weights/cache. Bước 10 cần nhắc và xác nhận UI riêng.
+**(Lịch sử) Tiến độ 04/11/2026: 75,6% /100%.** Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending. [Bước 09](docs/deletion-privacy-step09.md). DB head20261103_rag04/reviewed/mapping/reports bất biến; trace runtime mới chỉ IDs/hash/spans. Host API/worker cùng cwd/storage backend/, không chạy chung queue DB với tests/eval. Cleanup-only không cần weights/cache. Bước 10 cần nhắc và xác nhận UI riêng.
 
 ## Bất biến nghiệp vụ (không được vi phạm)
 
-**UI05/11/2026:** người dùng đã xác nhận code theo [kế hoạch UI](docs/ui-step10-plan.md). Login/Documents/Chat/Source đã nối API,30frontend tests/build/lint đạt; HTTP qua Vite với admin/member đạt. Bước10 ghi nhận4/6 →83,4%/100%; browser E2E/visual-keyboard QA và human acceptance còn pending vì browser host không khả dụng. [Report UI](docs/ui-step10-implementation.md). Không Gemini thật hoặc đổi backend contract; đừng coi fixtures/jsdom là model quality hoặc AT-R23 pass.
+**(Lịch sử) UI05/11/2026:** người dùng đã xác nhận code theo [kế hoạch UI](docs/ui-step10-plan.md). Login/Documents/Chat/Source đã nối API,30frontend tests/build/lint đạt; HTTP qua Vite với admin/member đạt. Bước10 ghi nhận4/6 →83,4%/100%; browser E2E/visual-keyboard QA và human acceptance còn pending vì browser host không khả dụng. [Report UI](docs/ui-step10-implementation.md). Không Gemini thật hoặc đổi backend contract; đừng coi fixtures/jsdom là model quality hoặc AT-R23 pass.
 
 1. **Scope do backend xác định:** role/workspace/user lấy từ identity đã xác thực; session chỉ của owner, admin không mặc nhiên đọc chat người khác.
 2. **Chỉ nguồn hợp lệ được dùng:** document ready + active revision/generation + index fingerprint tương thích + đúng workspace; revalidate SQL, không chỉ tin Qdrant payload.
@@ -57,8 +64,8 @@ Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 - RAG pipeline Python cố định; không runtime agent, LangChain/LangGraph hay RAGFlow làm core.
 - LLM hosted qua native Gemini adapter hiện tại (`app/services/gemini.py`); giữ model/prompt/config đã khóa, không tự đổi sang provider hoặc paid fallback.
 - Worker riêng poll processing_jobs bằng `FOR UPDATE SKIP LOCKED`, lease/heartbeat/generation/retry; gọi domain services trực tiếp, không giữ lock khi inference. Không dùng BackgroundTasks cho ingestion.
-- PostgreSQL giữ lifecycle/metadata/text/history, Qdrant giữ vector index; local file storage. Không thêm Redis/Celery trong P0. Compose đã có db/qdrant với image digests, persistent volumes, loopback ports và healthchecks; chưa có worker/frontend service.
-- Dense baseline E5-small CPU đã có dev retrieval benchmark Bước 07; BGE-M3 hoãn. Chưa có model chiến thắng qua so sánh hoặc final held-out benchmark.
+- PostgreSQL giữ lifecycle/metadata/text/history, Qdrant giữ vector index; local file storage. Không thêm Redis/Celery trong P0. Compose chỉ chạy db/qdrant (image digests, persistent volumes, loopback ports cấu hình được, healthchecks); API/worker/frontend chạy trên host Windows theo phương án A ([K-102](KNOWLEDGE.md)). Migration và seed là bước riêng.
+- Dense baseline E5-small CPU đã có dev retrieval benchmark Bước 07; BGE-M3 hoãn. Final held-out (30 câu, human review) đã chạy với E5 + Gemini: strict success 29/30; chưa có so sánh model để chọn model chiến thắng.
 - Model budget **0 USD/free tier**, không bật paid fallback. E5/Gemini smoke thật đã có Bước 03; tokenizer Bước 05 dùng cache local, không gọi LLM. Free-tier/quota là xác nhận thủ công theo thời điểm, không phải billing cap; không suy ra smoke/config là pipeline RAG đã triển khai.
 
 Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi người dùng đã xác nhận. Ghi ADR theo hướng dẫn ở docs/decisions khi triển khai quyết định, và giải thích trong KNOWLEDGE.

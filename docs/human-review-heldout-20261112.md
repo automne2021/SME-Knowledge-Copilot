@@ -35,9 +35,9 @@ Các phạm vi còn thiếu: fullAT-R01–23 trên bản chốt, fresh setup/cle
 
 ## Artifacts và kiểm chứng
 
-- [Combined review](../.cache/final-heldout-scoring-20261112/combined-review.json), [reviewed metrics](../.cache/final-heldout-scoring-20261112/reviewed-metrics.json), [receipt](../.cache/final-heldout-scoring-20261112/rescore-receipt.json).
-- [Helper một lần](../.cache/final-heldout-scoring-20261112/merge-and-rescore.py): gọi merge/rescore hiện có, exclusive writes; không chạy lại trên outputs đã tồn tại.
-- [Hashes trước thao tác](../.cache/final-heldout-scoring-20261112/input-hashes-before.json):60files gồm hai phiếu hiện tại, binding/worksheet, captures/executions/SQLite ledgers/raw reports của hai phiên và composite, protocol/controller/grants/approvals, packet7outputs cũ và practice6câu. Tất cả hashes trước/sau khớp; source/input/archive/controller cũng verify trước/sau.
+- [Combined review](../eval/reports/final-20261112/heldout/combined-review.json), [reviewed metrics](../eval/reports/final-20261112/heldout/reviewed-metrics.json), [receipt](../eval/reports/final-20261112/heldout/rescore-receipt.json).
+- Helper một lần (`.cache/final-heldout-scoring-20261112/merge-and-rescore.py`, chỉ lưu ở máy local): gọi merge/rescore hiện có, exclusive writes; không chạy lại trên outputs đã tồn tại.
+- Hashes trước thao tác (`.cache/final-heldout-scoring-20261112/input-hashes-before.json`, chỉ lưu ở máy local):60files gồm hai phiếu hiện tại, binding/worksheet, captures/executions/SQLite ledgers/raw reports của hai phiên và composite, protocol/controller/grants/approvals, packet7outputs cũ và practice6câu. Tất cả hashes trước/sau khớp; source/input/archive/controller cũng verify trước/sau.
 - Binding/metrics raw vẫn ghi pending/0reviewed tại thời điểm xuất, không sửa lịch sử. Trạng thái mới nằm ở reviewed-metrics; raw manifest vẫn `completed_with_errors`, không chuyển thành full acceptance pass.
 
 Đã kiểm tra độc lập phép tính từ hai bộ điểm khớp: correctness,29/30strict success, support trên34claims,36citation links và completeness. Không viết test mới chỉ để lặp lại implementation hoặc chạy lại model/backend suites khi không sửa pipeline. Model calls/embedding calls/DB writes mới đều0, chi phí inference mới0; invoice của native capture trước đó vẫn chưa xác minh (`null`).
