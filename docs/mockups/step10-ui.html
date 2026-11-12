@@ -1,0 +1,312 @@
+<div id="sme-ui-review" aria-label="Bản đề xuất giao diện SME Knowledge Copilot">
+  <style>
+    #sme-ui-review { --ui-bg:#fff; --ui-soft:#f6f7f9; --ui-ink:#202b3b; --ui-muted:#5d6979; --ui-border:#dee3e9; --ui-accent:#254564; --ui-hover:#1c3751; --ui-selected:#eaf0f5; --ui-ok:#276047; --ui-ok-bg:#edf5f0; --ui-warn:#7a5618; --ui-warn-bg:#fbf5e9; --ui-error:#9b3d3d; --ui-error-bg:#faeeee; --ui-radius:7px; --ui-row:54px; color-scheme:light; color:var(--ui-ink); font:14px/1.55 "Segoe UI",system-ui,sans-serif; width:100%; }
+    #sme-ui-review * { box-sizing:border-box; }
+    #sme-ui-review [hidden] { display:none!important; }
+    #sme-ui-review button,#sme-ui-review input,#sme-ui-review textarea,#sme-ui-review select { font:inherit; }
+    #sme-ui-review button { cursor:default; }
+    #sme-ui-review button:disabled { opacity:.5; cursor:not-allowed; }
+    #sme-ui-review button:focus-visible,#sme-ui-review input:focus-visible,#sme-ui-review textarea:focus-visible,#sme-ui-review select:focus-visible,#sme-ui-review summary:focus-visible { outline:2px solid var(--ui-accent); outline-offset:3px; }
+    #sme-ui-review h1,#sme-ui-review h2,#sme-ui-review h3,#sme-ui-review p { margin:0; }
+    #sme-ui-review h1 { font-size:23px; font-weight:600; letter-spacing:-.4px; }
+    #sme-ui-review h2 { font-size:17px; font-weight:600; }
+    #sme-ui-review h3 { font-size:14px; font-weight:600; }
+    #sme-ui-review .ui-muted { color:var(--ui-muted); }
+    #sme-ui-review .ui-small { font-size:12px; }
+    #sme-ui-review .ui-review { display:flex; align-items:center; flex-wrap:wrap; gap:10px 16px; margin-bottom:14px; font-size:12px; color:var(--ui-muted); }
+    #sme-ui-review .ui-review strong { font-weight:600; color:var(--ui-ink); }
+    #sme-ui-review .ui-preview-nav { display:flex; flex-wrap:wrap; gap:4px; }
+    #sme-ui-review .ui-preview-nav button { background:var(--ui-bg); border:1px solid var(--ui-border); border-radius:5px; padding:5px 10px; color:var(--ui-muted); }
+    #sme-ui-review .ui-preview-nav button[aria-pressed="true"] { color:var(--ui-accent); background:var(--ui-selected); border-color:var(--ui-accent); }
+    #sme-ui-review .ui-review label { display:flex; align-items:center; gap:6px; }
+    #sme-ui-review select { background:var(--ui-bg); color:var(--ui-ink); border:1px solid var(--ui-border); border-radius:5px; padding:6px 8px; max-width:100%; }
+    #sme-ui-review .ui-frame { border:1px solid var(--ui-border); border-radius:10px; overflow:hidden; background:var(--ui-bg); }
+    #sme-ui-review .ui-topbar { min-height:64px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:15px 24px; border-bottom:1px solid var(--ui-border); }
+    #sme-ui-review .ui-brand { font-size:16px; font-weight:600; letter-spacing:-.2px; }
+    #sme-ui-review .ui-workspace { padding-left:14px; margin-left:14px; border-left:1px solid var(--ui-border); color:var(--ui-muted); font-size:12px; font-weight:400; }
+    #sme-ui-review .ui-person { text-align:right; font-size:12px; }
+    #sme-ui-review .ui-person span { display:block; color:var(--ui-muted); font-size:11px; }
+    #sme-ui-review .ui-layout { display:grid; grid-template-columns:190px minmax(0,1fr); min-height:650px; }
+    #sme-ui-review .ui-side { padding:20px 12px; background:var(--ui-soft); border-right:1px solid var(--ui-border); }
+    #sme-ui-review .ui-nav { display:grid; gap:4px; }
+    #sme-ui-review .ui-nav button { text-align:left; padding:9px 12px; border:0; border-radius:var(--ui-radius); background:transparent; color:var(--ui-muted); font-weight:500; }
+    #sme-ui-review .ui-nav button[aria-current="page"] { background:var(--ui-selected); color:var(--ui-accent); }
+    #sme-ui-review .ui-nav button:hover { background:var(--ui-selected); }
+    #sme-ui-review .ui-sessions { padding-top:28px; }
+    #sme-ui-review .ui-section-label { font-size:11px; color:var(--ui-muted); padding:0 10px 8px; text-transform:uppercase; letter-spacing:.6px; }
+    #sme-ui-review .ui-session { display:block; width:100%; text-align:left; border:0; border-radius:5px; padding:9px 10px; background:transparent; color:var(--ui-muted); font-size:12px; }
+    #sme-ui-review .ui-session[aria-current="true"] { color:var(--ui-ink); background:var(--ui-bg); }
+    #sme-ui-review .ui-session:hover { background:var(--ui-bg); }
+    #sme-ui-review .ui-action { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:36px; border:1px solid var(--ui-border); border-radius:var(--ui-radius); padding:7px 12px; background:var(--ui-bg); color:var(--ui-ink); text-decoration:none; font-weight:500; white-space:normal; text-align:center; transition:background-color .14s,border-color .14s; }
+    #sme-ui-review .ui-action:hover { background:var(--ui-soft); }
+    #sme-ui-review .ui-primary { background:var(--ui-accent); border-color:var(--ui-accent); color:#fff; }
+    #sme-ui-review .ui-primary:hover { background:var(--ui-hover); border-color:var(--ui-hover); }
+    #sme-ui-review .ui-danger { color:var(--ui-error); }
+    #sme-ui-review .ui-danger-fill { background:var(--ui-error); border-color:var(--ui-error); color:#fff; }
+    #sme-ui-review .ui-link { border:0; background:transparent; padding:4px 2px; color:var(--ui-accent); text-decoration:underline; text-underline-offset:3px; }
+    #sme-ui-review .ui-new { width:100%; margin-top:24px; font-size:12px; }
+    #sme-ui-review .ui-action svg { width:16px; height:16px; flex-shrink:0; }
+    #sme-ui-review .ui-work { min-width:0; position:relative; }
+    #sme-ui-review .ui-chat-grid { display:grid; grid-template-columns:minmax(0,1fr); min-height:650px; }
+    #sme-ui-review .ui-chat-grid.ui-source-open { grid-template-columns:minmax(0,1fr) 300px; }
+    #sme-ui-review .ui-chat { min-width:0; padding:24px 28px 18px; display:flex; flex-direction:column; }
+    #sme-ui-review .ui-pagehead { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; }
+    #sme-ui-review .ui-pagehead p { margin-top:5px; color:var(--ui-muted); font-size:12px; }
+    #sme-ui-review .ui-thread { max-width:760px; width:100%; margin:28px auto 0; flex:1; }
+    #sme-ui-review .ui-user { padding:14px 18px; background:var(--ui-soft); border-radius:var(--ui-radius); margin-left:20px; }
+    #sme-ui-review .ui-user .ui-small { color:var(--ui-muted); margin-bottom:5px; }
+    #sme-ui-review .ui-answer { padding:26px 0 24px; }
+    #sme-ui-review .ui-answerhead { display:flex; align-items:center; flex-wrap:wrap; gap:9px; margin-bottom:14px; }
+    #sme-ui-review .ui-ai { color:var(--ui-muted); font-size:11px; border:1px solid var(--ui-border); border-radius:4px; padding:2px 6px; }
+    #sme-ui-review .ui-answer p + p { margin-top:12px; }
+    #sme-ui-review .ui-answer ol { margin:12px 0 16px; padding-left:22px; }
+    #sme-ui-review .ui-answer li { padding:3px 0 6px 3px; }
+    #sme-ui-review .ui-cite { padding:0 3px; border:0; border-radius:3px; background:var(--ui-selected); color:var(--ui-accent); font-size:12px; font-weight:600; vertical-align:baseline; }
+    #sme-ui-review .ui-source-ref { margin-top:20px; border-top:1px solid var(--ui-border); padding-top:12px; font-size:12px; color:var(--ui-muted); }
+    #sme-ui-review .ui-source-ref button { overflow-wrap:anywhere; text-align:left; }
+    #sme-ui-review .ui-state { padding:14px 16px; border:1px solid var(--ui-border); border-radius:var(--ui-radius); background:var(--ui-soft); }
+    #sme-ui-review .ui-state p { margin-top:5px; font-size:13px; }
+    #sme-ui-review .ui-state .ui-action { margin-top:12px; }
+    #sme-ui-review .ui-warning { color:var(--ui-warn); background:var(--ui-warn-bg); border-color:#e6d8b8; }
+    #sme-ui-review .ui-error { color:var(--ui-error); background:var(--ui-error-bg); border-color:#eacccc; }
+    #sme-ui-review .ui-compose { max-width:760px; width:100%; margin:22px auto 0; }
+    #sme-ui-review .ui-filter { margin-bottom:10px; display:flex; align-items:center; flex-wrap:wrap; gap:9px; font-size:12px; color:var(--ui-muted); }
+    #sme-ui-review .ui-filter select { font-size:12px; max-width:280px; }
+    #sme-ui-review .ui-inputbox { border:1px solid #b8c4d1; border-radius:var(--ui-radius); padding:12px; background:var(--ui-bg); }
+    #sme-ui-review textarea { display:block; resize:vertical; min-height:52px; width:100%; padding:0; border:0; color:var(--ui-ink); background:var(--ui-bg); font-size:14px; }
+    #sme-ui-review .ui-composer-foot { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:6px; }
+    #sme-ui-review .ui-hint { color:var(--ui-muted); font-size:11px; margin-top:8px; }
+    #sme-ui-review .ui-source { min-width:0; border-left:1px solid var(--ui-border); background:var(--ui-bg); padding:23px 20px; position:relative; z-index:2; }
+    #sme-ui-review .ui-sourcehead { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:24px; }
+    #sme-ui-review .ui-file { font-weight:500; overflow-wrap:anywhere; }
+    #sme-ui-review .ui-source-meta { font-size:12px; color:var(--ui-muted); margin-top:5px; }
+    #sme-ui-review .ui-excerpt { margin:22px 0 18px; padding:14px 15px; border-left:3px solid var(--ui-accent); background:var(--ui-soft); font-size:13px; }
+    #sme-ui-review .ui-source .ui-hint { margin-top:15px; }
+    #sme-ui-review .ui-documents { padding:24px 28px 32px; }
+    #sme-ui-review .ui-doc-count { display:flex; align-items:center; flex-wrap:wrap; justify-content:space-between; gap:10px; margin:26px 0 12px; font-size:12px; color:var(--ui-muted); }
+    #sme-ui-review .ui-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:12px; }
+    #sme-ui-review .ui-table th { text-align:left; color:var(--ui-muted); font-weight:500; background:var(--ui-soft); padding:11px 12px; border-bottom:1px solid var(--ui-border); }
+    #sme-ui-review .ui-table td { padding:12px; border-bottom:1px solid var(--ui-border); height:var(--ui-row); vertical-align:top; overflow-wrap:anywhere; }
+    #sme-ui-review .ui-table td:first-child { font-weight:500; font-size:13px; }
+    #sme-ui-review .ui-table small { display:block; color:var(--ui-muted); font-weight:400; font-size:11px; margin-top:4px; }
+    #sme-ui-review .ui-table th:nth-child(1) { width:38%; }
+    #sme-ui-review .ui-table th:nth-child(2) { width:26%; }
+    #sme-ui-review .ui-table th:nth-child(3) { width:16%; }
+    #sme-ui-review .ui-table th:nth-child(4) { width:20%; }
+    #sme-ui-review .ui-row-actions { display:flex; flex-wrap:wrap; gap:4px 10px; font-size:12px; }
+    #sme-ui-review .ui-badge { display:inline-block; padding:2px 7px; border-radius:4px; font-size:11px; font-weight:500; background:var(--ui-soft); color:var(--ui-muted); }
+    #sme-ui-review .ui-ready { background:var(--ui-ok-bg); color:var(--ui-ok); }
+    #sme-ui-review .ui-wait { background:var(--ui-selected); color:var(--ui-accent); }
+    #sme-ui-review .ui-caution { background:var(--ui-warn-bg); color:var(--ui-warn); }
+    #sme-ui-review .ui-bad { background:var(--ui-error-bg); color:var(--ui-error); }
+    #sme-ui-review .ui-empty { text-align:center; padding:70px 20px; }
+    #sme-ui-review .ui-empty p { margin:8px auto 20px; color:var(--ui-muted); max-width:390px; }
+    #sme-ui-review .ui-upload { margin-top:22px; padding:22px; border:1px dashed #aebdcb; border-radius:var(--ui-radius); background:var(--ui-soft); text-align:center; }
+    #sme-ui-review .ui-upload p { margin:7px 0 14px; color:var(--ui-muted); font-size:12px; }
+    #sme-ui-review .ui-notice { padding:10px 12px; margin-bottom:15px; font-size:12px; border-left:3px solid var(--ui-accent); background:var(--ui-selected); color:var(--ui-accent); }
+    #sme-ui-review .ui-login { background:var(--ui-soft); min-height:650px; padding:56px 24px; display:grid; place-items:center; }
+    #sme-ui-review .ui-loginbox { background:var(--ui-bg); border:1px solid var(--ui-border); border-radius:8px; padding:32px; width:100%; max-width:390px; }
+    #sme-ui-review .ui-loginbox h1 { margin-top:22px; }
+    #sme-ui-review .ui-loginbox > p { color:var(--ui-muted); margin-top:8px; font-size:13px; }
+    #sme-ui-review .ui-field { display:grid; gap:7px; margin-top:20px; }
+    #sme-ui-review .ui-field input { width:100%; min-height:40px; padding:9px 11px; border:1px solid #b8c4d1; border-radius:var(--ui-radius); color:var(--ui-ink); background:var(--ui-bg); }
+    #sme-ui-review .ui-loginbox .ui-primary { width:100%; margin-top:24px; }
+    #sme-ui-review .ui-loginbox .ui-state { margin-top:18px; }
+    #sme-ui-review dialog { color:var(--ui-ink); border:1px solid var(--ui-border); border-radius:10px; padding:28px; width:min(460px,calc(100% - 32px)); max-height:85%; overflow:auto; background:var(--ui-bg); }
+    #sme-ui-review dialog::backdrop { background:rgba(24,37,51,.28); }
+    #sme-ui-review .ui-dialog-actions { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-top:24px; }
+    #sme-ui-review .ui-backdrop { display:none; }
+    #sme-ui-review .ui-mobile-menu { display:none; }
+    #sme-ui-review .ui-footer { padding-top:10px; color:var(--ui-muted); font-size:11px; }
+    @media (max-width:1100px) {
+      #sme-ui-review .ui-chat-grid.ui-source-open { grid-template-columns:minmax(0,1fr); }
+      #sme-ui-review .ui-source { position:absolute; top:0; right:0; bottom:0; width:min(360px,100%); box-shadow:-8px 0 28px rgba(24,37,51,.09); overflow:auto; }
+      #sme-ui-review .ui-backdrop { display:block; position:absolute; inset:0; border:0; background:rgba(24,37,51,.14); z-index:1; }
+    }
+    @media (max-width:760px) {
+      #sme-ui-review .ui-layout { grid-template-columns:minmax(0,1fr); }
+      #sme-ui-review .ui-side { display:none; border-right:0; border-bottom:1px solid var(--ui-border); padding:14px; }
+      #sme-ui-review .ui-side.ui-side-open { display:block; }
+      #sme-ui-review .ui-nav { grid-template-columns:1fr 1fr; }
+      #sme-ui-review .ui-sessions { padding-top:16px; }
+      #sme-ui-review .ui-new { margin-top:12px; width:auto; }
+      #sme-ui-review .ui-mobile-menu { display:inline-flex; font-size:12px; }
+      #sme-ui-review .ui-topbar { padding:14px 16px; gap:9px; }
+      #sme-ui-review .ui-workspace { display:none; }
+      #sme-ui-review .ui-person { display:none; }
+      #sme-ui-review .ui-chat,#sme-ui-review .ui-documents { padding:22px 18px; }
+      #sme-ui-review .ui-user { margin-left:0; }
+      #sme-ui-review .ui-thread { margin-top:24px; }
+      #sme-ui-review .ui-table,#sme-ui-review .ui-table tbody,#sme-ui-review .ui-table tr,#sme-ui-review .ui-table td { display:block; width:100%; }
+      #sme-ui-review .ui-table thead { display:none; }
+      #sme-ui-review .ui-table tr { border-top:1px solid var(--ui-border); padding:14px 0; }
+      #sme-ui-review .ui-table td { border:0; padding:4px 0; height:auto; }
+      #sme-ui-review .ui-table td[data-label]::before { content:attr(data-label) ": "; color:var(--ui-muted); }
+      #sme-ui-review .ui-table td:first-child { font-size:14px; padding-bottom:8px; }
+      #sme-ui-review .ui-row-actions { gap:8px 16px; }
+      #sme-ui-review .ui-login { padding:30px 14px; }
+      #sme-ui-review .ui-loginbox { padding:26px 20px; }
+      #sme-ui-review .ui-review { gap:10px; }
+      #sme-ui-review .ui-review label { flex-wrap:wrap; }
+    }
+    @media (pointer:coarse) {
+      #sme-ui-review button,#sme-ui-review select,#sme-ui-review summary { min-height:44px; }
+      #sme-ui-review input,#sme-ui-review textarea { font-size:16px; }
+    }
+    @media (prefers-reduced-motion:reduce) { #sme-ui-review * { transition:none!important; animation:none!important; } }
+  </style>
+  <div class="ui-review" aria-label="Điều khiển duyệt thiết kế">
+    <strong>Bản đề xuất</strong>
+    <div class="ui-preview-nav" aria-label="Chọn màn hình mẫu">
+      <button type="button" data-preview="chat" aria-pressed="true">Hỏi đáp</button>
+      <button type="button" data-preview="documents" aria-pressed="false">Tài liệu</button>
+      <button type="button" data-preview="source" aria-pressed="false">Nguồn</button>
+      <button type="button" data-preview="login" aria-pressed="false">Đăng nhập</button>
+    </div>
+    <label>Vai trò <select id="ui-review-role"><option value="admin">Admin</option><option value="member">Member</option></select></label>
+    <label>Trạng thái <select id="ui-review-state" aria-label="Trạng thái mẫu"></select></label>
+  </div>
+  <div id="ui-review-content" class="ui-frame" aria-label="Mockup sản phẩm"></div>
+  <p class="ui-footer">Dữ liệu minh họa · Không kết nối API/model · Thao tác không thay đổi tài liệu thật</p>
+  <dialog id="ui-delete-dialog" aria-labelledby="ui-delete-heading">
+    <h2 id="ui-delete-heading">Xóa tài liệu?</h2>
+    <p class="ui-muted" style="margin-top:10px">Tài liệu sẽ ngừng được dùng để trả lời. Nội dung liên quan trong lịch sử sẽ không còn khả dụng.</p>
+    <p id="ui-delete-filename" class="ui-file" style="margin-top:16px"></p>
+    <label class="ui-field" for="ui-delete-name">Nhập đúng tên tài liệu để xác nhận<input id="ui-delete-name" autocomplete="off"></label>
+    <div class="ui-dialog-actions"><button class="ui-action" type="button" data-action="cancel-delete">Hủy</button><button class="ui-action ui-danger-fill" id="ui-confirm-delete" type="button" data-action="confirm-delete" disabled>Xóa tài liệu</button></div>
+  </dialog>
+  <script>
+    (() => {
+      const root = document.getElementById('sme-ui-review');
+      const content = root.querySelector('#ui-review-content');
+      const stateSelect = root.querySelector('#ui-review-state');
+      const roleSelect = root.querySelector('#ui-review-role');
+      const modal = root.querySelector('#ui-delete-dialog');
+      const deleteName = root.querySelector('#ui-delete-name');
+      const confirmDelete = root.querySelector('#ui-confirm-delete');
+      const initial = window.openai?.widgetState?.privateContent;
+      const views = ['chat','documents','source','login'];
+      const state = { view:views.includes(initial?.view)?initial.view:'chat', role:initial?.role==='member'?'member':'admin', sample:'normal', menu:false, upload:false, notice:'', draft:'', question:'Hồ sơ thanh toán chi phí cần những gì?', session:0, filter:'all', fullSource:false, deleted:false };
+      const design = { rowHeight:54, radius:7 };
+      const names = { chat:[['normal','Có câu trả lời'],['empty','Chưa có câu hỏi'],['loading','Đang xử lý'],['partial','Có phần còn thiếu'],['insufficient','Thiếu bằng chứng'],['error','Lỗi kỹ thuật'],['unavailable','Nguồn đã bị xóa']], documents:[['normal','Danh sách mẫu'],['empty','Chưa có tài liệu'],['loading','Đang tải'],['error','Lỗi kết nối']], source:[['normal','Nguồn khả dụng'],['loading','Đang tải nguồn'],['unavailable','Nguồn không khả dụng']], login:[['normal','Form mặc định'],['invalid','Sai thông tin'],['expired','Phiên hết hạn']] };
+      let timer;
+      let activeDelete = '';
+      const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      function save() { if (window.openai?.setWidgetState) Promise.resolve(window.openai.setWidgetState({ modelContent:{screen:state.view,role:state.role},privateContent:{view:state.view,role:state.role} })).catch(()=>{}); }
+      function icon(name) { return `<i data-lucide="${name}" aria-hidden="true"></i>`; }
+      function action(label,kind,extra='') { return `<button type="button" class="ui-action ${extra}" data-action="${kind}">${label}</button>`; }
+      function setView(view) { clearTimeout(timer); state.view=view; state.sample='normal'; state.notice=''; state.menu=false; state.upload=false; state.fullSource=false; render(); save(); }
+      function header() { return `<header class="ui-topbar"><div class="ui-brand">Knowledge Copilot<span class="ui-workspace">Không gian làm việc SME</span></div>${action('Điều hướng','menu','ui-mobile-menu')}<div class="ui-person">Minh Anh<span>${state.role==='admin'?'Quản trị tri thức':'Thành viên'}</span></div></header>`; }
+      function sidebar() { const docs=state.view==='documents'; return `<aside class="ui-side ${state.menu?'ui-side-open':''}"><nav class="ui-nav" aria-label="Điều hướng chính"><button type="button" data-action="chat" ${!docs?'aria-current="page"':''}>Hỏi đáp</button><button type="button" data-action="documents" ${docs?'aria-current="page"':''}>Tài liệu</button></nav>${!docs?`${action(icon('plus')+'Cuộc trò chuyện mới','new','ui-new')}<div class="ui-sessions"><div class="ui-section-label">Phiên gần đây</div><button type="button" class="ui-session" data-session="0" aria-current="${state.session===0}">Hồ sơ thanh toán</button><button type="button" class="ui-session" data-session="1" aria-current="${state.session===1}">Quy định bảo mật</button></div>`:''}</aside>`; }
+      function alertBox(title,body,kind='',button='') { return `<div class="ui-state ${kind}" ${kind==='ui-error'?'role="alert"':''}><h3>${title}</h3><p>${body}</p>${button}</div>`; }
+      function answer() {
+        const type=state.view==='source'?'normal':state.sample;
+        if (type==='loading') return `<div class="ui-answer">${alertBox('Đang xử lý câu hỏi…','Bạn có thể giữ nguyên màn hình trong khi chờ kết quả. Câu trả lời chỉ xuất hiện khi đã hoàn tất.')}</div>`;
+        if (type==='error') return `<div class="ui-answer">${alertBox('Chưa thể trả lời lúc này','Dịch vụ trả lời đang gián đoạn. Câu hỏi của bạn vẫn được giữ.','ui-error',action('Thử lại mẫu','retry-answer'))}</div>`;
+        if (type==='unavailable') return `<div class="ui-answer">${alertBox('Nguồn không còn khả dụng','Câu trả lời liên quan đã được ẩn vì tài liệu nguồn bị xóa hoặc thay đổi. Bạn có thể hỏi lại từ các tài liệu hiện có.','',action('Tạo câu hỏi mới','new'))}</div>`;
+        const head='<div class="ui-answerhead"><h3>Knowledge Copilot</h3><span class="ui-ai">AI-generated</span></div>';
+        if (type==='insufficient') return `<article class="ui-answer">${head}${alertBox('Chưa đủ bằng chứng trong tài liệu','Chưa tìm thấy thông tin xác định được người phê duyệt cuối cùng. Bạn có thể bổ sung quy định phê duyệt hoặc hỏi rõ loại chi phí.')}<p class="ui-hint">Không có nguồn trích dẫn cho phần thông tin đang thiếu.</p></article>`;
+        const marker='<button type="button" class="ui-cite" data-action="source" aria-label="Mở nguồn E1">[E1]</button>';
+        const body=state.session===1?`<p>Thông tin nội bộ cần được chia sẻ qua các kênh được doanh nghiệp cho phép. ${marker}</p>`:`<p>Hồ sơ đề nghị thanh toán gồm các tài liệu sau:</p><ol><li>Đề nghị thanh toán có nội dung và người đề nghị. ${marker}</li><li>Hóa đơn, chứng từ và xác nhận của người phụ trách. ${marker}</li></ol>`;
+        const partial=type==='partial'?alertBox('Một phần thông tin còn thiếu','Tài liệu có mô tả thành phần hồ sơ, nhưng chưa xác định rõ hạn nộp và người phê duyệt cuối cùng.','ui-warning'):'';
+        return `<article class="ui-answer">${head}${body}${partial}<div class="ui-source-ref">Nguồn tham chiếu<br><button type="button" class="ui-link" data-action="source">[E1] ${state.session===1?'huong_dan_bao_mat.md · Dòng 12–18':'quy_trinh_thanh_toan.pdf · Trang 2'}</button></div></article>`;
+      }
+      function sourcePanel() {
+        const title=state.session===1?'huong_dan_bao_mat.md':'quy_trinh_thanh_toan.pdf';
+        const location=state.session===1?'Dòng 12–18 · Markdown':'Trang 2 · PDF';
+        const status=state.sample;
+        let body;
+        if (status==='unavailable') body=alertBox('Nguồn không còn khả dụng','Tài liệu đã bị xóa hoặc bạn không còn quyền truy cập. Trích đoạn cũ không được hiển thị.','ui-warning');
+        else if (status==='loading') body=alertBox('Đang tải nguồn…','Đang kiểm tra quyền truy cập tài liệu.');
+        else body=`<p class="ui-file">${title}</p><p class="ui-source-meta">${location}</p><div class="ui-excerpt">${state.session===1?'“Thông tin nội bộ chỉ được chia sẻ qua các kênh đã được doanh nghiệp cho phép.”':'“Hồ sơ đề nghị thanh toán bao gồm đề nghị thanh toán, hóa đơn hoặc chứng từ kèm theo và xác nhận của người phụ trách.”'}</div>${action(state.fullSource?'Thu gọn tài liệu mẫu':'Mở tài liệu','full-source')}${state.fullSource?'<div class="ui-state" style="margin-top:18px"><h3>Bản nguồn minh họa</h3><p>2. Hồ sơ thanh toán</p><p>Người đề nghị chuẩn bị hồ sơ, đính kèm chứng từ và gửi người phụ trách xác nhận.</p></div>':''}<p class="ui-hint">Đối chiếu nội dung và điều kiện áp dụng trước khi sử dụng.</p>`;
+        return `<button type="button" class="ui-backdrop" data-action="close-source" aria-label="Đóng panel nguồn"></button><aside class="ui-source" aria-label="Nguồn tham chiếu"><div class="ui-sourcehead"><h2>Nguồn tham chiếu</h2><button type="button" class="ui-link" data-action="close-source">Đóng</button></div>${body}</aside>`;
+      }
+      function chat() {
+        const empty=state.sample==='empty'&&state.view!=='source';
+        const open=state.view==='source';
+        return `<div class="ui-chat-grid ${open?'ui-source-open':''}"><section class="ui-chat"><div class="ui-pagehead"><div><h1>Hỏi đáp tài liệu</h1><p>Câu trả lời có nguồn để bạn kiểm tra.</p></div></div>${state.notice?`<div class="ui-notice" role="status" style="margin-top:18px">${esc(state.notice)}</div>`:''}<div class="ui-thread">${empty?'<div class="ui-empty"><h2>Bạn cần tìm thông tin gì?</h2><p>Đặt câu hỏi đầy đủ về các tài liệu đã sẵn sàng trong không gian làm việc.</p></div>':`<div class="ui-user"><p class="ui-small">Bạn</p><p>${esc(state.question)}</p></div>${answer()}`}</div><form class="ui-compose" id="ui-chat-form"><label class="ui-filter" for="ui-doc-filter">Phạm vi tài liệu<select id="ui-doc-filter"><option value="all" ${state.filter==='all'?'selected':''}>Tất cả tài liệu sẵn sàng</option><option value="payment" ${state.filter==='payment'?'selected':''}>quy_trinh_thanh_toan.pdf</option><option value="security" ${state.filter==='security'?'selected':''}>huong_dan_bao_mat.md</option></select></label><div class="ui-inputbox"><label for="ui-question" class="ui-small ui-muted">Câu hỏi của bạn</label><textarea id="ui-question" name="question" placeholder="Nhập câu hỏi đầy đủ ngữ cảnh…" maxlength="4000" ${state.sample==='loading'?'disabled':''}>${esc(state.draft)}</textarea><div class="ui-composer-foot"><span class="ui-small ui-muted">Enter gửi · Shift+Enter xuống dòng</span><button type="submit" class="ui-action ui-primary" ${state.sample==='loading'?'disabled':''}>Gửi câu hỏi</button></div></div><p class="ui-hint">Mỗi câu hỏi cần đầy đủ ngữ cảnh. Hãy kiểm tra nguồn trước khi sử dụng câu trả lời.</p></form></section>${open?sourcePanel():''}</div>`;
+      }
+      function documents() {
+        const admin=state.role==='admin';
+        let body;
+        if (state.sample==='empty') body=`<div class="ui-empty"><h2>Chưa có tài liệu</h2><p>${admin?'Tải tài liệu đầu tiên để bắt đầu tìm kiếm và hỏi đáp.':'Quản trị viên chưa thêm tài liệu vào không gian làm việc.'}</p>${admin?action('Tải tài liệu','upload','ui-primary'):''}</div>`;
+        else if (state.sample==='loading') body=`<div style="margin-top:30px">${alertBox('Đang tải danh sách…','Thông tin tài liệu sẽ xuất hiện khi tải xong.')}</div>`;
+        else if (state.sample==='error') body=`<div style="margin-top:30px">${alertBox('Chưa tải được danh sách','Kết nối đang gián đoạn. Hãy kiểm tra lại sau ít phút.','ui-error',action('Thử lại mẫu','retry-docs'))}</div>`;
+        else {
+          const rows=[
+            ['quy_trinh_thanh_toan.pdf','PDF · 248 KB',state.deleted?'Đang xóa':'Sẵn sàng',state.deleted?'ui-wait':'ui-ready',state.deleted?'Đang dọn dữ liệu liên quan.':'',state.deleted?'':`<button class="ui-link" type="button" data-action="source">Xem</button>${admin?'<button class="ui-link ui-danger" type="button" data-action="delete">Xóa</button>':''}`],
+            ['so_tay_nhan_su.docx','DOCX · 184 KB','Đang xử lý','ui-wait','Đang lập chỉ mục.', '<button class="ui-link" type="button" data-action="job">Tiến trình</button>'],
+            ['huong_dan_bao_mat.md','Markdown · 12 KB','Sẵn sàng','ui-ready','', '<button class="ui-link" type="button" data-action="security-source">Xem</button>'],
+            ['chinh_sach_cong_tac_scan.pdf','PDF · 1,2 MB','Cần bản có text','ui-caution','Tài liệu scan chưa được hỗ trợ.', '<button class="ui-link" type="button" data-action="scan-info">Chi tiết</button>'],
+            ['quy_dinh_cu.txt','TXT · 8 KB','Lỗi dọn dẹp','ui-bad','Đã ngừng dùng để hỏi đáp.',admin?'<button class="ui-link" type="button" data-action="cleanup">Thử lại dọn dẹp</button>':'']
+          ];
+          body=`<div class="ui-doc-count"><span>5 tài liệu</span><span>Cập nhật: 05/11/2026</span></div><table class="ui-table"><thead><tr><th scope="col">Tên tài liệu</th><th scope="col">Trạng thái</th><th scope="col">Tải lên</th><th scope="col">Thao tác</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${r[0]}<small>${r[1]}</small></td><td data-label="Trạng thái"><span class="ui-badge ${r[3]}">${r[2]}</span>${r[4]?`<small>${r[4]}</small>`:''}</td><td data-label="Tải lên">05/11/2026<small>${['09:20','09:18','09:05','08:40','08:30'][i]}</small></td><td><div class="ui-row-actions">${r[5]}</div></td></tr>`).join('')}</tbody></table>`;
+        }
+        return `<section class="ui-documents"><div class="ui-pagehead"><div><h1>Tài liệu</h1><p>Quản lý nguồn kiến thức của không gian làm việc.</p></div>${admin?action(icon('upload')+'Tải tài liệu','upload','ui-primary'):''}</div>${state.notice?`<div class="ui-notice" role="status" style="margin-top:18px">${esc(state.notice)}</div>`:''}${state.upload&&admin?`<div class="ui-upload"><h3>Chọn hoặc thả tài liệu tại đây</h3><p>PDF có text, DOCX, TXT, MD · Tối đa 20 MB mỗi file</p>${action('Chọn file minh họa','sample-upload')}<p>Thao tác mẫu, không tải file thật.</p></div>`:''}${body}<p class="ui-hint" style="margin-top:22px">Chỉ tài liệu sẵn sàng được sử dụng để hỏi đáp.${admin?' Tài liệu đang xóa không còn được dùng, kể cả khi dọn dẹp chưa hoàn tất.':''}</p></section>`;
+      }
+      function login() { return `<section class="ui-login"><form class="ui-loginbox" id="ui-login-form"><div class="ui-brand">Knowledge Copilot</div><h1>Đăng nhập</h1><p>Truy cập kiến thức trong không gian làm việc của bạn.</p>${state.sample==='expired'?alertBox('Phiên đăng nhập đã hết hạn','Vui lòng đăng nhập lại để tiếp tục.'):''}${state.sample==='invalid'?alertBox('Không thể đăng nhập','Tên đăng nhập hoặc mật khẩu không đúng.','ui-error'):''}<label class="ui-field" for="ui-username">Tên đăng nhập<input id="ui-username" name="username" autocomplete="off" placeholder="Nhập tên đăng nhập" value="${state.role==='admin'?'demo.admin':'demo.member'}"></label><label class="ui-field" for="ui-password">Mật khẩu<input id="ui-password" type="password" name="password" autocomplete="off" placeholder="Nhập mật khẩu"></label><button type="submit" class="ui-action ui-primary">Đăng nhập</button><p class="ui-hint">Bản mẫu không xác thực và không lưu mật khẩu.</p></form></section>`; }
+      function render() {
+        roleSelect.value=state.role;
+        stateSelect.innerHTML=names[state.view].map(([value,label])=>`<option value="${value}" ${value===state.sample?'selected':''}>${label}</option>`).join('');
+        root.querySelectorAll('[data-preview]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preview===state.view)));
+        content.innerHTML=state.view==='login'?login():`${header()}<div class="ui-layout">${sidebar()}<main class="ui-work">${state.view==='documents'?documents():chat()}</main></div>`;
+        if (globalThis.lucide) globalThis.lucide.createIcons({attrs:{width:16,height:16}});
+      }
+      function applyDesign() { root.style.setProperty('--ui-row',design.rowHeight+'px'); root.style.setProperty('--ui-radius',design.radius+'px'); }
+      root.addEventListener('change',event=>{
+        if(event.target===roleSelect) { state.role=roleSelect.value; state.upload=false; render(); save(); }
+        else if(event.target===stateSelect) { clearTimeout(timer); state.sample=stateSelect.value; state.notice=''; render(); save(); }
+        else if(event.target.id==='ui-doc-filter') { state.filter=event.target.value; }
+      });
+      root.addEventListener('input',event=>{
+        if(event.target.id==='ui-question') state.draft=event.target.value;
+        if(event.target===deleteName) confirmDelete.disabled=deleteName.value!==activeDelete;
+      });
+      function closeSource() { state.view='chat'; state.sample='normal'; state.fullSource=false; render(); root.querySelector('[data-action="source"]')?.focus(); save(); }
+      root.addEventListener('click',event=>{
+        const preview=event.target.closest('[data-preview]'); if(preview) {setView(preview.dataset.preview);return;}
+        const session=event.target.closest('[data-session]'); if(session) {state.session=Number(session.dataset.session);state.question=state.session===1?'Thông tin nội bộ nên được chia sẻ như thế nào?':'Hồ sơ thanh toán chi phí cần những gì?';setView('chat');return;}
+        const button=event.target.closest('[data-action]'); if(!button)return;
+        const a=button.dataset.action;
+        if(a==='chat'||a==='documents') setView(a);
+        else if(a==='source'||a==='security-source') {if(a==='security-source')state.session=1;setView('source');root.querySelector('[data-action="close-source"]')?.focus();}
+        else if(a==='close-source')closeSource();
+        else if(a==='menu') {state.menu=!state.menu;render();}
+        else if(a==='new') {setView('chat');state.sample='empty';state.draft='';render();root.querySelector('#ui-question')?.focus();}
+        else if(a==='upload') {state.upload=!state.upload;render();}
+        else if(a==='sample-upload') {state.upload=false;state.sample='normal';state.notice='Đã chọn tài liệu minh họa. Mockup không thực hiện upload thật.';render();}
+        else if(a==='job') {state.notice='Tiến trình mẫu: đang lập chỉ mục. Không hiển thị phần trăm khi chưa đo được.';render();}
+        else if(a==='scan-info') {state.notice='Tài liệu này là bản scan. Hãy sử dụng bản có text để có thể hỏi đáp.';render();}
+        else if(a==='cleanup') {state.notice='Mẫu: đã yêu cầu thử lại dọn dẹp. Tài liệu tiếp tục bị loại khỏi nguồn hỏi đáp.';render();}
+        else if(a==='retry-docs'||a==='retry-answer') {state.sample='normal';state.notice='Đã chuyển về trạng thái mẫu thành công.';render();}
+        else if(a==='full-source') {state.fullSource=!state.fullSource;render();root.querySelector('[data-action="full-source"]')?.focus();}
+        else if(a==='delete') {activeDelete='quy_trinh_thanh_toan.pdf';root.querySelector('#ui-delete-filename').textContent=activeDelete;deleteName.value='';confirmDelete.disabled=true;modal.showModal();}
+        else if(a==='cancel-delete') modal.close();
+        else if(a==='confirm-delete'&&deleteName.value===activeDelete) {modal.close();state.deleted=true;state.notice='Mẫu: tài liệu đang xóa và đã ngừng dùng để hỏi đáp. Dọn dẹp vật lý có thể chưa hoàn tất.';render();}
+      });
+      root.addEventListener('submit',event=>{
+        event.preventDefault();
+        if(event.target.id==='ui-login-form') {setView('chat');state.notice='Đăng nhập minh họa; không gửi hoặc lưu thông tin đăng nhập.';render();}
+        if(event.target.id==='ui-chat-form') {
+          const question=state.draft.trim(); if(!question)return;
+          state.question=question;state.draft='';state.sample='loading';state.notice='Câu trả lời sau đây là mẫu cố định, không suy luận từ nội dung bạn nhập.';render();
+          timer=setTimeout(()=>{state.sample='normal';render();},850);
+        }
+      });
+      root.addEventListener('keydown',event=>{
+        if(event.target.id==='ui-question'&&event.key==='Enter'&&!event.shiftKey&&!event.isComposing) {event.preventDefault();event.target.form.requestSubmit();}
+        if(event.key==='Escape'&&!modal.open&&state.view==='source') {event.preventDefault();closeSource();}
+        if(event.key==='Tab'&&state.view==='source'&&matchMedia('(max-width:1100px)').matches&&!modal.open) {
+          const controls=[...root.querySelector('.ui-source').querySelectorAll('button:not(:disabled),input,select,textarea')];
+          const first=controls[0],last=controls[controls.length-1];
+          if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+          else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+        }
+      });
+      modal.addEventListener('close',()=>{if(state.view==='documents')root.querySelector('[data-action="delete"], [data-action="upload"]')?.focus();});
+      window.addEventListener('openai:set_globals',event=>{const next=event.detail?.globals?.widgetState?.privateContent;if(next&&views.includes(next.view)){state.view=next.view;state.role=next.role==='member'?'member':'admin';state.sample='normal';render();}});
+      render();applyDesign();
+      if(globalThis.Tweak) {const tweak=new globalThis.Tweak({container:root,onChange:applyDesign});tweak.addSlider(design,'rowHeight',{label:'Chiều cao dòng bảng',min:44,max:64,step:2,unit:'px'});tweak.addSlider(design,'radius',{label:'Bo góc control',min:4,max:10,step:1,unit:'px'});}
+    })();
+  </script>
+</div>

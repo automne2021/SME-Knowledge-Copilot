@@ -26,6 +26,8 @@ Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng 
 
 ## Mốc hiện tại: **M1 RAG — mục tiêu 15/11/2026**
 
+**Máy nhận bàn giao 05/11/2026:** đọc [runbook khôi phục](docs/workspace-restoration-20261105.md) trước khi setup/chạy. Python 3.12.1, Node 24.11.1/npm 11.6.2; cache hiện tại ở `<repo>/.cache/` trên ổ C, đường dẫn tuyệt đối trong `.env`. Các paths/số đo ổ D và môi trường ngày 02–04/11 trong reports là lịch sử. Kết quả kiểm chứng mới được ghi riêng trong runbook, không thay bằng kết quả máy cũ.
+
 Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 
 - **P0/M1:** seed auth + workspace/owner scope; upload PDF text/DOCX/TXT/MD → parse/chunk/embed/index; worker lease/retry; dense search-only API; Q&A/citations/abstention; sessions/source viewer; delete/cleanup; logs/timings; corpus/gold/benchmark; UI và Compose chạy lại được.
@@ -35,6 +37,8 @@ Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 **Tiến độ 04/11/2026: 75,6% /100%.** Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending. [Bước 09](docs/deletion-privacy-step09.md). DB head20261103_rag04/reviewed/mapping/reports bất biến; trace runtime mới chỉ IDs/hash/spans. Host API/worker cùng cwd/storage backend/, không chạy chung queue DB với tests/eval. Cleanup-only không cần weights/cache. Bước 10 cần nhắc và xác nhận UI riêng.
 
 ## Bất biến nghiệp vụ (không được vi phạm)
+
+**UI05/11/2026:** người dùng đã xác nhận code theo [kế hoạch UI](docs/ui-step10-plan.md). Login/Documents/Chat/Source đã nối API,30frontend tests/build/lint đạt; HTTP qua Vite với admin/member đạt. Bước10 ghi nhận4/6 →83,4%/100%; browser E2E/visual-keyboard QA và human acceptance còn pending vì browser host không khả dụng. [Report UI](docs/ui-step10-implementation.md). Không Gemini thật hoặc đổi backend contract; đừng coi fixtures/jsdom là model quality hoặc AT-R23 pass.
 
 1. **Scope do backend xác định:** role/workspace/user lấy từ identity đã xác thực; session chỉ của owner, admin không mặc nhiên đọc chat người khác.
 2. **Chỉ nguồn hợp lệ được dùng:** document ready + active revision/generation + index fingerprint tương thích + đúng workspace; revalidate SQL, không chỉ tin Qdrant payload.
@@ -51,10 +55,10 @@ Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 
 - Modular monolith FastAPI; không microservices, không Kubernetes.
 - RAG pipeline Python cố định; không runtime agent, LangChain/LangGraph hay RAGFlow làm core.
-- LLM qua adapter OpenAI-compatible; hosted là mặc định.
+- LLM hosted qua native Gemini adapter hiện tại (`app/services/gemini.py`); giữ model/prompt/config đã khóa, không tự đổi sang provider hoặc paid fallback.
 - Worker riêng poll processing_jobs bằng `FOR UPDATE SKIP LOCKED`, lease/heartbeat/generation/retry; gọi domain services trực tiếp, không giữ lock khi inference. Không dùng BackgroundTasks cho ingestion.
 - PostgreSQL giữ lifecycle/metadata/text/history, Qdrant giữ vector index; local file storage. Không thêm Redis/Celery trong P0. Compose đã có db/qdrant với image digests, persistent volumes, loopback ports và healthchecks; chưa có worker/frontend service.
-- Dense baseline trước hybrid/reranker. PLAN đề xuất E5-small CPU để smoke và BGE-M3 để so sánh; chưa có model chiến thắng hay benchmark thật.
+- Dense baseline E5-small CPU đã có dev retrieval benchmark Bước 07; BGE-M3 hoãn. Chưa có model chiến thắng qua so sánh hoặc final held-out benchmark.
 - Model budget **0 USD/free tier**, không bật paid fallback. E5/Gemini smoke thật đã có Bước 03; tokenizer Bước 05 dùng cache local, không gọi LLM. Free-tier/quota là xác nhận thủ công theo thời điểm, không phải billing cap; không suy ra smoke/config là pipeline RAG đã triển khai.
 
 Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi người dùng đã xác nhận. Ghi ADR theo hướng dẫn ở docs/decisions khi triển khai quyết định, và giải thích trong KNOWLEDGE.
@@ -69,7 +73,7 @@ Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi 
 - Runtime từ Bước 04 và frontend apiFetch đã đồng bộ JSON success `{data,request_id}`, failure `{error:{code,message,details},request_id}`. Server sinh X-Request-ID, no-store; binary source theo contract vẫn thuộc bước parser/source API sau.
 - Mọi thay đổi schema đi qua migration Alembic; không dùng `create_all()` ngoài test.
 - Config đích theo spec 17: DATABASE_URL, QDRANT_URL, FILE_STORAGE_DIR, embedding fingerprint, LLM/prompt/budget, job limits/auth. Thêm biến phải cập nhật .env.example; không giả định Settings cũ đã đọc các biến mới.
-- AuthToken chỉ lưu digest token, role/is_active đọc lại mỗi request. AdminUser bắt buộc cho write-document/job APIs sẽ triển khai; scope lookup trước status, admin không bypass session owner. Seed CLI idempotent, không reset hash/role khi chạy lại; private credentials ở DEMO_ADMIN_PASSWORD/DEMO_MEMBER_PASSWORD.
+- AuthToken chỉ lưu digest token, role/is_active đọc lại mỗi request. Write-document/job APIs đã yêu cầu admin; scope lookup trước status, admin không bypass session owner. Seed CLI idempotent, không reset hash/role khi chạy lại; private credentials ở DEMO_ADMIN_PASSWORD/DEMO_MEMBER_PASSWORD.
 - Nội dung do AI tạo hiển thị trên UI phải có nhãn "AI-generated".
 
 ## Test
@@ -77,13 +81,13 @@ Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi 
 - Mỗi tính năng có test cho cả trường hợp thành công và thất bại; chạy test và báo kết quả thật trước khi coi là xong.
 - Test DB chạy trên **PostgreSQL thật** (không SQLite) vì cần row locking và partial unique index.
 - Integration retrieval dùng Qdrant thật; unit test model dùng fake/stub có nhãn, real-model eval tách trong eval/.
-- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Bộ hiện tại 56 guard cases + 8 legacy tests đã pass trên môi trường Bước 01, không phải bằng chứng AT-R đã pass.
+- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Bước 09 ghi 302 backend +91 eval tests pass; 56 guard cases +8 legacy tests là baseline lịch sử Bước 01. Software tests không thay browser E2E hoặc human-quality/held-out acceptance; kết quả máy nhận ghi ở runbook khôi phục.
 - Trước pytest, xác minh TEST_DATABASE_URL là DB test riêng trên endpoint được phép, khác DB development. Fixture hiện có tự tạo/migrate DB; không chạy với URL chưa kiểm tra.
 - Baseline bị chặn thì ghi đúng nguyên nhân và command, không coi kiểm tra chưa chạy là pass. Report raw outputs/config đủ tái lập theo spec 14 và eval/README.md.
 
 ## Lệnh
 
-Các command chỉ dùng trong đợt được duyệt. Venv backend/.venv đã hoạt động; PowerShell execution policy hiện chặn .ps1 nên dùng interpreter tường minh/npm.cmd, không cần Activate.ps1. Cache dùng D:\AI-Cache\sme-copilot theo profile lệnh trong báo cáo Bước 01; không đổi policy hay config toàn user.
+Các command chỉ dùng trong đợt được duyệt. Dùng interpreter `backend/.venv/Scripts/python.exe` tường minh và `npm.cmd`, không cần Activate.ps1 hay đổi execution policy. Máy nhận dùng cache `<repo>/.cache/` trên ổ C theo runbook 05/11; kiểm tra venv/cache/services thực tế trước chạy, không suy ra chúng tồn tại chỉ từ reports lịch sử.
 
 ```powershell
 # Từ backend/, sau khi dependencies và DB test được xác minh:
@@ -93,6 +97,7 @@ Các command chỉ dùng trong đợt được duyệt. Venv backend/.venv đã 
 # Từ frontend/, sau khi dependencies được cài:
 npm.cmd run lint
 npm.cmd run build
+npm.cmd run test
 # Chỉ đọc trạng thái services hiện cấu hình, từ root:
 docker compose ps --all
 ```
@@ -100,8 +105,8 @@ docker compose ps --all
 Lưu ý:
 - `backend/alembic.ini` chỉ được chứa ký tự ASCII (Alembic đọc file theo encoding của hệ điều hành trên Windows).
 - Dependency (`DbSession`) dùng `Annotated`, không dùng `Depends()` làm default argument (ruff B008).
-- Revision hiện có là 27b126c3c0bc (Operations). RAG thêm bằng migration mới; không sửa revision cũ, drop dữ liệu legacy hoặc tự chấp nhận autogenerate DROP TABLE. Đọc mapping trong audit.
-- Backend dev dùng requirements-dev.lock (include runtime lock); frontend dùng package-lock.json và npm ci cho lần setup sau. Không install [stt] hoặc model dependencies trong bước corpus/môi trường nếu chưa có yêu cầu.
+- Migration head trong source là `20261103_rag04`, sau `27b126c3c0bc` (Operations). Kiểm tra head DB thực tế rồi migrate; không sửa revision đã áp dụng, drop dữ liệu legacy hoặc tự chấp nhận autogenerate DROP TABLE. Đọc mapping trong audit.
+- Backend dev dùng requirements-dev.lock (include runtime lock); API/worker local E5 cần thêm requirements-worker-cpu.lock trên Windows x64/Python 3.12. Frontend dùng package-lock.json và npm ci. Không install [stt]; tải weights hoặc gọi LLM phải thuộc đợt đã được duyệt.
 
 ## Bảo mật và dữ liệu
 
