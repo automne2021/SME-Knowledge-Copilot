@@ -1489,6 +1489,18 @@ Audit bàn giao cuối:384protected file hashes không đổi,455candidate files
 
 **Bài học từ script kiểm tra:** script của tôi so tên file bằng trường không tồn tại (`file_name`), nên báo 0 trúng, và phép kiểm tra "tài liệu đã xóa không quay lại" cũng thành rỗng nghĩa. Một kiểm tra phủ định ("không có X") với trường sai **luôn pass**. Vì vậy cần in schema hit trước, và kiểm tra phủ định bằng thuộc tính chắc chắn tồn tại (`document_id` ⊆ tập tài liệu ready). Đã chạy lại bằng `document_id`, chỉ đọc, và giữ cả kết quả sai lẫn kết quả đúng trong report.
 
+### K-103 — README cho người đọc ngoài nhóm
+
+**Ngày / loại:** 12/11/2026. Người dùng xác nhận R3 và yêu cầu viết đơn giản, không có phần đóng góp cá nhân. [README](README.md).
+
+**Lựa chọn:**
+- README cũ là nhật ký tiến độ (%, "Bước 0x", trạng thái từng đợt), khó đọc với người lọc hồ sơ. README mới đặt bài toán, tính năng, ảnh, cách hoạt động và kết quả lên trước. Nhật ký và quy trình nội bộ chuyển sang PLAN, KNOWLEDGE và `docs/`.
+- Mọi con số đều lấy từ `reviewed-metrics.json` và các report đã có, kèm mẫu số và link bằng chứng. Ghi rõ dữ liệu là giả lập và quy mô nhỏ, và lỗi 503 vẫn được tính vào mẫu số.
+- Ảnh chụp lại từ UI hiện tại thay vì dùng ảnh 06/11, vì một số file UI đã sửa sau đó. Chưa có ảnh câu trả lời thật vì Gemini tắt; bổ sung ở đợt video.
+- Không có phần "Known limitations" dài hay dòng lịch sử máy cũ; giới hạn viết thành danh sách ngắn, đúng những gì chưa làm.
+
+**Đánh đổi:** README ngắn thì ít chi tiết tái lập (cache, line-ending, ledger quota). Các chi tiết này vẫn nằm trong runbook và các report được link.
+
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai
 
 - Retrieval/answer quality và human scoring trên pipeline thật; E5/Gemini compatibility smoke đã có K-030/K-034–036, chưa kiểm chứng thinking overrides hoặc chi phí theo hóa đơn.

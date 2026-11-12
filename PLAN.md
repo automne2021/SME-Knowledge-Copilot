@@ -16,6 +16,14 @@
 
 **Đợt continuation được xác nhận12/11:** [report](docs/final-continuation-20261112.md) ghi22/22câu chưa từng thử HTTP200, dùng22generation/154count trong cap44/154. Controller mới có manifest riêng3369045f…a1eb, giữ nguyên productionprotocol1340f78f…b3d, model/prompt/corpus và parentbinding/reservations/evidence. Composite hai phiên30attempted/29success/1q023failed/0notattempted, manifestcompleted_with_errors; không một lượt liền mạch hoặc accuracy96,67%. Parent tổng30/210, count allowance đã hết; không retry/reset/paidfallback/download/UI/commit/push. 180regressiontests khác nhau đạt qua các process (lượt gộp176pass/4fail do asyncio socketpair bị guard;8pacing riêng đạt),3SQLtests/Ruff và audit cleanup12bảng0rows/0finalcollections/0ownedfiles đạt. [Worksheet và phiếu mới29outputs](docs/human-review-guide.md) đều chưa chấm; packet7output/practice6câu giữ hashes. Retrieval26answerableRecall@5=1/MRR@5≈0,9808 không là answer correctness. Tiếp theo nhóm chấm rồi merge/rescore offline sau xác nhận; fullAT-R/freshsetup/release vẫn mở, giữ87,3%/100%. Các snapshot8/30/continuation chưa triển khai phía dưới là lịch sử11/11.
 
+**Đợt R3 README được xác nhận 12/11:**
+- `main` đã fast-forward tới `release/m1` và push.
+- README viết lại theo kiểu trang sản phẩm: bài toán, tính năng, cách hoạt động, kết quả đo có link bằng chứng, cách chạy, giới hạn, hướng phát triển. Ảnh chụp từ UI hiện tại (Gemini tắt).
+- Theo yêu cầu người dùng, README **không** có phần đóng góp cá nhân.
+- Bước 12 mục 3 hoàn thành. Mục 5 chưa tính: README có sơ đồ kiến trúc, KNOWLEDGE có trade-off, còn phần đóng góp cá nhân người dùng tự xử lý ngoài README.
+
+Bước 12 đạt **3/6** → **96,4% / 100%**.
+
 **Đợt đóng gói R2, phương án A, được xác nhận 12/11:** [report](docs/fresh-setup-20261112.md), commit `0c1862b`.
 - Compose chỉ còn DB/Qdrant, port cấu hình được; bỏ service API không có E5; Dockerfile không còn tự migrate.
 - Cài sạch từ `git clone release/m1` trên Compose project và volume riêng: migrate → seed (idempotent) → ingest 10/10 ready → search smoke 9/9 → member 403 → chat khi tắt LLM 503 → delete/cleanup đủ SQL/Qdrant/files.
@@ -71,8 +79,8 @@ Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/
 | 09 | 10 | 6/6 — disable/redaction/cleanup/retry/fault-race/retention | 10 |
 | 10 | 12 | 6/6 — UI + Chrome E2E/keyboard/navigation/reload/expiry; human-quality còn Bước11 | 12 |
 | 11 | 8 | 6/7 — mục 1 release (`release/m1`) và mục 2–5, 7; mục 6 conditional chưa cộng | 48/7≈6,8571 |
-| 12 | 5 | 2/6 — mục 1 topology Compose (phương án A) và mục 2 cài sạch; README/video/đóng góp/rà soát còn mở | 10/6≈1,6667 |
-| Tổng | 102,5 | `(89,5 + 8×6/7 + 5×2/6) / 102,5` | **95,6% / 100%** |
+| 12 | 5 | 3/6 — mục 1 Compose (phương án A), mục 2 cài sạch, mục 3 README; video/đóng góp/rà soát còn mở | 15/6=2,5 |
+| Tổng | 102,5 | `(89,5 + 8×6/7 + 5×3/6) / 102,5` | **96,4% / 100%** |
 
 V1.29 không đổi trọng số hoặc mẫu số102,5. Bước11ghi nhận mục2–5 theo [held-out đã chấm](docs/human-review-heldout-20261112.md), thêm mục7 theo [acceptance23scenarios và adversarial đã chấm](docs/human-review-adversarial-20261112.md). Mục1chốt release/code commit và mục6chính sách sau-test còn mở, chưa cộng mục6khi điều kiện chưa phát sinh. Lỗi provider vẫn nằm trong mẫu số benchmark; acceptance được chứng minh theo từng contract/evidence, không có nghĩa toàn bộ native requests đều200 hoặc đãfreshsetup. Không tăng theo số tests/accuracy.
 

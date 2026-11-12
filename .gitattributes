@@ -6,3 +6,4 @@ eval/reports/** -text
 eval/mappings/** -text
 *.pdf binary
 *.docx binary
+*.png binary
