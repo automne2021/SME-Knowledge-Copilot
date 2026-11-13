@@ -103,6 +103,8 @@ cd frontend; npm.cmd run test
 
 ## Hướng phát triển
 
+Kế hoạch chi tiết từng tính năng ở [docs/roadmap/](docs/roadmap/README.md). Các hướng chính:
+
 - Hybrid search (BM25 + dense) và reranker, đo trước/sau trên cùng bộ dữ liệu.
 - Hỏi nối tiếp có retrieval lại theo ngữ cảnh.
 - Cập nhật phiên bản tài liệu và reindex không gián đoạn.
@@ -113,5 +115,6 @@ cd frontend; npm.cmd run test
 
 - [Spec RAG v2.1](SME_Knowledge_Copilot_RAG_Specification.md): yêu cầu, bất biến nghiệp vụ, tiêu chí nghiệm thu.
 - [PLAN](PLAN.md): kế hoạch và tiến độ từng bước.
-- [KNOWLEDGE](KNOWLEDGE.md): lý do các lựa chọn kỹ thuật và đánh đổi.
+- [KNOWLEDGE](KNOWLEDGE.md): kiến thức theo chủ đề, lý do các lựa chọn kỹ thuật và đánh đổi.
+- [Roadmap](docs/roadmap/README.md): kế hoạch sau M1, chia task theo tính năng.
 - Báo cáo từng bước trong [docs/](docs/), dữ liệu đánh giá trong [eval/](eval/).

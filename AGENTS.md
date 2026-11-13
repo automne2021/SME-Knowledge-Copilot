@@ -26,6 +26,7 @@ Theo yêu cầu của người dùng ngày 02/11/2026, mỗi khi code, thiết k
 - Khi sửa lỗi, giải thích nguyên nhân, cách sửa và cách chứng minh lỗi đã được xử lý. Khi đổi quyết định, giữ lịch sử và chỉ rõ mục thay thế.
 - Thay đổi nhỏ có thể ghi ngắn hoặc bổ sung vào mục liên quan; tránh chép lại nguyên spec/code và tránh lặp mục không có kiến thức mới. Không bỏ qua lý do của thay đổi vì cho rằng đã nói trong chat.
 - Kiểm tra KNOWLEDGE.md đã phản ánh công việc trước khi báo hoàn tất. Tài liệu này là nơi tích lũy giải thích kỹ thuật, không chứa secrets, dữ liệu riêng tư hay suy luận nội bộ của model.
+- **Cấu trúc từ 13/11/2026:** KNOWLEDGE.md tổ chức theo chủ đề. Thêm mục mới vào **mục 15 — Nhật ký quyết định** (mã tiếp theo `K-106`, `K-107`…, 2–5 dòng) và sửa đoạn chủ đề liên quan. Bản gốc K-001 → K-105 ở [docs/history/knowledge-archive-m1.md](docs/history/knowledge-archive-m1.md) là lưu trữ chỉ đọc.
 
 ## Báo tiến độ sau mỗi lượt trả lời
 
@@ -33,17 +34,22 @@ Theo yêu cầu người dùng ngày 02/11/2026, **mỗi phản hồi cuối ph�
 
 ## Nguồn yêu cầu hiện tại
 
-- Hướng sản phẩm được người dùng chọn: **SME Knowledge Copilot — RAG thuần**.
-- Contract sản phẩm: [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md).
-- Thứ tự triển khai: [PLAN.md](PLAN.md). Không tự triển khai toàn bộ kế hoạch khi người dùng chỉ yêu cầu sửa tài liệu.
-- [CLAUDE.md](CLAUDE.md) đã đồng bộ sang RAG ở Bước 00; spec Operations là tài liệu lịch sử (đã xóa khỏi repo ngày 12/11/2026, còn trong lịch sử Git), không áp rule STT/agent/approval vào pipeline mới.
-- Hiện trạng source, mapping schema/enum, backlog P0 và baseline kiểm tra nằm trong [audit chuyển tiếp](docs/rag-transition-audit.md). Đồng bộ tài liệu chưa đồng nghĩa code/hạ tầng RAG đã được triển khai.
-- **Trạng thái mới nhất 13/11/2026: 97,4% / 100% (PLAN v1.31).** Bước 13 (UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini) 4/4, đã merge vào `main`. [Report](docs/ui-v2-20261113.md).
-- **(Lịch sử) 12/11/2026 (PLAN v1.30):** Bước 11 đạt 6/7, Bước 12 đạt 3/6; còn video, đóng góp cá nhân và rà soát cuối. Các dòng tiến độ bên dưới là lịch sử.
-- **(Lịch sử) Tiến độ 75,6% /100%, Bước 00–09 hoàn thành theo phạm vi.** [Bước 09](docs/deletion-privacy-step09.md) có SQL disable/redaction, durable cleanup/retry/fencing, scoped multi-collection delete, canonical file cleanup và late-upsert reconciliation. **302 backend +91 eval tests đạt**, Ruff114/pip check đạt. Trace mặc định chỉ IDs/hash/spans; đăng ký evidence revalidate trước LLM, cleanup dọn legacy full/debug copies. CLI --cleanup-only không cần model cache/inference; worker ưu tiên job trước maintenance. DB head20261103_rag04, E5/index/config/cutoff None/BGE hoãn, reviewed/mapping/reports bất biến. Không model calls/download/paid fallback/UI/commit/push ở Bước09; Step08 reports giữ failed budget run và scoped retest, human review pending. Chưa UI/browser E2E/final held-out; Bước10 cần nhắc màn hình/file và xác nhận UI riêng. Host API/worker cùng cwd/storage backend/, không chung queue DB với tests/eval. Secrets riêng .env; không chạy model lại khi chỉ đọc status.
-- Ngân sách model: **free tier, tối đa 0 USD**. Không bật billing hoặc paid fallback. Key giữ riêng trong .env; chỉ chạy LLM trong đợt được xác nhận sau khi người dùng cấu hình key và xác minh free tier/quota. Flags trong config là xác nhận thủ công, không phải billing cap phía Google. Model weights/cache ở D, không commit. Mỗi đợt tiếp theo vẫn cần câu xác nhận theo quy tắc trên.
+- Hướng sản phẩm: **SME Knowledge Copilot — RAG thuần**. Contract: [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md) v2.1. Quy tắc kỹ thuật, bất biến nghiệp vụ và lệnh chuẩn: [CLAUDE.md](CLAUDE.md).
+- Spec Operations cũ đã xóa khỏi repo (12/11/2026), chỉ còn trong lịch sử Git; không áp rule STT/agent/approval vào pipeline RAG.
+- Thứ tự triển khai M1: [PLAN.md](PLAN.md). Việc sau M1: [docs/roadmap/](docs/roadmap/README.md). Không tự triển khai cả kế hoạch khi người dùng chỉ yêu cầu một phần.
+- Ngân sách model: **free tier, tối đa 0 USD**. Không bật billing hay fallback trả phí. Key chỉ nằm trong `.env`; chỉ gọi LLM thật trong đợt được xác nhận, kèm dự toán số lần gọi. Hai cờ free tier trong cấu hình là xác nhận thủ công, không phải giới hạn chi phí phía Google.
 
-### Cập nhật hiện trạng 05/11/2026
+## Trạng thái hiện tại (13/11/2026)
 
-- **(Lịch sử) Tiến độ 83,4%/100%** theo PLANv1.13: UI Bước10 mục1–4 đã triển khai và có30frontend tests/build/lint/HTTP checks; mục5browser E2E và mục6visual-keyboard QA chưa hoàn tất. Không đánh dấu AT-R23/human review pass. [Report UI](docs/ui-step10-implementation.md). Thông tin75,6%/chưa UI ở snapshot04/11 phía trên là lịch sử.
-- Máy nhận dùng cache tuyệt đối `<repo>/.cache/` trên ổ C theo private `.env`, thay profileD của máy cũ; weights không commit. API/worker/frontend dev chạy host; API phiên kiểm thử có key rỗng/free-tier flagsfalse trong process, không sửa `.env`, không gọi Gemini. Không chung worker dev queue với tests/eval.
+- **M1: 97,4% / 100%** (PLAN v1.32). Bước 00–10 và 13 xong; Bước 11 đạt 6/7; Bước 12 đạt 4/6. Phần còn lại (video demo, đóng góp cá nhân) do người dùng làm.
+- `main` chứa UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini ([report](docs/ui-v2-20261113.md)). `release/m1` là bản chốt M1, không sửa.
+- Test: 316 backend, 277 eval tooling, 49 frontend. Kết nối DB/Qdrant dùng `127.0.0.1`.
+- Nhật ký các đợt trước: [docs/history/plan-log-m1.md](docs/history/plan-log-m1.md).
+
+## Làm việc theo roadmap (dành cho Codex và các assistant)
+
+1. Đọc [docs/roadmap/README.md](docs/roadmap/README.md) mục 4 (quy tắc, định nghĩa xong, lệnh chuẩn) trước khi nhận task.
+2. Mỗi task `NN-Tk` trong file tính năng là **một** đợt: trình bày phạm vi (file, migration, API, test), chờ **"Thực hiện đi"**, làm đúng phạm vi, không tự sang task tiếp theo. Task có UI cần xác nhận UI riêng.
+3. Nhánh `feat/NN-<slug>` từ `main`; commit theo task; **không push hay merge** khi chưa được xác nhận. Không sửa `release/m1`.
+4. Gặp quyết định chưa có trong plan (contract, dependency, model, ngân sách): dừng và đề xuất 2–3 phương án kèm khuyến nghị.
+5. Cuối task: report trong `docs/`, mục mới trong KNOWLEDGE mục 15, cập nhật bảng trạng thái roadmap, báo cáo theo mẫu ở roadmap mục 6, kèm **% M1** (theo PLAN) và **% roadmap** (theo roadmap mục 5).

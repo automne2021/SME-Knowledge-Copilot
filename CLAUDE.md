@@ -10,6 +10,8 @@ Trước mọi thay đổi trong workspace, trình bày phạm vi/file bị ản
 
 Mỗi khi code, thiết kế, lựa chọn công nghệ/model/cấu hình, sửa lỗi hoặc điều chỉnh test/evaluation, cập nhật [KNOWLEDGE.md](KNOWLEDGE.md) trong cùng đợt công việc. Giải thích kiến thức chuyên ngành, bối cảnh, lý do chọn, các phương án khác và vì sao chưa chọn, đánh đổi, cách kiểm chứng và điều kiện xem xét lại. Phân biệt đề xuất với kết quả đã đo; giữ lịch sử khi thay đổi quyết định. Thay đổi nhỏ ghi ngắn vào mục liên quan, không chỉ giải thích trong chat.
 
+**Cấu trúc KNOWLEDGE từ 13/11/2026:** file chính tổ chức theo chủ đề để học. Ghi mục mới vào **mục 15 — Nhật ký quyết định** (mã tiếp theo `K-106`, `K-107`…) và sửa đoạn chủ đề liên quan. Bản gốc K-001 → K-105 ở [docs/history/knowledge-archive-m1.md](docs/history/knowledge-archive-m1.md), chỉ đọc, không ghi thêm.
+
 Quy tắc đầy đủ nằm ở [AGENTS.md](AGENTS.md). Mỗi đợt công việc phải có xác nhận riêng theo phạm vi; việc có PLAN không phải quyền tự thực hiện toàn bộ dự án.
 
 **Sau mỗi lượt trả lời:** nêu tiến độ project **X% / 100%** trong phản hồi cuối, theo trọng số/trạng thái tại [PLAN](PLAN.md#quy-ước-báo-tiến-độ-project). Đây là ước lượng khối lượng, không phải điểm model. Chỉ cập nhật file trong phạm vi đã được xác nhận; lượt chỉ đọc báo lại % hiện tại.
@@ -26,28 +28,21 @@ Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng 
 
 ## Mốc hiện tại: **M1 RAG — mục tiêu 15/11/2026**
 
-**Trạng thái 13/11/2026 (PLAN v1.31): 97,4% / 100%.** Bước 13 (UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini) 4/4, đã merge vào `main`; `release/m1` giữ bản M1 ([report](docs/ui-v2-20261113.md)). Mẫu số tăng lên 106,5 nên % không tăng dù đã làm thêm.
+**Trạng thái 13/11/2026 (PLAN v1.32): M1 97,4% / 100%.**
+- Bước 00–10 và 13 hoàn thành; Bước 11 đạt 6/7; Bước 12 đạt 4/6. `main` có UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini ([report](docs/ui-v2-20261113.md)); `release/m1` giữ bản chốt M1.
+- Phần còn lại của M1 do người dùng làm: video demo và phần đóng góp cá nhân (ngoài README).
+- **Sau M1:** việc mới theo [docs/roadmap/](docs/roadmap/README.md) (M2 → M4); mỗi task một đợt xác nhận; tiến độ roadmap báo **riêng** bên cạnh % M1.
+- Nhật ký các đợt trước: [docs/history/plan-log-m1.md](docs/history/plan-log-m1.md) và các report trong `docs/`.
 
-**(Lịch sử) Trạng thái 12/11/2026 (PLAN v1.30): 97,3% / 100%.**
-- Bước 00–10 hoàn thành. Bước 11 đạt 6/7: release trên `main`/`release/m1`, held-out 29/30 đã có human review, acceptance 23/23 theo phạm vi.
-- Bước 12 đạt 3/6: Compose theo phương án A, cài sạch (302 backend + 36 frontend tests đạt trên bản clone), README mới.
-- Còn mở: video demo (người dùng tự quay sau khi đổi UI), đóng góp cá nhân (ngoài README), rà soát cuối.
-
-Các dòng "Tiến độ", "UI05/11" và số liệu cũ bên dưới là lịch sử. Xem [PLAN](PLAN.md) và các report mới nhất trong `docs/`.
-
-**Máy nhận bàn giao 05/11/2026:** đọc [runbook khôi phục](docs/workspace-restoration-20261105.md) trước khi setup/chạy. Python 3.12.1, Node 24.11.1/npm 11.6.2; cache hiện tại ở `<repo>/.cache/` trên ổ C, đường dẫn tuyệt đối trong `.env`. Các paths/số đo ổ D và môi trường ngày 02–04/11 trong reports là lịch sử. Kết quả kiểm chứng mới được ghi riêng trong runbook, không thay bằng kết quả máy cũ.
+**Môi trường:** đọc [runbook khôi phục](docs/workspace-restoration-20261105.md) trước khi setup. Python 3.12.1, Node 24.11.1/npm 11.6.2; cache ở `<repo>/.cache/` (đường dẫn tuyệt đối trong `.env`). Kết nối PostgreSQL/Qdrant dùng `127.0.0.1`, không dùng `localhost` (Docker chỉ mở cổng IPv4).
 
 Chỉ làm phạm vi M1 trừ khi được yêu cầu rõ:
 
 - **P0/M1:** seed auth + workspace/owner scope; upload PDF text/DOCX/TXT/MD → parse/chunk/embed/index; worker lease/retry; dense search-only API; Q&A/citations/abstention; sessions/source viewer; delete/cleanup; logs/timings; corpus/gold/benchmark; UI và Compose chạy lại được.
-- **P1/M2:** reindex/update revision, hybrid/reranker, filter nâng cao, follow-up retrieval-aware, structured comparison và inspector/eval UI; chỉ làm sau baseline P0 và xác nhận riêng.
+- **P1/M2 trở đi:** theo [roadmap](docs/roadmap/README.md) (eval v2, hybrid/reranker, thư mục, bảng biểu, tiến độ trả lời, hỏi nối tiếp, phản hồi/dashboard, OCR, phiên bản tài liệu, provider LLM, Docker Linux/CI, trace, kênh chat); mỗi task cần xác nhận riêng.
 - **Ngoài hướng RAG:** STT/audio/meeting intelligence, agent tool loop, proposal/approval/task. Không đưa workflow Operations cũ trở lại M1/M2 RAG.
 
-**(Lịch sử) Tiến độ 04/11/2026: 75,6% /100%.** Bước 00–09 hoàn thành theo phạm vi. Delete SQL disable/redaction, cleanup có lease/retry, source-checked history/replay và late-write reconciliation đã có; **302 backend +91 eval tests đạt**, Ruff 114 files/pip check đạt. Chưa UI/browser E2E hoặc final human-quality/held-out benchmark. Bước 09 không model calls/downloads/paid fallback/commit/push. E5/index/cutoff None và reports Bước 08 giữ nguyên; human review vẫn pending. [Bước 09](docs/deletion-privacy-step09.md). DB head20261103_rag04/reviewed/mapping/reports bất biến; trace runtime mới chỉ IDs/hash/spans. Host API/worker cùng cwd/storage backend/, không chạy chung queue DB với tests/eval. Cleanup-only không cần weights/cache. Bước 10 cần nhắc và xác nhận UI riêng.
-
 ## Bất biến nghiệp vụ (không được vi phạm)
-
-**(Lịch sử) UI05/11/2026:** người dùng đã xác nhận code theo [kế hoạch UI](docs/ui-step10-plan.md). Login/Documents/Chat/Source đã nối API,30frontend tests/build/lint đạt; HTTP qua Vite với admin/member đạt. Bước10 ghi nhận4/6 →83,4%/100%; browser E2E/visual-keyboard QA và human acceptance còn pending vì browser host không khả dụng. [Report UI](docs/ui-step10-implementation.md). Không Gemini thật hoặc đổi backend contract; đừng coi fixtures/jsdom là model quality hoặc AT-R23 pass.
 
 1. **Scope do backend xác định:** role/workspace/user lấy từ identity đã xác thực; session chỉ của owner, admin không mặc nhiên đọc chat người khác.
 2. **Chỉ nguồn hợp lệ được dùng:** document ready + active revision/generation + index fingerprint tương thích + đúng workspace; revalidate SQL, không chỉ tin Qdrant payload.
@@ -90,7 +85,8 @@ Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi 
 - Mỗi tính năng có test cho cả trường hợp thành công và thất bại; chạy test và báo kết quả thật trước khi coi là xong.
 - Test DB chạy trên **PostgreSQL thật** (không SQLite) vì cần row locking và partial unique index.
 - Integration retrieval dùng Qdrant thật; unit test model dùng fake/stub có nhãn, real-model eval tách trong eval/.
-- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Bước 09 ghi 302 backend +91 eval tests pass; 56 guard cases +8 legacy tests là baseline lịch sử Bước 01. Software tests không thay browser E2E hoặc human-quality/held-out acceptance; kết quả máy nhận ghi ở runbook khôi phục.
+- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Số test hiện tại (13/11/2026): 316 backend, 277 eval tooling (cần `PYTHONPATH=backend`), 49 frontend. Software tests không thay browser E2E hoặc human-quality/held-out acceptance.
+- `test_worker.py::test_heartbeat_runs_during_inference_without_document_lock` có thể chập chờn khi máy bận (đã ghi trong roadmap 00-T1); chạy lại riêng trước khi kết luận là lỗi thật.
 - Trước pytest, xác minh TEST_DATABASE_URL là DB test riêng trên endpoint được phép, khác DB development. Fixture hiện có tự tạo/migrate DB; không chạy với URL chưa kiểm tra.
 - Baseline bị chặn thì ghi đúng nguyên nhân và command, không coi kiểm tra chưa chạy là pass. Report raw outputs/config đủ tái lập theo spec 14 và eval/README.md.
 

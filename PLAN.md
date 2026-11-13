@@ -1,76 +1,21 @@
 # PLAN — SME Knowledge Copilot
 
-> **Phiên bản:** 1.31 — thêm Bước 13 (UI v2 + quản lý phiên + logout thật) trên nhánh `feat/ui-v2`, 13/11/2026; v1.30 chốt release M1 trên `release/m1` 12/11/2026 (lập kế hoạch 01/11/2026)<br>
+> **Phiên bản:** 1.32 — tách nhật ký các đợt sang `docs/history/`, thêm trạng thái hiện tại và liên kết roadmap sau M1, 13/11/2026 (v1.31 thêm Bước 13; lập kế hoạch 01/11/2026)<br>
 > **Nguồn yêu cầu:** [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md), v2.1  
 > **Mục tiêu:** hoàn thành project RAG thuần có demo, test và benchmark tái lập; hướng tới M1 ngày 15/11/2026.  
 > **Nhân sự:** 2 người. Kế hoạch theo thứ tự phụ thuộc; thời lượng là ước lượng, không phải cam kết.  
-> **Trạng thái:** Bước00–10 hoàn thành theo phạm vi; human held-out29/29 đã gộp/rescore, strict success29/30giữ provider503. Human adversarial2/2 đã gộp/rescore, AT-R14đạt; acceptance23/23đạt theo bằng chứng chạy lại/kế thừa được ghi rõ. Bước11ghi5/7mục2–5,7; release freeze và Bước12còn mở, mục6conditional chưa cộng. Held-out ledger30generation/210count không đổi.<br>
+> **Trạng thái:** xem mục "Trạng thái hiện tại" ngay bên dưới.<br>
 
-**Đợt gộp review adversarial được xác nhận12/11:** [report/giới hạn](docs/human-review-adversarial-20261112.md), [reviewed metrics](eval/reports/final-20261112/adversarial/reviewed-metrics.json), [ma trận mới](eval/reports/final-20261112/acceptance/acceptance-matrix.json). Hai phiếu hợp lệ/khớp2/2, correctness2/2điểm, strictsuccess2/2devcases, support1/1claim/citation1/1link/completeness1/1; không adjudication. Kết hợp actual attackexposure/no-tools/native và literal-render/no-XSS contract đã có để đóng AT-R14theo scope, không khẳng định miễn nhiễm injection hoặc rerun mọi tầng. 958protected files trước/sau giữ hashes, gồm source167/native/phiếu đã chấm/oldAT và heldout60; không ghi đè rawpending reports hoặc ma trận cũ. 0model/embedding/DBwrites/commit/push/UIchanges. Bước11thêm mục7,5/7→**92,9%/100%**, release/mục6conditional/Bước12còn mở. Các snapshot4/7/partial/human0/2/91,8%bên dưới là lịch sử trước merge này; không chấm/gọi lại.
+## Trạng thái hiện tại (13/11/2026)
 
-**Đợt adversarial được xác nhận12/11:** [report](docs/adversarial-at14-20261112.md), audit (`.cache/adv-validation-20261112/final-audit.json`, chỉ lưu ở máy local), [hai phiếu mới cần nhóm chấm](docs/human-review-guide.md). Hai câu synthetic/dev dùng E5cache/Gemini/SQL/Qdrant thật, native2generation+6count/8HTTP200 trong grant riêng4/14/0USD; không repair/retry/tune/paidfallback/download/UI/commit/push. Attack có trong actualcontext và generationpayload2/2, không tools/0functioncalls; output email chính thức/citation và insufficient_evidence chỉ là quan sát, chưa humanpass. 26unit mới+45regression=71passed,3SQL riêng/Ruff5files đạt,85frozenfiles+2extras verify. Cleanup21tables0rows/0finalcollections/0ownedfiles;60heldoutfiles và combined/rescoredmetrics giữ hashes. Invoiceverifiednull, oldledger30/210không đổi. Human0/2, AT-R14partial, giữBước11mục2–5=4/7/**91,8%/100%**. Các mô tả chưa có grant/native mới ở snapshot acceptance bên dưới là lịch sử; ma trận cũ giữ nguyên. Tiếp theo nhóm chấm hai output mới, không chấm lại29heldout; merge/rescore/đóng acceptance cần đợt được xác nhận tiếp, không tự bắt đầuBước12.
-
-**Đợt acceptance được xác nhận12/11:** [kết quả và provenance](docs/final-acceptance-20261112.md), machine matrix (`.cache/at-20261112/acceptance-matrix.json`, chỉ lưu ở máy local).409test cases khác nhau đạt qua các process:302backend+2contract mới+69eval+36frontend; không cộng retests. Backend đầu300pass/2fail do bootstrap Python embedded; CLI và child-worker parser bootstrap sửa trong artifacts, không production/assertion/deadline; scoped retests đạt, giữ logs lỗi. Ruff132files/frontendlint/build đạt; bundle3files/backend53files khớp Chrome evidence cũ. DBacceptance riêng head20261103_rag04,21bảng0rows/0testcollections/0runtimefiles;167source/config và60held-out/review files giữ hashes. AT-R22rebuild từ manifest có native evidence hai phiên10docs trên DB/index rỗng, không thay fresh installation Bước12. AT-R14contract đạt nhưng native mới/human adversarial còn thiếu;0Gemini calls mới, không cấp thêm budget/reset/tune test/UI/source/commit/push. Bước11mục7chưa đóng; giữ **91,8%/100%**. Phạm vi đề xuất hai dev adversarial queries/cap mới4generation+14count/0USD cần xác nhận riêng, chưa có grant hoặc calls.
-
-**Đợt review được xác nhận12/11:** [kết quả/giới hạn](docs/human-review-heldout-20261112.md) và [acceptance gaps23scenarios](docs/final-acceptance-gaps-20261112.md). Hai phiếu29entries đúng run/hash/schema, hai reviewer IDs khác nhau; điểm khớp29/29, không adjudication. Correctness2/2, faithfulness34/34claims, citation36/36links, completeness34/34; strict success29/30≈96,67% giữ q023provider503. Đợt offline0model/embedding/DBwrites;60files gốc gồm reviews/captures/ledgers/reports/protocol/grants và practice giữ hashes. Report raw/binding vẫn pending như snapshot lúc xuất; đọc reviewed-metrics mới cho trạng thái hiện tại. Không sửa UI/pipeline/model/prompt/corpus, commit/push hoặc chạy fullAT. Tiến độ theo trọng số giữ nguyên: `(89,5+8×4/7)/102,5×100` → **91,8%/100%**, chưa M1Done. Các đoạn0/29/87,3% dưới đây là lịch sử trước merge/rescore.
-
-**Đợt continuation được xác nhận12/11:** [report](docs/final-continuation-20261112.md) ghi22/22câu chưa từng thử HTTP200, dùng22generation/154count trong cap44/154. Controller mới có manifest riêng3369045f…a1eb, giữ nguyên productionprotocol1340f78f…b3d, model/prompt/corpus và parentbinding/reservations/evidence. Composite hai phiên30attempted/29success/1q023failed/0notattempted, manifestcompleted_with_errors; không một lượt liền mạch hoặc accuracy96,67%. Parent tổng30/210, count allowance đã hết; không retry/reset/paidfallback/download/UI/commit/push. 180regressiontests khác nhau đạt qua các process (lượt gộp176pass/4fail do asyncio socketpair bị guard;8pacing riêng đạt),3SQLtests/Ruff và audit cleanup12bảng0rows/0finalcollections/0ownedfiles đạt. [Worksheet và phiếu mới29outputs](docs/human-review-guide.md) đều chưa chấm; packet7output/practice6câu giữ hashes. Retrieval26answerableRecall@5=1/MRR@5≈0,9808 không là answer correctness. Tiếp theo nhóm chấm rồi merge/rescore offline sau xác nhận; fullAT-R/freshsetup/release vẫn mở, giữ87,3%/100%. Các snapshot8/30/continuation chưa triển khai phía dưới là lịch sử11/11.
-
-**Đợt rà soát R5a được xác nhận 12/11:** [report](docs/final-review-20261112.md).
-- Sửa 112 link vào `.cache/`: 34 link trỏ sang bằng chứng đã đưa vào repo, 78 link thành ghi chú "local". Còn 0 link hỏng.
-- Đồng bộ trạng thái trong CLAUDE/AGENTS/HANDOFF; số cũ được đánh dấu lịch sử.
-- Quét toàn bộ 537 file: không có secret thật. Khuyến nghị dùng mật khẩu DB riêng thay vì giá trị mặc định.
-- Số trong README khớp bằng chứng; Definition of Done MVP có bằng chứng cho 13/13 điều kiện.
-- Kịch bản video và case study lưu ở file riêng, không commit.
-
-Bước 12 mục 6 hoàn thành cho repo hiện tại → **4/6**, **97,3% / 100%**. Sau khi đổi UI cần chạy lại kiểm tra frontend và một lượt trên trình duyệt (report mục 6).
-
-**Đợt R3 README được xác nhận 12/11:**
-- `main` đã fast-forward tới `release/m1` và push.
-- README viết lại theo kiểu trang sản phẩm: bài toán, tính năng, cách hoạt động, kết quả đo có link bằng chứng, cách chạy, giới hạn, hướng phát triển. Ảnh chụp từ UI hiện tại (Gemini tắt).
-- Theo yêu cầu người dùng, README **không** có phần đóng góp cá nhân.
-- Bước 12 mục 3 hoàn thành. Mục 5 chưa tính: README có sơ đồ kiến trúc, KNOWLEDGE có trade-off, còn phần đóng góp cá nhân người dùng tự xử lý ngoài README.
-
-Bước 12 đạt **3/6** → **96,4% / 100%**.
-
-**Đợt đóng gói R2, phương án A, được xác nhận 12/11:** [report](docs/fresh-setup-20261112.md), commit `0c1862b`.
-- Compose chỉ còn DB/Qdrant, port cấu hình được; bỏ service API không có E5; Dockerfile không còn tự migrate.
-- Cài sạch từ `git clone release/m1` trên Compose project và volume riêng: migrate → seed (idempotent) → ingest 10/10 ready → search smoke 9/9 → member 403 → chat khi tắt LLM 503 → delete/cleanup đủ SQL/Qdrant/files.
-- Frontend `npm ci` + 36/36 tests; backend **302 passed trong một lần chạy**.
-- Không gọi Gemini, không tải model, không đụng volume dev.
-
-Bước 12 đạt **2/6** (mục 1–2) → **95,6% / 100%**.
-
-**Đợt chốt release R1 được xác nhận 12/11:** [report](docs/release-m1-20261112.md).
-- Đã commit 5 nhóm (backend hook, tooling eval, UI, launcher, bộ bằng chứng) cùng commit tài liệu trên nhánh `release/m1`; chưa push hoặc merge.
-- Working tree khớp 167/167 hash acceptance; blob đã commit giống hệt sau chuẩn hóa line-ending.
-- Quét secret: 0 trùng. Hostname trong JUnit đã được che ở bản đưa vào repo.
-- Không gọi model, không ghi DB.
-- Spec Operations cũ: theo quyết định của người dùng, đã xóa hẳn khỏi repo; các link được sửa sang lịch sử Git (`9b96102`).
-
-Bước 11 đạt **6/7** (mục 6 conditional chưa cộng) → **94,0% / 100%**. Bước 12 vẫn 0/6. Các đoạn 92,9% bên dưới là lịch sử.
-
-**Tiến độ trước R1: 92,9% / 100%.** Bước00–10 hoàn thành theo phạm vi, gồm [Chrome E2E/QA](docs/browser-e2e-retry-20261110.md). Bước11 ghi nhận5/7mục2–5,7 sau [human held-out](docs/human-review-heldout-20261112.md) và [human adversarial/acceptance23scenarios](docs/human-review-adversarial-20261112.md). Held-out29outputs đã chấm, strictsuccess29/30giữ lỗi provider; hai adversarial devcases tách riêng. Chưa chốt release hoặc freshsetup/đóng góiBước12; mục6conditional chưa cộng. Tỷ lệ đo khối lượng xác minh theo trọng số, không phải accuracy AI hoặc M1Done; acceptance có contract/native/browser kế thừa và giới hạn được ghi rõ.
-
-**Ưu tiên được ghi nhận ngày 10/11/2026:** người dùng đã xem UI và thấy ổn, sẽ sửa sau nếu cần; tạm giữ giao diện. Phản hồi này là đánh giá trải nghiệm của người dùng, không tự thay kết quả E2E hay human scoring câu trả lời. Hoàn tất phần còn thiếu Bước 10 → Bước 11 freeze/final eval → Bước 12 đóng gói/demo/CV. Lưu [đánh giá portfolio](docs/portfolio-review-20261110.md) và [kế hoạch kiểm chứng](docs/final-validation-plan.md); hybrid/reranker/multi-turn vẫn là thí nghiệm sau baseline. Đợt ghi chú đầu ngày 10/11 chỉ cập nhật tài liệu, chưa ghi nhận thêm đầu việc hoàn thành.
-
-**Đợt pacing/held-out được xác nhận11/11:** [report](docs/final-heldout-20261111.md) ghi candidate mới1340f78f14f054fc63196e983c5cd876939f52534d999f663cdffe8257ae4b3d,100files+4extras, giữ archives cũ.155regression/8pacing cuối (7overlap)/5SQLtests riêng và Ruff đạt. User xác nhận free/no billing và quota15RPM/250KTPM/500RPD. Run native E5/Gemini ingest10docs, hoàn tất7queries rồi q023generationHTTP503;8attempted/1error/22notattempted giữ mẫu số30.8generation+56count,63nativeHTTP200+1HTTP503; không repair/retry/paid fallback/download. Pacing receipts và ledger/archive/input/capture verify;12bảng0rows/0final_collections/0canonicalfiles. Shell0 là orchestration/cleanup, manifest incomplete. [Hai phiếu mới](docs/human-review-guide.md) có7outputs chờ chấm; không thay practice6/6. Không tune model/prompt sau test, không đánh dấu final30/full acceptance/release đạt; giữ **87,3%/100%**. Continuation22câu cần thiết kế ledger giữ allowance và đợt duyệt riêng, runner hiện chưa resume.
-
-**Đợt review/integration11/11 đã xác nhận:** [merge/rescore](docs/human-review-practice-20261111.md) từ hai phiếu nhóm điền:6/6, không bất đồng, correctness2/2,4/4claims và4/4citation links được hỗ trợ. Chỉ là synthetic E2E, không benchmark held-out. [Final orchestration](docs/final-runner-sql-20261111.md) dùng SQL/Qdrant thật, inference giả:5tests +148regression đạt;10TXT ingestion/auth/capture, budget/timeout/mapping/ingestion failure và cleanup. Audit12bảng0rows/0final_collections/0files. Candidate thay thế `.cache/final-reviewed-baseline-20261111-sql-verified/`, protocol `d15e3cea44fe9dca9dae1ec5d24cd20e7fbb85b253f97d90a87646baa8834498`,99files+4extras verify; archive cũ giữ nguyên, root cũ drift được ghi rõ. Không model calls/download/held-out decode/UI/commit/push; chưa grant/ledger/execution, pending60/210 chưa được duyệt. Không đóng đầu việc Bước11 chỉ bằng tooling/practice review; giữ **87,3% /100%**. Các snapshot human0/6 ở các đợt trước là lịch sử.
-
-**Đợt chuẩn bị offline được xác nhận tiếp ngày 10/11:** triển khai `eval/final_eval.py`, `final_budget.py`, `final_review.py` và fixture tests. Toolkit freeze/replay/score không có live mode; SQLite ledger/caps và provider wrapper được kiểm tra bằng fake, chưa gắn vào API/browser. **57 focused tests đạt**, Ruff check/format đạt; không mở câu hỏi held-out thật, gọi model/embedding, ghi DB/Qdrant, sửa UI/backend/`.env` hoặc commit/push. Dùng Python3.12.6 sẵn có trong pgAdmin vì venv thiếu interpreter gốc; chưa khôi phục venv. [Report và giới hạn](docs/final-eval-tooling.md), [K-087](KNOWLEDGE.md#k-087--công-cụ-offline-cho-freeze-budget-và-human-review). Chưa đóng Bước10 mục5–6 hoặc bất kỳ đầu việc final eval Bước11; giữ **83,4% /100%**.
-
-**Đợt runtime được xác nhận sau đó cùng ngày:** [capture adapter](docs/runtime-capture-step11-preparation.md) đã nối hook mặc định tắt vào API/core chat, lấy actual final context và gắn ledger cho count/generate/repair; app test có settings/DB/collection/storage scope riêng. **116 focused tests đạt/1 warning baseline**, gồm 22 runtime tests với stubs +57 offline regression +37 unit tests answering/provider; chưa chạy SQL/Qdrant thật trong tests, model, embedding, browser hoặc nội dung held-out thật. Probes chỉ đọc: Docker27.3.1 hoạt động, Compose không liệt kê container đang chạy của project; DB test OperationalError và Qdrant ConnectError; LLM config và hai manual flags có mặt nhưng chưa xác minh với Google. Bước tiếp theo cần duyệt bật/chuẩn bị storage test và integration với fakes trước live batch. [K-088](KNOWLEDGE.md#k-088--capture-trong-pipeline-thật-với-runtime-kiểm-thử-riêng); giữ **83,4% /100%**.
-
-**Đợt storage/integration được xác nhận tiếp:** [6 SQL/Qdrant integration tests](docs/sql-capture-integration-20261110.md) và116regressiontests đạt; Docker storage healthy từ images có sẵn, DBtest/schema/queue được xác minh. Suite dùng DB `copilot_capture_test` riêng, real login/worker/retrieval/publish/canonical sources; embeddings/counter/provider giả và origin offline_fixture. Cleanup xác minh12bảng fixture0rows, Qdrant0final_collections; DB/schema/artifacts giữ để xem lại. Không UI, native inference/download, held-out/human review hay commit/push. Đã xử lý bootstrap parser của Python embedded và timeout trong test harness; production source không cần đổi trong đợt này. [K-089](KNOWLEDGE.md#k-089--sqlqdrant-integration-và-ranh-giới-bằng-chứng). Bước tiếp theo đề xuất live dev smoke2câu với trần4generateContent/14countTokens, cần đợt duyệt riêng và xác minh free-tier/quota. Giữ **83,4% /100%**.
-
-**Đợt native smoke được xác nhận tiếp:** [runner và report](docs/native-capture-smoke-20261110.md) đã chạy đúng hai câu tổng hợp với E5 cache + native Gemini, SQL/Qdrant/auth/retrieval/canonical context thật. Câu hoàn ứng grounded/citation, câu nghỉ phép insufficient_evidence với nguồn vẫn nằm trong context. **2 generateContent +6 countTokens** trong trần4/14,8nativeHTTP200, không repair/retry/fallback/download; invoice cost chưa xác minh (null), budget0USD. Ledger/scope cố định không tự reset;72source hashes và inputs đối chiếu sau run đạt. Tooling thêm nhãn synthetic_smoke, không giả human review; hai outputs vẫn pending chấm người. Có10smoketests +116regression +6SQLintegration được kiểm qua các lượt, không chạy browser/held-out. [K-090](KNOWLEDGE.md#k-090--native-smoke-và-phân-biệt-compatibility-với-chất-lượng). Giữ **83,4% /100%**, chưa đóng đầu việc acceptance có trọng số.
-
-**Đợt browser E2E được xác nhận tiếp:** [harness/report](docs/browser-e2e-20261110.md) đã có scope DB/queue/storage/collection riêng, UI bundle build đạt,131guard/regressiontests và Ruff đạt; không đổi UI source/`.env`/dependencies. Bốn câu trước xóa có tổngcap8generateContent/28countTokens, hai câu sau xóa cap0/0. Chưa chạy thao tác browser hoặc model: native Brave approval ban đầu timeout, người dùng đã chấp thuận retry; sau đó Computer Use dừng vì không xác định được URL hiện tại trên Windows đủ chắc chắn để enforce policy, còn browser host tích hợp unavailable. Không bypass guard hoặc gọi API thay rồi nhận browser pass. Ledger0/0, không capture/model output; đã dừng harness và dọn scope, giữ artifacts/ledger. [K-091](KNOWLEDGE.md#k-091--browser-harness-và-tool-blocker-không-phải-acceptance). Bước10mục5–6/AT-R23/human review vẫn pending, giữ **83,4% /100%**. Cần browser access hợp lệ ở phiên thực thi tiếp; không tự reset scope one-shot đã đóng.
+- **M1 (Bước 00–13): 97,4% / 100%.** Bước 00–10 và 13 hoàn thành; Bước 11 đạt 6/7 (mục 6 có điều kiện, chưa phát sinh); Bước 12 đạt 4/6.
+- **Còn lại của M1, đều do người dùng làm:** quay video demo theo `docs/demo-script.md` (file local) và viết phần đóng góp cá nhân ngoài README.
+- **Code:** `main` chứa UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini; `release/m1` giữ bản chốt M1 (12/11).
+- **Kết quả chính:** held-out 29/30 (1 lỗi provider vẫn tính), citation 36/36, Recall@5 1,0; test 316 backend / 277 eval / 49 frontend. Chi tiết ở [KNOWLEDGE mục 12](KNOWLEDGE.md).
+- **Sau M1:** làm theo [roadmap](docs/roadmap/README.md) (M2 → M4). Tiến độ roadmap tính **riêng**, không trộn vào % M1 dưới đây.
+- **Nhật ký từng đợt** trước đây nằm ở đầu file này đã chuyển sang [docs/history/plan-log-m1.md](docs/history/plan-log-m1.md).
 
 ### Quy ước báo tiến độ project
-
-Đợt retry được xác nhận: [harness retry-01](docs/browser-e2e-retry-20261110.md) dùng hai ledger, ledger gốc giữ tổng8generateContent/28countTokens; không reset/add allowance.119selectedtests/Ruff đạt; browser6/6cases, source410/auth401 và QA chức năng có bằng chứng; đã xuất capture/evaluation/cleanup, không còn server8012. Human0/6, held-out pending. Đóng hai đầu việc còn lại Bước10 theo bằng chứng, không theo số tests/tooling.
 
 Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/11/2026. Dùng midpoint person-hours của bảng Bước 00–12 làm trọng số cố định ban đầu: `1,5; 4; 7; 5; 8; 12; 10; 10; 10; 10; 12; 8; 5`, tổng **102,5**. Công thức `100 × Σ(trọng số bước × tỷ lệ đầu việc đã xác minh) / 102,5`; làm tròn một chữ số thập phân. Sửa trọng số cần ghi lý do và phiên bản, không đổi để làm % đẹp hơn.
 
@@ -92,13 +37,10 @@ Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/
 | 13 | 4 | 4/4 — mục 1 ba endpoint + test, mục 2 UI v2 + test, mục 3 smoke/ảnh chụp/tài liệu, mục 4 merge `feat/ui-v2` vào `main` sau khi người dùng dùng thử (13/11) | 4 |
 | Tổng | 106,5 | `(89,5 + 8×6/7 + 5×4/6 + 4) / 106,5` | **97,4% / 100%** |
 
-**V1.31 (13/11/2026):** người dùng duyệt đợt "UI v2 + tính năng nhỏ" sau mockup. Thêm Bước 13 trọng số 4 (ước lượng khoảng 4 giờ công: 3 endpoint, 4 màn hình, test, smoke), mẫu số 102,5 → 106,5. Phần trăm giảm từ 97,3% xuống 96,4% vì phạm vi tăng, không phải vì việc cũ bị mất. Bước 13 gồm: (1) `POST /auth/logout`, `PATCH`/`DELETE /chat/sessions/{id}` cùng test PostgreSQL thật; (2) bố cục sidebar, trang Lịch sử, đăng nhập một cột, đồng hồ chờ, chip phạm vi, sao chép kèm nguồn, tìm/lọc tài liệu, tiến độ ingest từ job thật; (3) smoke HTTP, ảnh chụp Edge headless, spec/KNOWLEDGE/README/report; (4) merge `feat/ui-v2` vào `main` sau khi người dùng xem. [Report](docs/ui-v2-20261113.md), [K-105](KNOWLEDGE.md).
+Bước 13 được thêm ngày 13/11/2026 (v1.31) với trọng số 4 sau khi người dùng duyệt đợt UI v2; mẫu số 102,5 → 106,5 nên % từng giảm từ 97,3% xuống 96,4% trước khi Bước 13 xong. Ghi chú các phiên bản trước nằm trong [nhật ký M1](docs/history/plan-log-m1.md).
 
-V1.29 không đổi trọng số hoặc mẫu số102,5. Bước11ghi nhận mục2–5 theo [held-out đã chấm](docs/human-review-heldout-20261112.md), thêm mục7 theo [acceptance23scenarios và adversarial đã chấm](docs/human-review-adversarial-20261112.md). Mục1chốt release/code commit và mục6chính sách sau-test còn mở, chưa cộng mục6khi điều kiện chưa phát sinh. Lỗi provider vẫn nằm trong mẫu số benchmark; acceptance được chứng minh theo từng contract/evidence, không có nghĩa toàn bộ native requests đều200 hoặc đãfreshsetup. Không tăng theo số tests/accuracy.
 
 Đầu việc đang làm/chưa xác minh không tính hoàn thành; đóng gate còn cần các điều kiện của từng bước. Cách chia đều đầu việc trong một bước là ước lượng quản lý, không phải giờ thực tế đã tiêu hay độ chính xác AI. Nếu chỉ giải thích/đọc, giữ nguyên %; chỉ ghi file tiến độ trong đợt thay đổi đã xác nhận. Bước 02 đã đạt khoảng 12,2% trước cộng embedding/tokenizer Bước 03.
-
-V1.6 giữ nguyên mọi trọng số. Mục 5 Bước 03 ghi rõ **nếu đủ tài nguyên**, nên không nằm trong gate bắt buộc khi chủ động hoãn challenger; không đánh dấu đã smoke BGE. Gate Bước 03 là có inference thật cho một embedding + một LLM và response validate được. Đạt gate này không có nghĩa mọi output đều đúng: run đầu có lỗi, retest chỉ một case/prompt v2, không phải 5/5 cùng prompt. Human quality/retrieval benchmark còn ở Bước 07/11.
 
 ## 1. Phương án khởi đầu
 
@@ -639,6 +581,8 @@ Thứ tự tích hợp vẫn theo bước 00–12. Hai người có thể chia o
 Mỗi ngày ghi ngắn: đã chứng minh được gì, lỗi hiện nằm tầng nào, model/config nào đổi, số liệu nào vừa đo và bước/gate kế tiếp. Với coding assistant, giao một feature có contract + edge cases + acceptance tests; review thay vì giao toàn project trong một prompt.
 
 ## 9. M2 — tăng chiều sâu RAG sau khi M1 đạt
+
+> **Cập nhật 13/11/2026:** danh sách dưới đây là định hướng ban đầu. Kế hoạch chi tiết, chia task cho Codex và có thứ tự ưu tiên nằm ở [docs/roadmap/](docs/roadmap/README.md); khi hai nơi lệch nhau, roadmap là bản hiện hành.
 
 Thực hiện từng thí nghiệm, không triển khai cả danh sách cùng lúc:
 
