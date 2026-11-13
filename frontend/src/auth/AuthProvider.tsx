@@ -19,6 +19,8 @@ interface AuthState {
   expired: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  /** User-initiated sign-out: revoke the token on the server, then clear the tab. */
+  signOut: () => Promise<void>;
   revalidate: () => void;
 }
 const Context = createContext<AuthState | null>(null);
@@ -37,6 +39,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
     setError("");
   }, []);
+  const signOut = useCallback(async () => {
+    controller.current?.abort();
+    if (readSession()) {
+      try {
+        await api.logout();
+      } catch {
+        /* Local sign-out still proceeds; the token then expires on its own TTL. */
+      }
+    }
+    logout();
+  }, [logout]);
   const revalidate = useCallback(() => {
     controller.current?.abort();
     if (!readSession()) {
@@ -126,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
   return (
-    <Context.Provider value={{ user, loading, error, expired, login, logout, revalidate }}>
+    <Context.Provider value={{ user, loading, error, expired, login, logout, signOut, revalidate }}>
       {children}
     </Context.Provider>
   );

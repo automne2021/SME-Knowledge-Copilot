@@ -1,6 +1,8 @@
 # Bàn giao cho Claude — SME Knowledge Copilot
 
-> **Cập nhật cuối 12/11 (sau R1–R3 và rà soát):** release đã merge vào `main`, Compose theo phương án A, cài sạch đạt ([report](docs/fresh-setup-20261112.md)), README mới. PLAN v1.30, tiến độ **96,4%**. Còn video, đóng góp cá nhân và rà soát cuối. Nội dung bên dưới là snapshot trước R1, giữ để tham khảo.
+> **Cập nhật 13/11:** Bước 13 (UI v2, đổi tên/xóa phiên, logout thật) trên nhánh `feat/ui-v2`, PLAN v1.31, **96,4%** (mẫu số tăng). [Report](docs/ui-v2-20261113.md).
+>
+> **Cập nhật 12/11 (sau R1–R3 và rà soát):** release đã merge vào `main`, Compose theo phương án A, cài sạch đạt ([report](docs/fresh-setup-20261112.md)), README mới. PLAN v1.30, tiến độ **96,4%**. Còn video, đóng góp cá nhân và rà soát cuối. Nội dung bên dưới là snapshot trước R1, giữ để tham khảo.
 
 **Cập nhật:** 12/11/2026. **Nguồn trạng thái:** PLAN v1.29. **Tiến độ: 92,9% /100%**, là ước lượng khối lượng theo person-hours, không phải accuracy AI. Chưa M1 Done.
 

@@ -12,9 +12,31 @@ function app(path = "/chat") {
     </MemoryRouter>,
   );
 }
-function transport(options: { role?: string; noSources?: boolean; queryFailure?: boolean } = {}) {
+type SessionRow = { id: string; title: string; created_at: string };
+function transport(
+  options: {
+    role?: string;
+    noSources?: boolean;
+    queryFailure?: boolean;
+    sessions?: SessionRow[];
+  } = {},
+) {
   let complete = false;
+  let sessions = options.sessions;
   return vi.fn(async (path: string, init?: RequestInit) => {
+    if (path.endsWith("/auth/logout")) return ok({ revoked: true });
+    if (sessions && path.includes("/chat/sessions/") && init?.method === "PATCH") {
+      const key = decodeURIComponent(path.split("/chat/sessions/")[1]);
+      const title = JSON.parse(init.body as string).title as string;
+      sessions = sessions.map((row) => (row.id === key ? { ...row, title } : row));
+      return ok(sessions.find((row) => row.id === key));
+    }
+    if (sessions && path.includes("/chat/sessions/") && init?.method === "DELETE") {
+      const key = decodeURIComponent(path.split("/chat/sessions/")[1]);
+      sessions = sessions.filter((row) => row.id !== key);
+      return ok({ id: key, deleted: true });
+    }
+    if (sessions && path.includes("/chat/sessions?")) return ok({ items: sessions });
     if (path.endsWith("/auth/me")) return ok({ ...user, role: options.role ?? "knowledge_admin" });
     if (path.endsWith("/auth/login")) return ok({ access_token: token, expires_in: 3600 });
     if (path.includes("/documents?")) return ok({ items: options.noSources ? [] : [doc] });
@@ -52,11 +74,99 @@ it("authenticates with server identity and removes tab data on logout", async ()
   await userEvent.type(screen.getByLabelText("Mật khẩu"), "private-test-password");
   await userEvent.click(screen.getByRole("button", { name: "Đăng nhập" }));
   await screen.findByRole("heading", { name: "Hỏi đáp tài liệu" });
-  expect(screen.getByText("Quản trị tri thức")).toBeTruthy();
+  expect(screen.getByText("Quản trị viên")).toBeTruthy();
   expect(JSON.stringify(sessionStorage)).not.toContain("private-test-password");
   await userEvent.click(screen.getByRole("button", { name: "Đăng xuất" }));
   await screen.findByRole("heading", { name: "Đăng nhập" });
   expect(sessionStorage.getItem("sme.auth.v1")).toBeNull();
+  const revoke = fetcher.mock.calls.find(([path]) => path.endsWith("/auth/logout"));
+  expect(revoke?.[1]?.method).toBe("POST");
+  expect(new Headers(revoke?.[1]?.headers).get("Authorization")).toBe(`Bearer ${token}`);
+});
+it("still signs out locally when the revoke request fails", async () => {
+  storeSession(token, 3600);
+  const fetcher = transport();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (path: string, init?: RequestInit) => {
+      if (path.endsWith("/auth/logout")) throw new TypeError("network down");
+      return fetcher(path, init);
+    }),
+  );
+  app();
+  await screen.findByRole("heading", { name: "Hỏi đáp tài liệu" });
+  await userEvent.click(screen.getByRole("button", { name: "Đăng xuất" }));
+  await screen.findByRole("heading", { name: "Đăng nhập" });
+  expect(sessionStorage.getItem("sme.auth.v1")).toBeNull();
+});
+const SESSIONS: SessionRow[] = [
+  { id: "session-1", title: "Hoàn ứng công tác", created_at: new Date().toISOString() },
+  { id: "session-2", title: "Quy trình duyệt", created_at: "2026-01-02T03:00:00Z" },
+];
+it("renames a conversation from the sidebar", async () => {
+  storeSession(token, 3600);
+  const fetcher = transport({ sessions: SESSIONS });
+  vi.stubGlobal("fetch", fetcher);
+  app();
+  await userEvent.click(await screen.findByRole("button", { name: "Đổi tên “Hoàn ứng công tác”" }));
+  const input = screen.getByLabelText("Tên mới");
+  await userEvent.clear(input);
+  await userEvent.type(input, "Công tác tháng 11");
+  await userEvent.click(screen.getByRole("button", { name: "Lưu" }));
+  await screen.findByRole("link", { name: "Công tác tháng 11" });
+  const call = fetcher.mock.calls.find(([, init]) => init?.method === "PATCH");
+  expect(call?.[0]).toBe("/api/v1/chat/sessions/session-1");
+  expect(JSON.parse(call![1]!.body as string)).toEqual({ title: "Công tác tháng 11" });
+});
+it("asks before deleting the open conversation and then leaves it", async () => {
+  storeSession(token, 3600);
+  const fetcher = transport({ sessions: SESSIONS });
+  vi.stubGlobal("fetch", fetcher);
+  app("/chat/session-1");
+  const deleted = () => fetcher.mock.calls.some(([, init]) => init?.method === "DELETE");
+  await userEvent.click(await screen.findByRole("button", { name: "Xóa “Hoàn ứng công tác”" }));
+  expect(deleted()).toBe(false);
+  await userEvent.click(screen.getByRole("button", { name: "Hủy" }));
+  expect(deleted()).toBe(false);
+  await userEvent.click(screen.getByRole("button", { name: "Xóa “Hoàn ứng công tác”" }));
+  await userEvent.click(screen.getByRole("button", { name: "Xóa cuộc trò chuyện" }));
+  await waitFor(() => expect(screen.queryByRole("link", { name: "Hoàn ứng công tác" })).toBeNull());
+  const call = fetcher.mock.calls.find(([, init]) => init?.method === "DELETE");
+  expect(call?.[0]).toBe("/api/v1/chat/sessions/session-1");
+  await screen.findByText("Bạn cần tìm thông tin gì?");
+});
+it("lists history grouped by day and filters by title", async () => {
+  storeSession(token, 3600);
+  vi.stubGlobal("fetch", transport({ sessions: SESSIONS }));
+  app("/history");
+  await screen.findByRole("heading", { name: "Lịch sử hội thoại" });
+  expect(screen.getByRole("region", { name: "Hôm nay" }).textContent).toContain(
+    "Hoàn ứng công tác",
+  );
+  expect(screen.getByRole("region", { name: "Cũ hơn" }).textContent).toContain("Quy trình duyệt");
+  await userEvent.type(screen.getByLabelText("Tìm cuộc trò chuyện"), "duyệt");
+  expect(screen.queryByRole("link", { name: "Hoàn ứng công tác" })).toBeNull();
+  expect(screen.getByRole("link", { name: "Quy trình duyệt" })).toBeTruthy();
+});
+it("filters documents by name and status", async () => {
+  storeSession(token, 3600);
+  const failed = { ...doc, id: "doc-2", filename: "scan.pdf", status: "failed" as const };
+  const fetcher = transport();
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (path: string, init?: RequestInit) =>
+      path.includes("/documents?") ? ok({ items: [doc, failed] }) : fetcher(path, init),
+    ),
+  );
+  app("/documents");
+  await screen.findByText("scan.pdf");
+  await userEvent.click(screen.getByRole("button", { name: /Cần chú ý/ }));
+  expect(screen.queryByText(doc.filename)).toBeNull();
+  expect(screen.getByText("scan.pdf")).toBeTruthy();
+  await userEvent.click(screen.getByRole("button", { name: /Tất cả/ }));
+  await userEvent.type(screen.getByLabelText("Tìm tài liệu"), "policy");
+  expect(screen.getByText(doc.filename)).toBeTruthy();
+  expect(screen.queryByText("scan.pdf")).toBeNull();
 });
 it("does not give members write controls", async () => {
   storeSession(token, 3600);

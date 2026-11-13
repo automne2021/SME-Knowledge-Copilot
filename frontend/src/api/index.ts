@@ -21,6 +21,7 @@ export const api = {
       signal,
     }),
   me: (signal?: AbortSignal) => apiFetch<User>("/auth/me", { signal }),
+  logout: () => apiFetch<{ revoked: boolean }>("/auth/logout", { method: "POST", timeout: 5000 }),
   documents: (signal?: AbortSignal) =>
     apiFetch<{ items: KnowledgeDocument[] }>("/documents?limit=100", { signal }),
   document: (key: string, signal?: AbortSignal) =>
@@ -46,6 +47,17 @@ export const api = {
     apiFetch<ChatSession>("/chat/sessions", {
       method: "POST",
       body: JSON.stringify({ title }),
+      signal,
+    }),
+  renameSession: (key: string, title: string, signal?: AbortSignal) =>
+    apiFetch<ChatSession>(`/chat/sessions/${id(key)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ title }),
+      signal,
+    }),
+  deleteSession: (key: string, signal?: AbortSignal) =>
+    apiFetch<{ id: string; deleted: boolean }>(`/chat/sessions/${id(key)}`, {
+      method: "DELETE",
       signal,
     }),
   messages: (key: string, signal?: AbortSignal) =>

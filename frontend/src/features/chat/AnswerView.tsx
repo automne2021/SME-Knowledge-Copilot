@@ -1,7 +1,55 @@
-import { CircleCheck, CircleExclamationPoint, FileText, SearchX, Sparkles } from "lucide-react";
+import { useState } from "react";
+import {
+  Check,
+  CircleCheck,
+  CircleExclamationPoint,
+  Copy,
+  FileText,
+  SearchX,
+  Sparkles,
+} from "lucide-react";
 import type { Answer, Citation } from "../../api/types";
 import { Feedback } from "../../components/ui/Feedback";
 import { sourceLocation } from "../../lib/format";
+/** Plain-text answer with numbered sources, for pasting into email or chat tools. */
+export function answerText(answer: Answer) {
+  const citations = answer.citations ?? [];
+  const number = (id: string) => citations.findIndex((c) => c.evidence_id === id) + 1;
+  const claims = (answer.claims ?? []).map(
+    (claim) => `- ${claim.text} ${claim.evidence_ids.map((id) => `[${number(id)}]`).join("")}`,
+  );
+  const sources = citations.map(
+    (c, i) => `[${i + 1}] ${c.file_name}, ${sourceLocation(c.location)}`,
+  );
+  const note = "(Câu trả lời do AI tạo, hãy kiểm tra nguồn.)";
+  return [...claims, "", "Nguồn:", ...sources, "", note].join("\n");
+}
+function CopyButton({ answer }: { answer: Answer }) {
+  const [state, setState] = useState<"idle" | "done" | "failed">("idle");
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(answerText(answer));
+      setState("done");
+    } catch {
+      setState("failed");
+    }
+    setTimeout(() => setState("idle"), 2500);
+  };
+  return (
+    <button type="button" className="button button-small" onClick={() => void copy()}>
+      {state === "done" ? (
+        <Check size={15} aria-hidden="true" />
+      ) : (
+        <Copy size={15} aria-hidden="true" />
+      )}
+      {state === "done"
+        ? "Đã sao chép"
+        : state === "failed"
+          ? "Không sao chép được"
+          : "Sao chép kèm nguồn"}
+    </button>
+  );
+}
 export function AnswerView({
   answer,
   onSource,
@@ -123,6 +171,9 @@ export function AnswerView({
                 </button>
               ))}
             </div>
+          </div>
+          <div className="answer-actions">
+            <CopyButton answer={answer} />
           </div>
         </>
       )}

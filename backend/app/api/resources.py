@@ -19,9 +19,10 @@ from app.models import (
     ProcessingJob,
     QueryRun,
 )
-from app.schemas.identity import SessionCreate
+from app.schemas.identity import SessionCreate, SessionRename
 from app.services.access import document_for_user, job_for_user, session_for_user
 from app.services.chat import read_run, run_data
+from app.services.sessions import delete_session, rename_session
 
 router = APIRouter(tags=["resources"])
 PageLimit = Annotated[int, Query(ge=1, le=100)]
@@ -137,6 +138,24 @@ def sessions(db: DbSession, user: CurrentUser, request: Request, limit: PageLimi
             ]
         },
     )
+
+
+@router.patch("/chat/sessions/{session_id}")
+def rename(
+    session_id: uuid.UUID,
+    payload: SessionRename,
+    db: DbSession,
+    user: CurrentUser,
+    request: Request,
+) -> dict:
+    row = rename_session(db, session_id, user, payload.title)
+    return success(request, {"id": row.id, "title": row.title, "created_at": row.created_at})
+
+
+@router.delete("/chat/sessions/{session_id}")
+def remove(session_id: uuid.UUID, db: DbSession, user: CurrentUser, request: Request) -> dict:
+    delete_session(db, session_id, user)
+    return success(request, {"id": session_id, "deleted": True})
 
 
 @router.get("/chat/sessions/{session_id}/messages")

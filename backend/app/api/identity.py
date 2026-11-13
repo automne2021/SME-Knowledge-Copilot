@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Request
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Request
+from fastapi.security import HTTPAuthorizationCredentials
 
 from app.core.db import DbSession
 from app.core.errors import success
-from app.core.security import CurrentUser, login
+from app.core.security import CurrentUser, bearer, login, logout
 from app.schemas.identity import LoginRequest
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -28,3 +31,14 @@ def login_endpoint(payload: LoginRequest, db: DbSession, request: Request) -> di
 @router.get("/me")
 def me(user: CurrentUser, request: Request) -> dict:
     return success(request, public_identity(user))
+
+
+@router.post("/logout")
+def logout_endpoint(
+    db: DbSession,
+    request: Request,
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
+) -> dict:
+    logout(db, credentials)
+    db.commit()
+    return success(request, {"revoked": True})

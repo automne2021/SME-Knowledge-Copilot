@@ -690,6 +690,7 @@ Backend dùng Pydantic với `extra=forbid`, kiểm tra enum, độ dài, eviden
 - `client_request_id` do client tạo và giữ khi retry mạng. Cùng ID + cùng input trả run/result đã có; khác input → `409 idempotency_conflict`. Run đang chạy → `409 query_in_progress` + run ID. Muốn thử lại run đã failed phải dùng ID mới.
 - Input hash tính từ question đã trim, session ID, filters chuẩn hóa, retrieval mode và top-k. Resolve idempotency sau auth và trước tạo run mới; fingerprint cấu hình thực thi được pin từ lần đầu. Replay và `GET /chat/runs/{id}` vẫn phải kiểm tra quyền/nguồn hiện tại, áp dụng che answer khi nguồn không còn khả dụng, không trả cached text đã bị xóa.
 - Lưu final message, citations, query status `completed` trong một transaction sau source revalidation. DB commit lỗi → lỗi request; không trả câu trả lời chưa lưu như đã thành công.
+- **Đổi tên/xóa phiên (13/11/2026):** chỉ chủ phiên; admin hoặc người ngoài nhận `404` như phiên không tồn tại. Cả hai lấy cùng khóa `NOWAIT` trên session như query start/publish; khóa đang bị giữ → `409 session_busy`. Xóa trước hết expire run quá deadline; còn run `running` → `409 session_busy` kèm `run_id`. Nếu không, xóa hẳn citations → messages → query runs → session trong một transaction (không soft delete: đây là dữ liệu riêng của người dùng, không cần giữ cho bất biến nào). Tài liệu nguồn không bị ảnh hưởng.
 - P1 mới được rewrite standalone query từ history có giới hạn, lưu query gốc + rewritten query, retrieve lại và kiểm tra quyền hiện tại. Assistant messages cũ không trở thành nguồn tri thức.
 
 ---
@@ -817,6 +818,7 @@ Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa c
 | `GET` | `/ready` | P0 | DB/index/config readiness; không gọi LLM tốn phí mỗi probe |
 | `POST` | `/auth/login` | P0 | Xác thực tài khoản seed, trả access token có expiry |
 | `GET` | `/auth/me` | P0 | Identity và role thực tế của người gọi |
+| `POST` | `/auth/logout` | P0 | Thu hồi token đang dùng (13/11/2026) |
 | `POST` | `/documents` | P0 | Upload tài liệu |
 | `GET` | `/documents` | P0 | Danh sách, trạng thái, filter |
 | `GET` | `/documents/{id}` | P0 | Detail và metadata |
@@ -829,13 +831,15 @@ Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa c
 | `POST` | `/chat/query` | P0 | RAG question answering |
 | `POST` | `/chat/sessions` | P0 | Tạo phiên chat |
 | `GET` | `/chat/sessions` | P0 | Chỉ các phiên của người gọi |
+| `PATCH` | `/chat/sessions/{id}` | P0 | Chủ phiên đổi tên, `{title}` 1–200 ký tự sau trim (13/11/2026) |
+| `DELETE` | `/chat/sessions/{id}` | P0 | Chủ phiên xóa hẳn phiên và lịch sử (13/11/2026) |
 | `GET` | `/chat/sessions/{id}/messages` | P0 | Lịch sử phiên |
 | `GET` | `/chat/runs/{id}` | P0 | Trạng thái/kết quả query đã được cấp quyền |
 | `POST` | `/documents/{id}/reindex` | P1 | Tạo index revision mới |
 | `POST` | `/evaluations/runs` | P1 | Trigger benchmark (có thể CLI-only ở P0) |
 | `GET` | `/evaluations/runs/{id}` | P1 | Metrics/artifacts |
 
-**Authentication:** P0 dùng bearer access token của tài khoản seed theo mục 2.5. Login trả `access_token`, `token_type`, `expires_in`; `POST /auth/login` nhận `{username,password}`. Token hết hạn trả `401`; UI yêu cầu đăng nhập lại. Không có refresh token/SSO trong P0. Trước khi public còn cần HTTPS, rate limiting và cấu hình triển khai phù hợp; không gọi auth demo là bảo mật doanh nghiệp.
+**Authentication:** P0 dùng bearer access token của tài khoản seed theo mục 2.5. Login trả `access_token`, `token_type`, `expires_in`; `POST /auth/login` nhận `{username,password}`. Token hết hạn trả `401`; UI yêu cầu đăng nhập lại. Không có refresh token/SSO trong P0. `POST /auth/logout` (13/11/2026) đặt `revoked_at` cho đúng token đang gửi, trả `{revoked: true}`; token đã thu hồi, thiếu hoặc sai định dạng trả `401`. Các token khác của cùng người dùng không bị ảnh hưởng. Trước khi public còn cần HTTPS, rate limiting và cấu hình triển khai phù hợp; không gọi auth demo là bảo mật doanh nghiệp.
 
 **Implementation Bước 04:** login JSON, username lowercase ASCII/case-normalized, extra fields bị từ chối. Password Argon2id; token opaque 256-bit, DB chỉ lưu SHA-256, expiry mặc định 3.600 giây và trạng thái revoke; identity/role được đọc lại từ SQL mỗi request. Dev seed demo.admin/demo.member lấy mật khẩu riêng từ .env, seed lại không reset hoặc nâng quyền. Login/me, read document/job, owner session create/list/history và run status đã có; full upload/content/search/chat generation/delete APIs chưa triển khai. Error/success envelopes và frontend helper đã đồng bộ. [Chi tiết/checks/giới hạn](docs/schema-identity-step04.md).
 
@@ -1047,7 +1051,8 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 | Ready có warning | Cho phép hỏi, kèm cảnh báo trang scan bị bỏ qua | Không gọi tài liệu là đã đọc đầy đủ |
 | Failed/needs_ocr | Lỗi tiếng Việt, nút retry chỉ khi hợp lệ | Scan hướng dẫn dùng bản có text |
 | Deleting/deleted | Ẩn khỏi bộ chọn nguồn; hiện cleanup state cho admin | Delete cần xác nhận tên tài liệu, không báo xóa vật lý xong ngay |
-| Chat loading | Stage ngắn “Đang tìm tài liệu/soạn trả lời”; giữ câu hỏi nếu lỗi | Không hiển thị draft trước citation validation |
+| Chat loading | “Đang tìm tài liệu và soạn câu trả lời”, đồng hồ đếm giây từ lúc gửi và khoảng thời gian thường gặp; giữ câu hỏi nếu lỗi | Không giả các bước con vì `/chat/query` trả một lần; không hiển thị draft trước citation validation |
+| History | Phiên của người dùng nhóm theo ngày (Asia/Ho_Chi_Minh), tìm theo tên, đổi tên, xóa có hộp xác nhận | Xóa phiên đang mở thì quay về màn hình hỏi mới |
 | Chat partial | Tách phần có nguồn và thông tin còn thiếu | Cảnh báo mâu thuẫn khi có, không tự chọn bên đúng |
 | Source unavailable | Thông báo nguồn không còn khả dụng | Không dùng cached excerpt để vượt qua response 410 |
 

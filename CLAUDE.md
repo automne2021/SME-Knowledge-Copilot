@@ -26,7 +26,9 @@ Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng 
 
 ## Mốc hiện tại: **M1 RAG — mục tiêu 15/11/2026**
 
-**Trạng thái 12/11/2026 (PLAN v1.30): 96,4% / 100%.**
+**Trạng thái 13/11/2026 (PLAN v1.31): 96,4% / 100%.** Thêm Bước 13 (UI v2, quản lý phiên, logout thật) trên nhánh `feat/ui-v2`, 3/4; merge vào `main` chờ người dùng duyệt ([report](docs/ui-v2-20261113.md)). Mẫu số tăng lên 106,5 nên % không tăng dù đã làm thêm.
+
+**(Lịch sử) Trạng thái 12/11/2026 (PLAN v1.30): 97,3% / 100%.**
 - Bước 00–10 hoàn thành. Bước 11 đạt 6/7: release trên `main`/`release/m1`, held-out 29/30 đã có human review, acceptance 23/23 theo phạm vi.
 - Bước 12 đạt 3/6: Compose theo phương án A, cài sạch (302 backend + 36 frontend tests đạt trên bản clone), README mới.
 - Còn mở: video demo (người dùng tự quay sau khi đổi UI), đóng góp cá nhân (ngoài README), rà soát cuối.

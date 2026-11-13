@@ -1,22 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  CircleCheck,
-  CircleExclamationPoint,
-  Eye,
-  Files,
-  LoaderCircle,
-  RotateCw,
-  Trash,
-  Upload,
-} from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Eye, RotateCw, Search, Trash2, Upload } from "lucide-react";
 import { api } from "../api";
 import { isAbort } from "../api/client";
-import type { KnowledgeDocument, Job } from "../api/types";
+import type { DocumentStatus, KnowledgeDocument, Job } from "../api/types";
 import { useAuth } from "../auth/AuthProvider";
 import { useWorkspace } from "../workspace/WorkspaceProvider";
 import { ErrorFeedback, Feedback, Loading } from "../components/ui/Feedback";
 import { DeleteDialog, UploadDialog } from "../features/documents/DocumentDialogs";
 import { useDocuments } from "../features/documents/useDocuments";
+import { clock, useNow } from "../hooks/useElapsed";
 import {
   fileKind,
   fileSize,
@@ -34,6 +26,30 @@ const statusLabels = {
   deleting: "Đang xóa",
   deleted: "Đã xóa",
 };
+type StatusFilter = "all" | "ready" | "active" | "attention";
+const FILTERS: { key: StatusFilter; label: string; match: (status: DocumentStatus) => boolean }[] =
+  [
+    { key: "all", label: "Tất cả", match: () => true },
+    { key: "ready", label: "Sẵn sàng", match: (s) => s === "ready" },
+    {
+      key: "active",
+      label: "Đang xử lý",
+      match: (s) => s === "queued" || s === "processing" || s === "deleting",
+    },
+    { key: "attention", label: "Cần chú ý", match: (s) => s === "failed" || s === "needs_ocr" },
+  ];
+/** "Bước 4/6 · Lập chỉ mục · 8/14 đoạn" from the worker's real stage and chunk counters. */
+export function progressText(job: Job) {
+  const step = INGEST_STAGES.indexOf(job.stage);
+  const parts = [];
+  if (step >= 0) parts.push(`Bước ${step + 1}/${INGEST_STAGES.length}`);
+  parts.push(stageLabel[job.stage] ?? "Đang xử lý tài liệu");
+  const done = job.progress?.completed_units,
+    total = job.progress?.total_units;
+  if (typeof done === "number" && typeof total === "number" && total > 0)
+    parts.push(`${done}/${total} đoạn`);
+  return parts.join(" · ");
+}
 export default function DocumentsPage() {
   const { user } = useAuth();
   const { openSource } = useWorkspace();
@@ -44,8 +60,20 @@ export default function DocumentsPage() {
   const [notice, setNotice] = useState(""),
     [actionError, setActionError] = useState<unknown>(null),
     [busy, setBusy] = useState<string | null>(null);
+  const [query, setQuery] = useState(""),
+    [filter, setFilter] = useState<StatusFilter>("all");
   const controller = useRef<AbortController | null>(null);
   useEffect(() => () => controller.current?.abort(), []);
+  const visible = useMemo(() => {
+    const needle = query.trim().toLocaleLowerCase("vi");
+    const match = FILTERS.find((f) => f.key === filter)!.match;
+    return documents.items.filter(
+      (d) => match(d.status) && (!needle || d.filename.toLocaleLowerCase("vi").includes(needle)),
+    );
+  }, [documents.items, query, filter]);
+  const now = useNow(
+    documents.items.some((d) => d.status === "queued" || d.status === "processing"),
+  );
   const retry = async (job: Job) => {
     if (busy) return;
     const next = new AbortController();
@@ -129,48 +157,44 @@ export default function DocumentsPage() {
         </div>
       ) : (
         <>
-          <div className="stats" aria-label="Tổng quan tài liệu">
-            {(
-              [
-                ["Tổng tài liệu", documents.items.length, Files, ""],
-                [
-                  "Sẵn sàng",
-                  documents.items.filter((d) => d.status === "ready").length,
-                  CircleCheck,
-                  "ok",
-                ],
-                [
-                  "Đang xử lý",
-                  documents.items.filter((d) => ["queued", "processing"].includes(d.status)).length,
-                  LoaderCircle,
-                  "busy",
-                ],
-                [
-                  "Cần chú ý",
-                  documents.items.filter((d) => ["failed", "needs_ocr"].includes(d.status)).length,
-                  CircleExclamationPoint,
-                  "warn",
-                ],
-              ] as const
-            ).map(([label, value, Icon, tone]) => (
-              <div key={label} className={`stat stat-${tone || "total"}`}>
-                <Icon size={18} aria-hidden="true" />
-                <div>
-                  <strong>{value}</strong>
-                  <span>{label}</span>
-                </div>
-              </div>
-            ))}
-          </div>
           <div className="list-toolbar">
-            <span>
-              {documents.items.length} tài liệu
-              {documents.items.length === 100 && " · Đang hiển thị tối đa 100 tài liệu gần nhất"}
-            </span>
+            <label className="search-field">
+              <Search size={16} aria-hidden="true" />
+              <span className="sr-only">Tìm tài liệu</span>
+              <input
+                type="search"
+                placeholder="Tìm theo tên tài liệu"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </label>
+            <div className="filter-group" role="group" aria-label="Lọc theo trạng thái">
+              {FILTERS.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  className="filter-chip"
+                  aria-pressed={filter === option.key}
+                  onClick={() => setFilter(option.key)}
+                >
+                  {option.label}
+                  <span className="count">
+                    {documents.items.filter((d) => option.match(d.status)).length}
+                  </span>
+                </button>
+              ))}
+            </div>
             <button className="text-button" onClick={documents.refresh}>
+              <RotateCw size={14} aria-hidden="true" />
               Làm mới
             </button>
           </div>
+          {documents.items.length === 100 && (
+            <p className="hint">Đang hiển thị tối đa 100 tài liệu gần nhất.</p>
+          )}
+          {visible.length === 0 && (
+            <p className="hint">Không có tài liệu nào khớp bộ lọc hiện tại.</p>
+          )}
           <table className="document-table">
             <thead>
               <tr>
@@ -181,7 +205,7 @@ export default function DocumentsPage() {
               </tr>
             </thead>
             <tbody>
-              {documents.items.map((doc) => {
+              {visible.map((doc) => {
                 const job = doc.latest_job_id ? documents.jobs[doc.latest_job_id] : undefined;
                 const cleanupFailed = doc.status === "deleting" && job?.status === "failed";
                 const retryable =
@@ -209,9 +233,17 @@ export default function DocumentsPage() {
                       <span className={`status status-${cleanupFailed ? "failed" : doc.status}`}>
                         {cleanupFailed ? "Lỗi dọn dẹp" : statusLabels[doc.status]}
                       </span>
+                      {(doc.status === "queued" || doc.status === "processing") && (
+                        <small className="elapsed-note">
+                          {clock(
+                            Math.max(0, Math.floor((now - Date.parse(doc.created_at)) / 1000)),
+                          )}{" "}
+                          kể từ lúc tải lên
+                        </small>
+                      )}
                       {doc.status === "processing" && job && (
                         <>
-                          <small>{stageLabel[job.stage] ?? "Đang xử lý tài liệu"}</small>
+                          <small>{progressText(job)}</small>
                           {INGEST_STAGES.includes(job.stage) && (
                             <span className="stage-bar" aria-hidden="true">
                               <span
@@ -279,7 +311,7 @@ export default function DocumentsPage() {
                             className="text-button destructive"
                             onClick={() => setRemove(doc)}
                           >
-                            <Trash size={15} aria-hidden="true" />
+                            <Trash2 size={15} aria-hidden="true" />
                             Xóa
                           </button>
                         )}

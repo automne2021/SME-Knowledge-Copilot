@@ -71,10 +71,7 @@ def login(db: Session, username: str, password: str) -> tuple[str, int, User]:
     return token, ttl, user
 
 
-def get_current_user(
-    db: DbSession,
-    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
-) -> User:
+def active_token(db: Session, credentials: HTTPAuthorizationCredentials | None) -> AuthToken:
     if credentials is None or not re.fullmatch(r"[A-Za-z0-9_-]{43}", credentials.credentials):
         raise unauthorized()
     token = db.scalar(
@@ -84,13 +81,30 @@ def get_current_user(
             AuthToken.revoked_at.is_(None),
         )
     )
-    user = db.get(User, token.user_id) if token else None
+    if token is None:
+        raise unauthorized()
+    return token
+
+
+def get_current_user(
+    db: DbSession,
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
+) -> User:
+    token = active_token(db, credentials)
+    user = db.get(User, token.user_id)
     if user is None or not user.is_active or user.role not in RAG_ROLES:
         raise unauthorized()
     return user
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+def logout(db: Session, credentials: HTTPAuthorizationCredentials | None) -> None:
+    """Revoke only the presented token; other sessions of the same user stay valid."""
+    token = active_token(db, credentials)
+    token.revoked_at = datetime.now(UTC)
+    db.flush()
 
 
 def require_admin(user: User) -> User:

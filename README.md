@@ -11,6 +11,7 @@ Trợ lý hỏi đáp tài liệu nội bộ tiếng Việt cho doanh nghiệp n
 - **Ba trạng thái trả lời:** có nguồn dẫn, trả lời một phần (nêu rõ phần còn thiếu hoặc mâu thuẫn), và chưa đủ bằng chứng. Lỗi kỹ thuật được báo là lỗi, không bị giả thành "không có thông tin".
 - **Xóa là ngừng dùng ngay.** Tài liệu bị xóa không còn được dùng để trả lời, kể cả trong lịch sử chat, trước khi dữ liệu được dọn hết.
 - **Phân quyền:** quản trị viên quản lý tài liệu; thành viên chỉ hỏi đáp; mỗi người chỉ xem được lịch sử chat của mình.
+- **Lịch sử và thao tác hằng ngày:** đổi tên, xóa cuộc trò chuyện (có xác nhận); chọn tài liệu cần hỏi; sao chép câu trả lời kèm nguồn; tìm và lọc tài liệu theo trạng thái; đồng hồ chờ khi hỏi và tiến độ xử lý tài liệu theo từng bước.
 
 ![Tài liệu và nguồn tham chiếu](docs/images/documents-source.png)
 
@@ -48,7 +49,7 @@ flowchart LR
 | Retrieval Recall@5 / MRR@5 (26 câu có đáp án) | 1,0 / 0,98 |
 | Thời gian trả lời p50 / p95 (một request mỗi lúc) | ≈ 39 s / 45 s, gồm cả thời gian chờ giãn request cho free tier |
 
-Kiểm thử phần mềm: **302 test backend** (trên PostgreSQL và Qdrant thật), **277 test eval tooling** và **36 test frontend**, đạt trên một bản clone sạch. 23/23 kịch bản nghiệm thu của spec đạt theo phạm vi bằng chứng đã ghi.
+Kiểm thử phần mềm: **311 test backend** (trên PostgreSQL và Qdrant thật), **277 test eval tooling** và **45 test frontend** đều đạt. Bản release M1 (302 / 277 / 36 test) đã được kiểm chứng thêm trên một bản clone sạch. 23/23 kịch bản nghiệm thu của spec đạt theo phạm vi bằng chứng đã ghi.
 
 Bộ dữ liệu nhỏ và là dữ liệu giả lập, nên các con số trên **không** phải độ chính xác trên tài liệu doanh nghiệp thật. Chi tiết và dữ liệu gốc: [báo cáo held-out](docs/human-review-heldout-20261112.md), [nghiệm thu](docs/final-acceptance-20261112.md), [cài sạch](docs/fresh-setup-20261112.md), [bằng chứng](eval/reports/final-20261112/).
 
@@ -98,7 +99,6 @@ cd frontend; npm.cmd run test
 - Chỉ dùng dense retrieval; chưa có hybrid search hay reranker.
 - Worker và API chỉ được kiểm chứng trên Windows; chưa có Docker image chạy được RAG trên Linux.
 - Một workspace demo, đăng nhập bằng tài khoản seed; chưa có SSO hay multi-tenant thật.
-- Đăng xuất chỉ xóa token ở trình duyệt; backend chưa có endpoint thu hồi token, nên token cũ còn hiệu lực tới khi hết hạn (1 giờ).
 - Trích dẫn đúng ID chưa đảm bảo ý trả lời đúng nghĩa; RAG giảm nhưng không loại bỏ hoàn toàn việc model trả lời sai.
 
 ## Hướng phát triển

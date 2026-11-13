@@ -3,13 +3,14 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthProvider";
 import { ErrorFeedback, Feedback, Loading } from "../components/ui/Feedback";
 import { isAbort } from "../api/client";
-import { BookOpenCheck, Quote, SearchX, ShieldCheck } from "lucide-react";
+import { BookOpenCheck, Eye, EyeOff } from "lucide-react";
 export default function LoginPage() {
   const auth = useAuth();
   const [busy, setBusy] = useState(false),
     [error, setError] = useState<unknown>(null);
   const [username, setUsername] = useState(""),
-    [password, setPassword] = useState("");
+    [password, setPassword] = useState(""),
+    [reveal, setReveal] = useState(false);
   if (auth.user) return <Navigate to="/chat" replace />;
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,39 +28,6 @@ export default function LoginPage() {
   };
   return (
     <main className="login-page">
-      <section className="login-intro" aria-label="Giới thiệu">
-        <div className="brand brand-inverse">
-          <span className="brand-mark" aria-hidden="true">
-            <BookOpenCheck size={18} />
-          </span>
-          Knowledge Copilot
-        </div>
-        <h2>Hỏi đáp tài liệu nội bộ, có nguồn để kiểm tra.</h2>
-        <ul>
-          <li>
-            <Quote size={18} aria-hidden="true" />
-            <span>
-              <strong>Trích dẫn từ tài liệu gốc</strong>
-              Mỗi ý trong câu trả lời gắn với đoạn nguồn, mở ra là thấy đúng trang, đoạn hoặc dòng.
-            </span>
-          </li>
-          <li>
-            <SearchX size={18} aria-hidden="true" />
-            <span>
-              <strong>Biết nói “chưa đủ bằng chứng”</strong>
-              Không có thông tin trong tài liệu thì không tự bịa câu trả lời.
-            </span>
-          </li>
-          <li>
-            <ShieldCheck size={18} aria-hidden="true" />
-            <span>
-              <strong>Đúng quyền, đúng phiên bản</strong>
-              Chỉ dùng tài liệu đã xử lý xong trong không gian của bạn; tài liệu bị xóa ngừng được
-              dùng ngay.
-            </span>
-          </li>
-        </ul>
-      </section>
       <section className="login-box">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
@@ -68,7 +36,7 @@ export default function LoginPage() {
           Knowledge Copilot
         </div>
         <h1>Đăng nhập</h1>
-        <p className="muted">Truy cập kiến thức trong không gian làm việc của bạn.</p>
+        <p className="muted">Hỏi đáp tài liệu nội bộ, có nguồn để kiểm tra.</p>
         {auth.expired && (
           <Feedback title="Phiên đăng nhập đã hết hạn">
             Vui lòng đăng nhập lại để tiếp tục.
@@ -103,25 +71,43 @@ export default function LoginPage() {
               disabled={busy}
             />
           </label>
-          <label className="field">
-            Mật khẩu
-            <input
-              type="password"
-              name="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              maxLength={128}
-              disabled={busy}
-            />
-          </label>
+          <div className="field">
+            <label htmlFor="password">Mật khẩu</label>
+            <span className="password-input">
+              <input
+                id="password"
+                type={reveal ? "text" : "password"}
+                name="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                maxLength={128}
+                disabled={busy}
+              />
+              <button
+                type="button"
+                className="icon-button small"
+                aria-label={reveal ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                aria-pressed={reveal}
+                onClick={() => setReveal((v) => !v)}
+              >
+                {reveal ? (
+                  <EyeOff size={16} aria-hidden="true" />
+                ) : (
+                  <Eye size={16} aria-hidden="true" />
+                )}
+              </button>
+            </span>
+          </div>
           <button className="button button-primary full-width" disabled={busy || auth.loading}>
             {busy ? "Đang đăng nhập…" : "Đăng nhập"}
           </button>
         </form>
         {auth.loading && <Loading label="Đang kiểm tra phiên…" />}
-        <p className="hint">Sử dụng tài khoản được quản trị viên cung cấp.</p>
+        <p className="hint">
+          Tài khoản do quản trị viên cấp. Quên mật khẩu, hãy liên hệ quản trị viên.
+        </p>
       </section>
     </main>
   );

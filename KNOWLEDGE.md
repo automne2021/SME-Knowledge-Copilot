@@ -1510,6 +1510,28 @@ Audit bàn giao cuối:384protected file hashes không đổi,455candidate files
 - **Đăng xuất phía server (phát hiện 12/11):** API không có `/auth/logout`. Nút "Đăng xuất" chỉ xóa token khỏi sessionStorage; token còn hiệu lực ở server tới hết TTL 1 giờ. Đây là giới hạn đã biết từ kế hoạch UI ("chưa revoke-token"), nay ghi vào README. Chưa thêm endpoint vì release đã freeze; làm sau M1 kèm cập nhật spec và test. Bài học phụ: script kiểm thử bỏ qua status code của request dọn dẹp đã khiến report ghi sai là token đã bị thu hồi; request dọn dẹp cũng phải kiểm tra kết quả.
 - **File chuẩn bị cá nhân** (bộ Q&A phỏng vấn, kịch bản video) chặn bằng `.git/info/exclude` thay vì `.gitignore`, để tên file không xuất hiện trên repo công khai.
 
+### K-105 — UI v2: quản lý phiên, logout thật và hiển thị thời gian chờ trung thực
+
+**Ngày / loại:** 13/11/2026, người dùng duyệt mockup và phạm vi đợt "UI v2 + tính năng nhỏ". Nhánh `feat/ui-v2`, chưa merge vào `main`. [Report](docs/ui-v2-20261113.md).
+
+**Backend (3 endpoint, không migration):**
+- `POST /auth/logout` đặt `revoked_at` cho đúng token đang gửi. Cột này đã có từ Bước 04 và `get_current_user` đã lọc `revoked_at IS NULL`, nên chỉ cần thêm đường ghi. Không thu hồi mọi token của user: đăng xuất ở một tab không nên đá các phiên khác. Giới hạn "đăng xuất không thu hồi token" ở K-104 được gỡ.
+- `PATCH`/`DELETE /chat/sessions/{id}` chỉ cho chủ phiên. Scope lookup chạy trước, nên admin và người ngoài nhận 404 giống phiên không tồn tại (không lộ ID có thật).
+- **Xóa hẳn thay vì soft delete.** Lịch sử chat là dữ liệu riêng của người dùng; không bất biến nào cần giữ nó sau khi chủ phiên muốn xóa, và soft delete sẽ buộc mọi truy vấn lịch sử thêm một điều kiện lọc. Thứ tự xóa theo khóa ngoại: citations → messages → query runs → session, trong một transaction.
+- **Không xóa khi đang có câu hỏi chạy.** Câu hỏi không giữ lock trong lúc gọi model; nếu xóa giữa chừng thì lúc publish, run đã biến mất. Vì vậy delete lấy cùng khóa `NOWAIT` trên session như query start/publish, expire các run quá deadline, rồi trả `409 session_busy` nếu còn run `running`. Run đã quá deadline thì publish tự thất bại vì `remaining(deadline)` được kiểm tra trước khi đọc run.
+
+**Frontend:**
+- Bố cục sidebar trái (tài khoản và đăng xuất ở cuối), trang Lịch sử mới, đăng nhập một cột. Bảng màu slate trung tính, một màu nhấn xanh #1D4ED8; màu trạng thái giữ nghĩa cố định.
+- Font Be Vietnam Pro tự host qua `@fontsource/be-vietnam-pro@5.3.0` thay cho Google Fonts: app chạy được khi không có mạng và không gửi request ra ngoài lúc mở trang.
+- **Thời gian chờ trung thực:** `/chat/query` trả một lần, nên UI chỉ hiện đồng hồ đếm giây từ lúc gửi (lấy từ `startedAt` của pending query, sống sót qua reload) và khoảng "thường mất 30–45 giây" (p50/p95 đo ở held-out là 39/45 s). Không vẽ thanh % hay các bước con giả. Muốn hiện bước thật phải thêm stream (SSE): để sau.
+- Tiến độ ingest lấy từ `stage` và `progress.completed_units/total_units` mà worker đã ghi sẵn trong `GET /jobs/{id}` ("Bước 4/6 · Lập chỉ mục · 8/14 đoạn"), cộng thời gian kể từ lúc tải lên. Không cần đổi backend.
+- Nhóm lịch sử theo ngày lịch Asia/Ho_Chi_Minh, không theo UTC: phiên lúc 01:30 sáng giờ Việt Nam vẫn là "Hôm nay".
+- Đăng xuất: gọi revoke trước, lỗi mạng vẫn xóa token ở tab (token khi đó hết hạn theo TTL).
+
+**Kiểm chứng:** toàn bộ backend 311/311; 9 test mới trên PostgreSQL thật (gồm admin/người ngoài 404, 409 khi đang chạy, expire run quá hạn rồi xóa đủ 4 bảng). Frontend 45 test (9 mới). Smoke HTTP 14/14 trên stack dev với LLM tắt. Ảnh chụp bằng Edge headless qua CDP ở 1440×900 và 390×844.
+
+**Chưa làm:** stream các bước khi hỏi, nhãn "có nguồn đã bị xóa" trong Lịch sử, thư mục, OCR.
+
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai
 
 - Retrieval/answer quality và human scoring trên pipeline thật; E5/Gemini compatibility smoke đã có K-030/K-034–036, chưa kiểm chứng thinking overrides hoặc chi phí theo hóa đơn.

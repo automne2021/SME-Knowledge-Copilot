@@ -1,6 +1,6 @@
 # PLAN — SME Knowledge Copilot
 
-> **Phiên bản:** 1.30 — chốt release M1 trên nhánh `release/m1` (Bước 11 mục 1), 12/11/2026 (lập kế hoạch 01/11/2026)<br>
+> **Phiên bản:** 1.31 — thêm Bước 13 (UI v2 + quản lý phiên + logout thật) trên nhánh `feat/ui-v2`, 13/11/2026; v1.30 chốt release M1 trên `release/m1` 12/11/2026 (lập kế hoạch 01/11/2026)<br>
 > **Nguồn yêu cầu:** [SME_Knowledge_Copilot_RAG_Specification.md](SME_Knowledge_Copilot_RAG_Specification.md), v2.1  
 > **Mục tiêu:** hoàn thành project RAG thuần có demo, test và benchmark tái lập; hướng tới M1 ngày 15/11/2026.  
 > **Nhân sự:** 2 người. Kế hoạch theo thứ tự phụ thuộc; thời lượng là ước lượng, không phải cam kết.  
@@ -89,7 +89,10 @@ Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/
 | 10 | 12 | 6/6 — UI + Chrome E2E/keyboard/navigation/reload/expiry; human-quality còn Bước11 | 12 |
 | 11 | 8 | 6/7 — mục 1 release (`release/m1`) và mục 2–5, 7; mục 6 conditional chưa cộng | 48/7≈6,8571 |
 | 12 | 5 | 4/6 — mục 1 Compose, mục 2 cài sạch, mục 3 README, mục 6 rà soát; video (mục 4) và đóng góp (mục 5) do người dùng làm | 20/6≈3,3333 |
-| Tổng | 102,5 | `(89,5 + 8×6/7 + 5×4/6) / 102,5` | **97,3% / 100%** |
+| 13 | 4 | 3/4 — mục 1 ba endpoint + test, mục 2 UI v2 + test, mục 3 smoke/ảnh chụp/tài liệu; mục 4 merge vào `main` chờ người dùng duyệt | 3 |
+| Tổng | 106,5 | `(89,5 + 8×6/7 + 5×4/6 + 4×3/4) / 106,5` | **96,4% / 100%** |
+
+**V1.31 (13/11/2026):** người dùng duyệt đợt "UI v2 + tính năng nhỏ" sau mockup. Thêm Bước 13 trọng số 4 (ước lượng khoảng 4 giờ công: 3 endpoint, 4 màn hình, test, smoke), mẫu số 102,5 → 106,5. Phần trăm giảm từ 97,3% xuống 96,4% vì phạm vi tăng, không phải vì việc cũ bị mất. Bước 13 gồm: (1) `POST /auth/logout`, `PATCH`/`DELETE /chat/sessions/{id}` cùng test PostgreSQL thật; (2) bố cục sidebar, trang Lịch sử, đăng nhập một cột, đồng hồ chờ, chip phạm vi, sao chép kèm nguồn, tìm/lọc tài liệu, tiến độ ingest từ job thật; (3) smoke HTTP, ảnh chụp Edge headless, spec/KNOWLEDGE/README/report; (4) merge `feat/ui-v2` vào `main` sau khi người dùng xem. [Report](docs/ui-v2-20261113.md), [K-105](KNOWLEDGE.md).
 
 V1.29 không đổi trọng số hoặc mẫu số102,5. Bước11ghi nhận mục2–5 theo [held-out đã chấm](docs/human-review-heldout-20261112.md), thêm mục7 theo [acceptance23scenarios và adversarial đã chấm](docs/human-review-adversarial-20261112.md). Mục1chốt release/code commit và mục6chính sách sau-test còn mở, chưa cộng mục6khi điều kiện chưa phát sinh. Lỗi provider vẫn nằm trong mẫu số benchmark; acceptance được chứng minh theo từng contract/evidence, không có nghĩa toàn bộ native requests đều200 hoặc đãfreshsetup. Không tăng theo số tests/accuracy.
 

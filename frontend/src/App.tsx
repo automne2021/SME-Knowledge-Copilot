@@ -6,6 +6,7 @@ import { Loading } from "./components/ui/Feedback";
 import LoginPage from "./pages/LoginPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import ChatPage from "./pages/ChatPage";
+import HistoryPage from "./pages/HistoryPage";
 function Protected() {
   const { user, loading } = useAuth();
   if (loading)
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/chat/:sessionId" element={<ChatPage />} />
           <Route path="/documents" element={<DocumentsPage />} />
+          <Route path="/history" element={<HistoryPage />} />
           <Route path="*" element={<Navigate to="/chat" replace />} />
         </Route>
       </Routes>

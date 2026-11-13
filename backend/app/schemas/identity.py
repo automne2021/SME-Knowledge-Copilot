@@ -19,3 +19,8 @@ class SessionCreate(BaseModel):
     title: Annotated[
         str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)
     ] = "Cuộc trò chuyện mới"
+
+
+class SessionRename(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    title: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]

@@ -12,7 +12,8 @@ import { useChat } from "../features/chat/useChat";
 import { savePending } from "../features/chat/pending";
 import { SOURCE_UNAVAILABLE } from "../features/sources/SourcePanel";
 import { SUGGESTED_QUESTIONS } from "../features/chat/suggestions";
-import { ArrowUp, BookOpenCheck, Files, Funnel, Sparkles } from "lucide-react";
+import { ArrowUp, BookOpenCheck, Clock, Files, Funnel, LoaderCircle, X } from "lucide-react";
+import { clock, useElapsed } from "../hooks/useElapsed";
 export default function ChatPage() {
   const { sessionId } = useParams();
   return <Conversation key={sessionId ?? "new"} sessionId={sessionId} />;
@@ -137,6 +138,8 @@ function Conversation({ sessionId }: { sessionId?: string }) {
       location: citation.location,
     });
   const busy = chat.busy || creating;
+  const elapsed = useElapsed(busy ? (chat.pending?.startedAt ?? null) : null);
+  const chosen = selected.map((id) => documents.find((d) => d.id === id));
   return (
     <section className="chat-page">
       <div className="chat-heading">
@@ -214,20 +217,19 @@ function Conversation({ sessionId }: { sessionId?: string }) {
           )}
         {busy && (
           <div className="thinking" role="status">
-            <span className="answer-avatar" aria-hidden="true">
-              <Sparkles size={16} />
-            </span>
-            <div>
+            <LoaderCircle className="spin thinking-icon" size={18} aria-hidden="true" />
+            <div className="thinking-body">
               <p className="thinking-title">
-                {creating ? "Đang tạo cuộc trò chuyện…" : "Đang xử lý câu hỏi…"}
-                <span className="dots" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </span>
+                {creating ? "Đang tạo cuộc trò chuyện…" : "Đang tìm tài liệu và soạn câu trả lời…"}
+                {!creating && chat.pending && (
+                  <span className="elapsed" aria-label={`Đã chờ ${elapsed} giây`}>
+                    <Clock size={14} aria-hidden="true" />
+                    {clock(elapsed)}
+                  </span>
+                )}
               </p>
               <p className="hint">
-                Tìm trong tài liệu, soạn câu trả lời và kiểm tra nguồn trước khi hiển thị.
+                Thường mất 30–45 giây. Câu trả lời chỉ hiển thị sau khi đã kiểm tra trích dẫn.
               </p>
             </div>
           </div>
@@ -352,6 +354,25 @@ function Conversation({ sessionId }: { sessionId?: string }) {
               )}
             </div>
           </details>
+          {selected.length > 0 && (
+            <ul className="scope-chips" aria-label="Tài liệu đang hỏi">
+              {chosen.map((doc, i) => (
+                <li key={selected[i]}>
+                  <span>{doc?.filename ?? "Tài liệu không còn trong danh sách"}</span>
+                  <button
+                    type="button"
+                    aria-label={`Bỏ ${doc?.filename ?? "tài liệu"} khỏi phạm vi`}
+                    disabled={busy || Boolean(chat.pending)}
+                    onClick={() =>
+                      setSelected((current) => current.filter((id) => id !== selected[i]))
+                    }
+                  >
+                    <X size={14} aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="composer-box">
             <label htmlFor="question" className="sr-only">
               Câu hỏi của bạn
