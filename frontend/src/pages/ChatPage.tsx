@@ -152,7 +152,10 @@ function Conversation({ sessionId }: { sessionId?: string }) {
           (m.content === chat.pending!.payload.question &&
             Date.parse(m.created_at) >= chat.pending!.startedAt - 60_000)),
     );
-  const failure = chat.error instanceof ApiError ? failureCopy(chat.error.code) : null;
+  const failure =
+    chat.error instanceof ApiError
+      ? failureCopy(chat.error.code, chat.error.details?.reason)
+      : null;
   const orphanFailure = failureCopy(chat.orphanRun?.error_code);
   const askAgain = () => {
     const previous = [...chat.messages].reverse().find((m) => m.role === "user");

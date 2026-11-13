@@ -42,15 +42,16 @@ def test_preflight_refuses_unconfirmed_or_unpinned_endpoint(change):
 
 
 @pytest.mark.parametrize(
-    "status,code",
+    "status,code,reason",
     [
-        (429, "model_unavailable"),
-        (503, "model_unavailable"),
-        (401, "model_unavailable"),
-        (302, "model_unavailable"),
+        (429, "model_unavailable", "quota"),
+        (503, "model_unavailable", "overloaded"),
+        (500, "model_unavailable", "overloaded"),
+        (401, "model_unavailable", "rejected"),
+        (302, "model_unavailable", "rejected"),
     ],
 )
-def test_no_http_retry_redirect_or_fallback(monkeypatch, status, code):
+def test_no_http_retry_redirect_or_fallback(monkeypatch, caplog, status, code, reason):
     calls = []
     real = httpx.AsyncClient
 
@@ -69,8 +70,56 @@ def test_no_http_retry_redirect_or_fallback(monkeypatch, status, code):
     with pytest.raises(AppError) as exc:
         GeminiProvider(settings()).generate({}, time.monotonic() + 2)
     assert exc.value.code == code and len(calls) == 1
+    assert exc.value.status_code == 503 and exc.value.details == {"reason": reason}
     assert "must-not-leak" not in str(exc.value)
     assert calls[0].headers["x-goog-api-key"] == "test-only-key"
+    # The provider status is logged for diagnosis; bodies and the key never are.
+    assert f"HTTP {status} ({reason})" in caplog.text
+    assert "must-not-leak" not in caplog.text and "test-only-key" not in caplog.text
+
+
+def test_hung_provider_call_times_out_at_the_call_bound(monkeypatch, caplog):
+    real = httpx.AsyncClient
+
+    async def hang(request):
+        await asyncio.sleep(5)
+        return httpx.Response(200, json={})
+
+    monkeypatch.setattr(
+        "app.services.gemini.httpx.AsyncClient",
+        lambda **kwargs: real(transport=httpx.MockTransport(hang), **kwargs),
+    )
+    provider = GeminiProvider(settings().model_copy(update={"llm_call_timeout_seconds": 0.2}))
+    started = time.monotonic()
+    with pytest.raises(AppError) as exc:
+        provider.generate({}, time.monotonic() + 10)
+    assert exc.value.code == "model_timeout" and exc.value.status_code == 504
+    assert time.monotonic() - started < 2
+    assert "timed out" in caplog.text and "test-only-key" not in caplog.text
+
+
+def test_network_error_is_classified_without_retry(monkeypatch):
+    calls = []
+    real = httpx.AsyncClient
+
+    def fail(request):
+        calls.append(request)
+        raise httpx.ConnectError("offline", request=request)
+
+    monkeypatch.setattr(
+        "app.services.gemini.httpx.AsyncClient",
+        lambda **kwargs: real(transport=httpx.MockTransport(fail), **kwargs),
+    )
+    with pytest.raises(AppError) as exc:
+        GeminiProvider(settings()).generate({}, time.monotonic() + 2)
+    assert exc.value.code == "model_unavailable" and exc.value.details == {"reason": "network"}
+    assert len(calls) == 1
+
+
+def test_default_call_timeout_fails_a_hung_call_well_before_the_query_deadline():
+    defaults = type(get_settings()).model_fields
+    assert defaults["llm_call_timeout_seconds"].default == 60
+    assert defaults["query_timeout_seconds"].default == 150
 
 
 def test_actual_count_payload_and_safe_usage_thought_filter(monkeypatch):

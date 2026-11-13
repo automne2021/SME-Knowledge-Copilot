@@ -49,7 +49,7 @@ flowchart LR
 | Retrieval Recall@5 / MRR@5 (26 câu có đáp án) | 1,0 / 0,98 |
 | Thời gian trả lời p50 / p95 (một request mỗi lúc) | ≈ 39 s / 45 s, gồm cả thời gian chờ giãn request cho free tier |
 
-Kiểm thử phần mềm: **311 test backend** (trên PostgreSQL và Qdrant thật), **277 test eval tooling** và **48 test frontend** đều đạt. Bản release M1 (302 / 277 / 36 test) đã được kiểm chứng thêm trên một bản clone sạch. 23/23 kịch bản nghiệm thu của spec đạt theo phạm vi bằng chứng đã ghi.
+Kiểm thử phần mềm: **316 test backend** (trên PostgreSQL và Qdrant thật), **277 test eval tooling** và **49 test frontend** đều đạt. Bản release M1 (302 / 277 / 36 test) đã được kiểm chứng thêm trên một bản clone sạch. 23/23 kịch bản nghiệm thu của spec đạt theo phạm vi bằng chứng đã ghi.
 
 Bộ dữ liệu nhỏ và là dữ liệu giả lập, nên các con số trên **không** phải độ chính xác trên tài liệu doanh nghiệp thật. Chi tiết và dữ liệu gốc: [báo cáo held-out](docs/human-review-heldout-20261112.md), [nghiệm thu](docs/final-acceptance-20261112.md), [cài sạch](docs/fresh-setup-20261112.md), [bằng chứng](eval/reports/final-20261112/).
 

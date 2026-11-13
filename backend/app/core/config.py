@@ -64,7 +64,9 @@ class Settings(BaseSettings):
     llm_max_output_tokens: int = Field(default=800, ge=128, le=8192)
     llm_safety_margin_tokens: int = Field(default=256, ge=64)
     llm_context_window_tokens: int = Field(default=32768, ge=1024, le=1_048_576)
-    llm_call_timeout_seconds: float = Field(default=120, gt=0, le=120)
+    # 60 s per provider call: the slowest held-out query took 45.5 s end to end (including eval
+    # pacing), so normal calls fit with margin, while a hung call fails at ~1 min instead of 2.
+    llm_call_timeout_seconds: float = Field(default=60, gt=0, le=120)
     query_timeout_seconds: float = Field(default=150, gt=0, le=150)
     llm_max_concurrency: int = Field(default=2, ge=1, le=2)
     stt_model: str = "small"

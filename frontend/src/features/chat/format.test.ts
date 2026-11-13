@@ -5,6 +5,7 @@ import { clock } from "../../hooks/useElapsed";
 import { progressText } from "../../pages/DocumentsPage";
 import { groupSessions } from "../../pages/HistoryPage";
 import type { Job } from "../../api/types";
+import { failureCopy } from "./failure";
 
 describe("plain-text helpers", () => {
   it("copies claims with numbered sources and the AI label", () => {
@@ -57,5 +58,13 @@ describe("plain-text helpers", () => {
       ["7 ngày qua", ["b"]],
       ["Cũ hơn", ["c"]],
     ]);
+  });
+  it("explains provider failures by reason and falls back by code", () => {
+    expect(failureCopy("model_unavailable", "quota")?.title).toBe("Đã hết quota Gemini free tier");
+    expect(failureCopy("model_unavailable", "overloaded")?.title).toBe("Gemini đang quá tải");
+    expect(failureCopy("model_unavailable", "rejected")?.title).toBe("Gemini từ chối yêu cầu");
+    expect(failureCopy("model_unavailable", "unknown")?.title).toBe("Chưa kết nối được model");
+    expect(failureCopy("model_timeout")?.title).toBe("Gemini không phản hồi kịp");
+    expect(failureCopy("not_a_code")).toBeNull();
   });
 });

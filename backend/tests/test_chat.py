@@ -101,6 +101,22 @@ def test_errors_do_not_publish_assistant_or_retry_failed_id(chat_env, outputs, c
         assert list(db.scalars(select(ChatMessage.role))) == ["user"]
 
 
+def test_provider_failure_reason_reaches_client_and_replay(chat_env):
+    env = chat_env
+    ready(env)
+    env.provider = FakeProvider([AppError(503, "model_unavailable", "quota", {"reason": "quota"})])
+    first = env.ask()
+    error = first.json()["error"]
+    assert first.status_code == 503 and error["code"] == "model_unavailable"
+    assert error["details"]["reason"] == "quota" and error["details"]["run_id"]
+    replay = env.ask().json()["error"]
+    assert replay["details"] == {"run_id": error["details"]["run_id"], "reason": "quota"}
+    with env.sessions() as db:
+        run = db.scalar(select(QueryRun))
+        assert run.config_json["failure_reason"] == "quota"
+        assert run.config_json["failure_http_status"] == 503
+
+
 def test_repair_once_then_success_and_citation_from_final_context_only(chat_env, monkeypatch):
     env = chat_env
     ready(env)

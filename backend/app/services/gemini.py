@@ -1,6 +1,7 @@
 """Native Gemini only; hard wall-clock HTTP bounds, no retries/tools/paid fallback."""
 
 import asyncio
+import logging
 
 import httpx
 
@@ -9,6 +10,22 @@ from app.services.answering import remaining
 
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
 MODEL = "gemini-3.5-flash-lite"
+logger = logging.getLogger(__name__)
+
+# Provider failures keep the public code model_unavailable (eval runners and clients rely on it);
+# details.reason tells the user whether to wait for quota, retry later, or fix configuration.
+FAILURE_MESSAGES = {
+    "quota": "Đã chạm giới hạn quota free tier của Gemini; thử lại sau.",
+    "overloaded": "Gemini đang quá tải hoặc lỗi tạm thời; thử lại sau ít phút.",
+    "rejected": "Gemini từ chối yêu cầu; kiểm tra cấu hình API key và model.",
+    "network": "Không kết nối được tới Gemini.",
+}
+
+
+def failure_reason(status_code: int) -> str:
+    if status_code == 429:
+        return "quota"
+    return "overloaded" if status_code >= 500 else "rejected"
 
 
 class GeminiProvider:
@@ -37,11 +54,20 @@ class GeminiProvider:
                         timeout=timeout,
                     )
         except (TimeoutError, httpx.TimeoutException):
-            raise AppError(504, "model_timeout", "Model vượt thời gian cho phép.") from None
+            logger.warning("Gemini %s timed out after %.0f s", action, timeout)
+            raise AppError(
+                504, "model_timeout", "Gemini không phản hồi trong thời gian cho phép."
+            ) from None
         except httpx.RequestError:
-            raise AppError(503, "model_unavailable", "Không kết nối được model.") from None
+            logger.warning("Gemini %s network error", action)
+            raise AppError(
+                503, "model_unavailable", FAILURE_MESSAGES["network"], {"reason": "network"}
+            ) from None
         if response.status_code != 200:
-            raise AppError(503, "model_unavailable", "Model tạm thời không khả dụng.")
+            # Status only: provider bodies may echo request content and are never logged.
+            reason = failure_reason(response.status_code)
+            logger.warning("Gemini %s returned HTTP %s (%s)", action, response.status_code, reason)
+            raise AppError(503, "model_unavailable", FAILURE_MESSAGES[reason], {"reason": reason})
         try:
             body = response.json()
             if not isinstance(body, dict):

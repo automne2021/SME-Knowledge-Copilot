@@ -949,7 +949,7 @@ Multipart field bắt buộc là `file`; filename hiển thị được sanitize
 | `document_not_ready` | Filter chỉ định document chưa ready | 409; search toàn workspace bỏ qua document đó |
 | `retrieval_unavailable` | Vector DB lỗi | 503, không trả lời giả |
 | `model_timeout` | LLM vượt deadline | 504, có request ID |
-| `model_unavailable` | Provider lỗi hoặc tạm hết khả năng phục vụ | 503, không giả thành abstention |
+| `model_unavailable` | Provider lỗi hoặc tạm hết khả năng phục vụ | 503, không giả thành abstention. Từ 13/11/2026 kèm `details.reason`: `quota` (provider trả 429), `overloaded` (5xx), `rejected` (4xx khác), `network`. Reason được lưu cùng run và trả lại khi replay cùng `client_request_id`. Log chỉ ghi action + HTTP status, không ghi body/key. Không retry |
 | `model_busy` | Hết capacity model trong API process | 429, không xếp hàng vô hạn hoặc fallback |
 | `invalid_model_output` | Sai schema/citation sau repair | 502, không publish draft |
 | `invalid_filter` | Field filter không hỗ trợ/sai kiểu | 422 |
@@ -1164,7 +1164,7 @@ Các giá trị dưới đây là giới hạn khởi đầu để triển khai/
 | Lease | 60 giây; heartbeat mỗi 15 giây | Heartbeat chạy độc lập với parse/inference nặng |
 | Embedding call/batch | 120 giây | Retry tạm thời; OOM không lặp cấu hình cũ vô hạn |
 | Vector operation | 10 giây | Typed timeout; không fallback thành empty search |
-| Query total | 150 giây, mỗi LLM call tối đa 120 giây | Repair dùng thời gian còn lại; deadline chung thắng |
+| Query total | 150 giây, mỗi LLM call mặc định 60 giây (trần cấu hình 120; trước 13/11/2026 mặc định 120) | Repair dùng thời gian còn lại; deadline chung thắng |
 | Query concurrency | 1/session, tối đa 2 LLM calls đồng thời/app ban đầu | Vượt capacity → 429, không treo hàng đợi vô hạn |
 
 Health: `/health` chỉ chứng minh process sống; `/ready` kiểm tra DB, collection/manifest/model config và trạng thái model load cần thiết. UI lỗi model không đồng nghĩa API chết. Khi shutdown, worker ngừng claim, kết thúc trong grace period hoặc để lease hết; recovery không dựa vào việc shutdown luôn sạch.
@@ -1590,7 +1590,7 @@ LLM_TIMEOUT_SECONDS=120
 
 Mẫu local trên là ví dụ cấu hình, không bắt buộc dùng LLM local làm baseline. Chọn một provider/model thực tế trước demo và lưu trong eval config. `<...>` là placeholder phải được thay; không có model/key/context window thật thì startup báo thiếu cấu hình, không tự trả mock answer. `MAX_UPLOAD_MB`/các giới hạn MB ở đây được quy ước là MiB (1.048.576 bytes), UI ghi đơn vị tương ứng.
 
-**Runtime Bước 08 (04/11/2026):** native Gemini `gemini-3.5-flash-lite`, key riêng và flags `LLM_FREE_TIER_CONFIRMED`/`LLM_QUOTA_CONFIRMED`; search/health không cần LLM key, query có evidence nhưng thiếu cấu hình trả503. Tên biến thực trong [.env.example](.env.example) là `LLM_EVIDENCE_BUDGET_TOKENS=4000`, `LLM_MAX_OUTPUT_TOKENS=800`, `LLM_CONTEXT_WINDOW_TOKENS=32768`, `LLM_SAFETY_MARGIN_TOKENS=256`, `LLM_CALL_TIMEOUT_SECONDS=120`, `QUERY_TIMEOUT_SECONDS=150`, `LLM_MAX_CONCURRENCY=2`. Prompt `rag-v1-claims`, repair≤1 và thinking MINIMAL pin trong code/config, không nhận từ client. Context32768 là app ceiling dưới model input limit, không phải thông số tối đa model. Mẫu local/BGE phía trên là phương án khác, không được dùng thay profile E5/Gemini hiện tại nếu chưa đổi fingerprint/adapter/eval. Xem [Bước 08](docs/answering-step08.md).
+**Runtime Bước 08 (04/11/2026):** native Gemini `gemini-3.5-flash-lite`, key riêng và flags `LLM_FREE_TIER_CONFIRMED`/`LLM_QUOTA_CONFIRMED`; search/health không cần LLM key, query có evidence nhưng thiếu cấu hình trả503. Tên biến thực trong [.env.example](.env.example) là `LLM_EVIDENCE_BUDGET_TOKENS=4000`, `LLM_MAX_OUTPUT_TOKENS=800`, `LLM_CONTEXT_WINDOW_TOKENS=32768`, `LLM_SAFETY_MARGIN_TOKENS=256`, `LLM_CALL_TIMEOUT_SECONDS=120` (mặc định 60 từ 13/11/2026), `QUERY_TIMEOUT_SECONDS=150`, `LLM_MAX_CONCURRENCY=2`. Prompt `rag-v1-claims`, repair≤1 và thinking MINIMAL pin trong code/config, không nhận từ client. Context32768 là app ceiling dưới model input limit, không phải thông số tối đa model. Mẫu local/BGE phía trên là phương án khác, không được dùng thay profile E5/Gemini hiện tại nếu chưa đổi fingerprint/adapter/eval. Xem [Bước 08](docs/answering-step08.md).
 
 **Validation cấu hình:** `0 ≤ overlap < chunk_size`; token budget phải hợp context window; `candidate_k ≥ final_k ≥ 1`; heartbeat nhỏ hơn lease; timeout/retry/concurrency phải dương; dimension và fingerprint phải khớp collection. `RETRIEVAL_SCORE_THRESHOLD` rỗng nghĩa là tắt cutoff. API key có thể rỗng chỉ khi local adapter được cấu hình cho phép; không in secrets trong logs/config reports.
 

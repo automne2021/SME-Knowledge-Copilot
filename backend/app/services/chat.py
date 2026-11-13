@@ -217,11 +217,14 @@ def start_run(db, user, payload, settings):
             status = previous.config_json.get(
                 "failure_http_status", 504 if code == "model_timeout" else 503
             )
+            details = {"run_id": str(previous.id)}
+            if previous.config_json.get("failure_reason"):
+                details["reason"] = previous.config_json["failure_reason"]
             raise AppError(
                 status,
                 code,
                 "Truy vấn trước đã thất bại; dùng client request ID mới để thử lại.",
-                {"run_id": str(previous.id)},
+                details,
             )
         return previous, run_data(db, user, previous)
     active = db.scalar(
@@ -276,6 +279,8 @@ def fail_run(db, run_id, error):
         row.status, row.error_code = "failed", error.code
         row.finished_at = db.scalar(select(func.clock_timestamp()))
         row.config_json = row.config_json | {"failure_http_status": error.status_code}
+        if (error.details or {}).get("reason"):
+            row.config_json = row.config_json | {"failure_reason": error.details["reason"]}
         db.commit()
 
 
@@ -459,7 +464,7 @@ def query(
         return publish(db, user, run.id, evidence, answer, trace, reason, timings, deadline)
     except AppError as exc:
         fail_run(db, run.id, exc)
-        exc.details = {"run_id": str(run.id)}
+        exc.details = {**(exc.details or {}), "run_id": str(run.id)}
         raise
     except SQLAlchemyError:
         try:
