@@ -19,6 +19,7 @@ function pause(signal: AbortSignal) {
     else signal.addEventListener("abort", abort, { once: true });
   });
 }
+export const REVALIDATE_DELAY_MS = 150;
 export function useChat(userId: string, sessionId: string | undefined) {
   const [messages, setMessages] = useState<ChatMessage[]>([]),
     [loading, setLoading] = useState(Boolean(sessionId));
@@ -72,28 +73,32 @@ export function useChat(userId: string, sessionId: string | undefined) {
   );
   useEffect(() => {
     void refresh(true);
-    const visibility = () => {
-      if (document.hidden) {
-        history.current?.abort();
-        setMessages([]);
-        setLoading(true);
-      } else void refresh(true);
+    // Returning to the tab fires both "visibilitychange" and "focus". Coalesce them into one
+    // background revalidation that keeps the thread on screen; the server response replaces it
+    // (including redactions). Clearing first caused a spinner, layout jumps and double loads.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const revalidate = () => {
+      if (document.hidden) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => void refresh(), REVALIDATE_DELAY_MS);
     };
+    // In-app deletes still clear immediately: we know the content is no longer valid.
     const invalidate = () => {
+      clearTimeout(timer);
       setMessages([]);
       setOrphanRun(null);
       void refresh(true);
     };
-    const focus = () => void refresh(true);
-    window.addEventListener("focus", focus);
-    document.addEventListener("visibilitychange", visibility);
+    window.addEventListener("focus", revalidate);
+    document.addEventListener("visibilitychange", revalidate);
     window.addEventListener(DOCUMENT_CHANGED, invalidate);
     window.addEventListener(SOURCE_UNAVAILABLE, invalidate);
     return () => {
+      clearTimeout(timer);
       history.current?.abort();
       request.current?.abort();
-      window.removeEventListener("focus", focus);
-      document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("focus", revalidate);
+      document.removeEventListener("visibilitychange", revalidate);
       window.removeEventListener(DOCUMENT_CHANGED, invalidate);
       window.removeEventListener(SOURCE_UNAVAILABLE, invalidate);
     };

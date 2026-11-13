@@ -36,6 +36,10 @@
 * {
   box-sizing: border-box;
 }
+html {
+  /* Reserve the scrollbar track so content height changes never shift the page sideways. */
+  scrollbar-gutter: stable;
+}
 body {
   margin: 0;
   min-width: 320px;
@@ -1355,6 +1359,9 @@ summary {
 .thinking-body {
   flex: 1;
   min-width: 0;
+}
+.slow-note {
+  color: var(--warning);
 }
 .thinking-title {
   display: flex;

@@ -1532,6 +1532,14 @@ Audit bàn giao cuối:384protected file hashes không đổi,455candidate files
 
 **Chưa làm:** stream các bước khi hỏi, nhãn "có nguồn đã bị xóa" trong Lịch sử, thư mục, OCR.
 
+**Sửa sau khi người dùng dùng thử (13/11, cùng ngày):**
+- **Câu hỏi timeout 142,8 s:** trace cho thấy retrieval (14 ứng viên → 5 đoạn) và countTokens (~1.046 token) đều xong; lời gọi generateContent chờ hết call timeout 120 s, server ghi `model_timeout`/504. Lỗi ở phía Gemini (free tier quá tải), không do code UI. Hệ thống báo đúng là lỗi kỹ thuật. Phần cần sửa là UI: hai hộp cho một lỗi, chữ khó hiểu, và đồng hồ im lặng quá mốc "30–45 giây".
+- **Hai bong bóng câu hỏi:** server lưu câu hỏi ngay khi run bắt đầu, nhưng client chỉ biết run ID sau khi request trả về. Trong lúc chờ, tải lại lịch sử sẽ vẽ cả bản đã lưu lẫn bong bóng "đang chờ". Sửa: ẩn bong bóng chờ khi lịch sử đã có câu hỏi cùng run ID, hoặc cùng nội dung và gửi sau `startedAt` (trừ hao 60 s lệch đồng hồ).
+- **Spinner và rung khi chuyển tab:** thiết kế Bước 10 xóa tin nhắn khi tab ẩn và tải lại (có spinner) khi quay lại. Trình duyệt bắn cả `visibilitychange` lẫn `focus`, nên nội dung bị xóa và vẽ lại hai lần. Trang ngắn lại làm thanh cuộn biến mất, khiến cả trang dịch ngang. Sửa: gộp hai sự kiện thành một lần tải lại ở nền (debounce 150 ms), giữ nội dung đang hiện, và `scrollbar-gutter: stable`.
+- **Đánh đổi có chủ đích:** nếu tài liệu bị xóa ở nơi khác trong lúc tab ẩn, nội dung cũ còn hiện thêm một khoảnh khắc cho tới khi server trả bản đã che. Xóa ngay trong app (`DOCUMENT_CHANGED`, `SOURCE_UNAVAILABLE`) vẫn xóa nội dung ngay lập tức. Backend vẫn che nội dung ở mọi response, nên bất biến "không hồi sinh nội dung đã xóa" giữ nguyên ở tầng dữ liệu.
+- **Lỗi model:** một hộp duy nhất với câu chữ theo mã lỗi (`model_timeout`, `model_unavailable`, `model_busy`, `invalid_model_output`, `retrieval_unavailable`, `source_changed`) và nút "Hỏi lại". Sau 60 s, đồng hồ thêm dòng báo hệ thống tự dừng ở 2:30 (`QUERY_TIMEOUT_SECONDS` = 150).
+- **Kiểm chứng:** frontend 48/48, chạy 3 lần không chập chờn. Ba test mới tái hiện đúng ba lỗi. Trên Edge headless, sau khi phát cả hai sự kiện, số tin nhắn và chiều rộng khung chat giữ nguyên trong 1,2 s và không có spinner.
+
 ## 4. Những bằng chứng cần bổ sung khi bắt đầu triển khai
 
 - Retrieval/answer quality và human scoring trên pipeline thật; E5/Gemini compatibility smoke đã có K-030/K-034–036, chưa kiểm chứng thinking overrides hoặc chi phí theo hóa đơn.

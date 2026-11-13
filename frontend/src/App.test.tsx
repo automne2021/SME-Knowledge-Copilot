@@ -140,7 +140,7 @@ it("lists history grouped by day and filters by title", async () => {
   vi.stubGlobal("fetch", transport({ sessions: SESSIONS }));
   app("/history");
   await screen.findByRole("heading", { name: "Lịch sử hội thoại" });
-  expect(screen.getByRole("region", { name: "Hôm nay" }).textContent).toContain(
+  expect((await screen.findByRole("region", { name: "Hôm nay" })).textContent).toContain(
     "Hoàn ứng công tác",
   );
   expect(screen.getByRole("region", { name: "Cũ hơn" }).textContent).toContain("Quy trình duyệt");
@@ -290,4 +290,97 @@ it("hides suggestions when no document is ready", async () => {
   await screen.findByText("0 tài liệu sẵn sàng");
   expect(screen.queryByRole("button", { name: /nghỉ phép/ })).toBeNull();
   expect(screen.getByRole("link", { name: "Xem tài liệu" })).toBeTruthy();
+});
+/** A query that never returns while the server already stored the question (as in production). */
+function hangingQuery() {
+  const base = transport();
+  const state = { started: 0, historyLoads: 0 };
+  const fetcher = vi.fn(async (path: string, init?: RequestInit) => {
+    if (path.endsWith("/chat/query")) {
+      state.started = Date.now();
+      return new Promise<Response>((_, reject) =>
+        init?.signal?.addEventListener("abort", () =>
+          reject(new DOMException("Aborted", "AbortError")),
+        ),
+      );
+    }
+    if (path.includes("/messages?")) {
+      state.historyLoads += 1;
+      return ok({
+        items: state.started
+          ? [{ ...messages[0], created_at: new Date(state.started).toISOString() }]
+          : [],
+      });
+    }
+    return base(path, init);
+  });
+  return { fetcher, state };
+}
+async function askAndWait(question: string) {
+  app("/chat/session-1");
+  const box = await screen.findByLabelText("Câu hỏi của bạn");
+  await waitFor(() => expect((box as HTMLTextAreaElement).disabled).toBe(false));
+  await userEvent.type(box, question);
+  await userEvent.click(screen.getByRole("button", { name: "Gửi câu hỏi" }));
+  await screen.findByText("Đang tìm tài liệu và soạn câu trả lời…");
+}
+it("shows one question bubble and no reload spinner when returning to the tab mid-answer", async () => {
+  storeSession(token, 3600);
+  const { fetcher, state } = hangingQuery();
+  vi.stubGlobal("fetch", fetcher);
+  await askAndWait("A question");
+  const before = state.historyLoads;
+  act(() => {
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new Event("focus"));
+  });
+  expect(screen.queryByText("Đang kiểm tra lịch sử…")).toBeNull();
+  await waitFor(() => expect(state.historyLoads).toBe(before + 1));
+  await waitFor(() => expect(screen.getAllByText("A question")).toHaveLength(1));
+  expect(screen.getByText("Đang tìm tài liệu và soạn câu trả lời…")).toBeTruthy();
+});
+it("tells the user when a wait is longer than usual and when it will stop", async () => {
+  storeSession(token, 3600);
+  vi.stubGlobal("fetch", hangingQuery().fetcher);
+  await askAndWait("A question");
+  expect(screen.queryByText(/Lâu hơn bình thường/)).toBeNull();
+  const realNow = Date.now.bind(Date);
+  const now = vi.spyOn(Date, "now").mockImplementation(() => realNow() + 70_000);
+  try {
+    await screen.findByText(/Lâu hơn bình thường/, undefined, { timeout: 2500 });
+    expect(screen.getByText(/2:30/)).toBeTruthy();
+  } finally {
+    now.mockRestore();
+  }
+});
+it("explains a model timeout once, as an error with a way to ask again", async () => {
+  storeSession(token, 3600);
+  const base = transport();
+  let failed = false;
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (path: string, init?: RequestInit) => {
+      if (path.endsWith("/chat/query")) {
+        failed = true;
+        return failure(504, "model_timeout");
+      }
+      if (path.includes("/messages?")) return ok({ items: failed ? [messages[0]] : [] });
+      if (path.endsWith("/chat/runs/run-1"))
+        return ok({ ...answer, status: "failed", error_code: "model_timeout" });
+      return base(path, init);
+    }),
+  );
+  app("/chat/session-1");
+  const box = await screen.findByLabelText("Câu hỏi của bạn");
+  await waitFor(() => expect((box as HTMLTextAreaElement).disabled).toBe(false));
+  await userEvent.type(box, "A question");
+  await userEvent.click(screen.getByRole("button", { name: "Gửi câu hỏi" }));
+  await screen.findByText("Gemini không phản hồi kịp");
+  expect(screen.getAllByRole("alert")).toHaveLength(1);
+  expect(screen.queryByText(/chưa hoàn tất thành công/)).toBeNull();
+  expect(screen.queryByText("Chưa đủ bằng chứng trong tài liệu")).toBeNull();
+  await userEvent.click(screen.getByRole("button", { name: "Hỏi lại" }));
+  expect((screen.getByLabelText("Câu hỏi của bạn") as HTMLTextAreaElement).value).toBe(
+    "A question",
+  );
 });

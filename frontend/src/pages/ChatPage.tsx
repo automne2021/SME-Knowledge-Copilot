@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
-import { isAbort } from "../api/client";
+import { ApiError, errorMessage, isAbort } from "../api/client";
 import type { Citation, KnowledgeDocument } from "../api/types";
 import { useAuth } from "../auth/AuthProvider";
 import { DOCUMENT_CHANGED } from "../auth/session";
@@ -14,6 +14,7 @@ import { SOURCE_UNAVAILABLE } from "../features/sources/SourcePanel";
 import { SUGGESTED_QUESTIONS } from "../features/chat/suggestions";
 import { ArrowUp, BookOpenCheck, Clock, Files, Funnel, LoaderCircle, X } from "lucide-react";
 import { clock, useElapsed } from "../hooks/useElapsed";
+import { failureCopy, QUERY_DEADLINE_SECONDS, SLOW_AFTER_SECONDS } from "../features/chat/failure";
 export default function ChatPage() {
   const { sessionId } = useParams();
   return <Conversation key={sessionId ?? "new"} sessionId={sessionId} />;
@@ -140,6 +141,24 @@ function Conversation({ sessionId }: { sessionId?: string }) {
   const busy = chat.busy || creating;
   const elapsed = useElapsed(busy ? (chat.pending?.startedAt ?? null) : null);
   const chosen = selected.map((id) => documents.find((d) => d.id === id));
+  // The question is saved server-side as soon as the run starts, before the answer exists and
+  // before the client knows the run ID. Once history contains it, stop drawing the local bubble.
+  const pendingSaved =
+    chat.pending !== null &&
+    chat.messages.some(
+      (m) =>
+        m.role === "user" &&
+        (m.query_run_id === chat.pending!.runId ||
+          (m.content === chat.pending!.payload.question &&
+            Date.parse(m.created_at) >= chat.pending!.startedAt - 60_000)),
+    );
+  const failure = chat.error instanceof ApiError ? failureCopy(chat.error.code) : null;
+  const orphanFailure = failureCopy(chat.orphanRun?.error_code);
+  const askAgain = () => {
+    const previous = [...chat.messages].reverse().find((m) => m.role === "user");
+    if (!draft.trim() && previous) setDraft(previous.content);
+    document.getElementById("question")?.focus();
+  };
   return (
     <section className="chat-page">
       <div className="chat-heading">
@@ -205,16 +224,14 @@ function Conversation({ sessionId }: { sessionId?: string }) {
             </div>
           ))
         )}
-        {chat.pending &&
-          (!chat.pending.runId ||
-            !chat.messages.some((m) => m.query_run_id === chat.pending!.runId)) && (
-            <div className="message message-user">
-              <div className="bubble">
-                <p className="sr-only">Bạn</p>
-                <p className="plain-text">{chat.pending.payload.question}</p>
-              </div>
+        {chat.pending && !pendingSaved && (
+          <div className="message message-user">
+            <div className="bubble">
+              <p className="sr-only">Bạn</p>
+              <p className="plain-text">{chat.pending.payload.question}</p>
             </div>
-          )}
+          </div>
+        )}
         {busy && (
           <div className="thinking" role="status">
             <LoaderCircle className="spin thinking-icon" size={18} aria-hidden="true" />
@@ -231,6 +248,12 @@ function Conversation({ sessionId }: { sessionId?: string }) {
               <p className="hint">
                 Thường mất 30–45 giây. Câu trả lời chỉ hiển thị sau khi đã kiểm tra trích dẫn.
               </p>
+              {!creating && elapsed >= SLOW_AFTER_SECONDS && (
+                <p className="hint slow-note">
+                  Lâu hơn bình thường. Hệ thống tự dừng sau {clock(QUERY_DEADLINE_SECONDS)} nếu
+                  model không phản hồi.
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -247,36 +270,53 @@ function Conversation({ sessionId }: { sessionId?: string }) {
             trùng.
           </Feedback>
         )}
-        {chat.orphanRun && (
+        {chat.orphanRun && chat.error === null && (
           <Feedback
             title={
               chat.orphanRun.status === "running"
-                ? "Truy vấn trước vẫn đang xử lý"
-                : "Truy vấn trước chưa hoàn tất thành công"
+                ? "Câu hỏi trước vẫn đang được xử lý"
+                : (orphanFailure?.title ?? "Câu hỏi trước chưa được trả lời")
             }
             kind={chat.orphanRun.status === "failed" ? "warning" : "info"}
             action={
-              <button className="button" disabled={busy} onClick={() => void chat.checkOrphan()}>
-                Kiểm tra trạng thái
-              </button>
+              chat.orphanRun.status === "running" ? (
+                <button className="button" disabled={busy} onClick={() => void chat.checkOrphan()}>
+                  Kiểm tra trạng thái
+                </button>
+              ) : (
+                <button className="button" onClick={askAgain}>
+                  Hỏi lại
+                </button>
+              )
             }
           >
-            Bạn có thể kiểm tra trạng thái trước khi gửi câu hỏi mới.
+            {chat.orphanRun.status === "running"
+              ? "Kiểm tra trạng thái trước khi gửi câu hỏi mới để tránh gửi trùng."
+              : (orphanFailure?.body ?? "Câu hỏi đã kết thúc mà chưa có câu trả lời.")}
           </Feedback>
         )}
-        {chat.error !== null && <ErrorFeedback error={chat.error} />}
-        {createError !== null && <ErrorFeedback error={createError} />}
-        {chat.error !== null && !chat.pending && (
-          <button
-            className="text-button"
-            onClick={() => {
-              const previous = [...chat.messages].reverse().find((m) => m.role === "user");
-              if (previous) setDraft(previous.content);
-            }}
+        {chat.error !== null && (
+          <Feedback
+            title={failure?.title ?? "Chưa thể hoàn tất thao tác"}
+            kind="error"
+            action={
+              !chat.pending && (
+                <button className="button" onClick={askAgain}>
+                  Hỏi lại
+                </button>
+              )
+            }
           >
-            Đưa câu hỏi trước vào ô nhập
-          </button>
+            <p>{failure?.body ?? errorMessage(chat.error)}</p>
+            {chat.error instanceof ApiError && chat.error.requestId && (
+              <details>
+                <summary>Thông tin hỗ trợ</summary>
+                <p>Mã yêu cầu: {chat.error.requestId}</p>
+              </details>
+            )}
+          </Feedback>
         )}
+        {createError !== null && <ErrorFeedback error={createError} />}
       </div>
       <div className="chat-composer">
         {docError !== null && (

@@ -39,12 +39,17 @@ export function useDocuments() {
   }, []);
   useEffect(() => {
     void load();
+    // "focus" and "visibilitychange" both fire on tab return; load once, in the background.
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const focus = () => {
-      if (!document.hidden) void load();
+      if (document.hidden) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => void load(), 150);
     };
     window.addEventListener("focus", focus);
     document.addEventListener("visibilitychange", focus);
     return () => {
+      clearTimeout(timer);
       controller.current?.abort();
       window.removeEventListener("focus", focus);
       document.removeEventListener("visibilitychange", focus);
