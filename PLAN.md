@@ -89,8 +89,8 @@ Mỗi phản hồi cuối báo **X% / 100%**, theo yêu cầu người dùng 02/
 | 10 | 12 | 6/6 — UI + Chrome E2E/keyboard/navigation/reload/expiry; human-quality còn Bước11 | 12 |
 | 11 | 8 | 6/7 — mục 1 release (`release/m1`) và mục 2–5, 7; mục 6 conditional chưa cộng | 48/7≈6,8571 |
 | 12 | 5 | 4/6 — mục 1 Compose, mục 2 cài sạch, mục 3 README, mục 6 rà soát; video (mục 4) và đóng góp (mục 5) do người dùng làm | 20/6≈3,3333 |
-| 13 | 4 | 3/4 — mục 1 ba endpoint + test, mục 2 UI v2 + test, mục 3 smoke/ảnh chụp/tài liệu; mục 4 merge vào `main` chờ người dùng duyệt | 3 |
-| Tổng | 106,5 | `(89,5 + 8×6/7 + 5×4/6 + 4×3/4) / 106,5` | **96,4% / 100%** |
+| 13 | 4 | 4/4 — mục 1 ba endpoint + test, mục 2 UI v2 + test, mục 3 smoke/ảnh chụp/tài liệu, mục 4 merge `feat/ui-v2` vào `main` sau khi người dùng dùng thử (13/11) | 4 |
+| Tổng | 106,5 | `(89,5 + 8×6/7 + 5×4/6 + 4) / 106,5` | **97,4% / 100%** |
 
 **V1.31 (13/11/2026):** người dùng duyệt đợt "UI v2 + tính năng nhỏ" sau mockup. Thêm Bước 13 trọng số 4 (ước lượng khoảng 4 giờ công: 3 endpoint, 4 màn hình, test, smoke), mẫu số 102,5 → 106,5. Phần trăm giảm từ 97,3% xuống 96,4% vì phạm vi tăng, không phải vì việc cũ bị mất. Bước 13 gồm: (1) `POST /auth/logout`, `PATCH`/`DELETE /chat/sessions/{id}` cùng test PostgreSQL thật; (2) bố cục sidebar, trang Lịch sử, đăng nhập một cột, đồng hồ chờ, chip phạm vi, sao chép kèm nguồn, tìm/lọc tài liệu, tiến độ ingest từ job thật; (3) smoke HTTP, ảnh chụp Edge headless, spec/KNOWLEDGE/README/report; (4) merge `feat/ui-v2` vào `main` sau khi người dùng xem. [Report](docs/ui-v2-20261113.md), [K-105](KNOWLEDGE.md).
 
