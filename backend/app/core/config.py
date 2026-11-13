@@ -52,7 +52,8 @@ class Settings(BaseSettings):
     demo_member_password: SecretStr | None = None
     app_timezone: str = "Asia/Ho_Chi_Minh"
 
-    qdrant_url: str = "http://localhost:6333"
+    # IPv4 loopback: Compose publishes ports on 127.0.0.1 only; "localhost" may try ::1 first.
+    qdrant_url: str = "http://127.0.0.1:6333"
     qdrant_collection: str = "knowledge_e5_small_v1"
 
     llm_base_url: str | None = None
