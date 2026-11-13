@@ -4,7 +4,25 @@
 > **Ngày lập:** 13/11/2026. **Trạng thái M1:** 97,4% / 100% theo [PLAN](../../PLAN.md); phần còn lại (video, đóng góp cá nhân) do người dùng làm.
 > **Mục đích:** biến project từ "RAG chạy đúng" thành "RAG có chiều sâu, đo được cải tiến, dùng được như sản phẩm", phục vụ hồ sơ VNG AI Builder Residency.
 
-## 1. Bức tranh hiện tại (đọc trước khi nhận task)
+## Đọc tối thiểu khi nhận một task (tiết kiệm token)
+
+Người dùng chỉ cần gõ: **"Làm task NN-Tk"**. Khi đó assistant đọc **đúng các phần sau**:
+
+1. **Bắt buộc (khoảng 300 dòng):**
+   - File này: **mục 4** (quy tắc, định nghĩa xong, lệnh chuẩn) và **mục 6** (mẫu báo cáo).
+   - Toàn bộ file tính năng `docs/roadmap/NN-*.md`.
+2. **Chỉ khi file tính năng trỏ tới hoặc task đụng phần đó:**
+   - Mục "Bất biến nghiệp vụ" trong `CLAUDE.md`, khi task đụng retrieval, xóa, quyền hoặc chat.
+   - Đúng mục spec được ghi (ví dụ "spec mục 8.8"), không đọc cả spec.
+   - Đúng chủ đề trong `KNOWLEDGE.md`, dùng mục lục để nhảy tới.
+   - Các file code liệt kê ở mục "Hiện trạng" của file tính năng. Mở rộng sang file khác khi thật sự cần, và nêu lý do trong phần trình bày phạm vi.
+3. **Không đọc:**
+   - `PLAN.md`, `HANDOFF_CLAUDE.md`, `docs/history/`.
+   - Các report cũ trong `docs/`, `eval/reports/`, `eval/snapshots/`, `.cache/`.
+   - Mục 1–3 và mục 7 của file này (bối cảnh cho người lập plan).
+4. **Task tiếp theo của cùng tính năng, trong cùng phiên:** không đọc lại các file trên; chỉ xem lại phần task mới trong file tính năng.
+
+## 1. Bức tranh hiện tại (bối cảnh, không bắt buộc đọc mỗi task)
 
 Hệ thống hỏi đáp tài liệu nội bộ tiếng Việt. Trả lời kèm trích dẫn do backend kiểm tra, và nói "chưa đủ bằng chứng" thay vì bịa.
 
@@ -73,13 +91,9 @@ Công sức: S ≤ 0,5 ngày, M 1–2 ngày, L 3–5 ngày cho một dev.
 
 Đây là phần bắt buộc. Quy tắc gốc nằm ở [AGENTS.md](../../AGENTS.md); phần dưới cụ thể hóa cho roadmap.
 
-### 4.1. Thứ tự đọc trước khi làm một task
+### 4.1. Phạm vi đọc
 
-1. `AGENTS.md` và `CLAUDE.md`: quy tắc xác nhận, bất biến nghiệp vụ, lệnh.
-2. File tính năng trong `docs/roadmap/`.
-3. Mục spec liên quan được trỏ trong file tính năng.
-4. Mục KNOWLEDGE liên quan (theo chủ đề).
-5. Code hiện tại ở các file được liệt kê. Không tin mô tả trong plan hơn code thật; nếu lệch, báo lại.
+Theo mục "Đọc tối thiểu" ở đầu file. Không tin mô tả trong plan hơn code thật; nếu lệch, báo lại trước khi làm.
 
 ### 4.2. Một task là một đợt xác nhận
 

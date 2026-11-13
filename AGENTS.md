@@ -48,7 +48,7 @@ Theo yêu cầu người dùng ngày 02/11/2026, **mỗi phản hồi cuối ph�
 
 ## Làm việc theo roadmap (dành cho Codex và các assistant)
 
-1. Đọc [docs/roadmap/README.md](docs/roadmap/README.md) mục 4 (quy tắc, định nghĩa xong, lệnh chuẩn) trước khi nhận task.
+1. Khi người dùng nói "Làm task NN-Tk": đọc **tối thiểu** theo mục "Đọc tối thiểu" ở đầu [docs/roadmap/README.md](docs/roadmap/README.md). Bắt buộc gồm mục 4 và mục 6 của file đó, cộng file tính năng `docs/roadmap/NN-*.md`. Spec, KNOWLEDGE, `CLAUDE.md` và code chỉ đọc đúng phần được trỏ tới. Không đọc `PLAN.md`, `docs/history/` hay report cũ.
 2. Mỗi task `NN-Tk` trong file tính năng là **một** đợt: trình bày phạm vi (file, migration, API, test), chờ **"Thực hiện đi"**, làm đúng phạm vi, không tự sang task tiếp theo. Task có UI cần xác nhận UI riêng.
 3. Nhánh `feat/NN-<slug>` từ `main`; commit theo task; **không push hay merge** khi chưa được xác nhận. Không sửa `release/m1`.
 4. Gặp quyết định chưa có trong plan (contract, dependency, model, ngân sách): dừng và đề xuất 2–3 phương án kèm khuyến nghị.
