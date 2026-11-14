@@ -62,6 +62,9 @@ Có bộ eval **v2** đủ lớn và đủ đa dạng để so sánh các thay �
   - `test2` (khoảng 60%): chỉ chạy khi chốt cấu hình của một tính năng.
   - Câu v1 giữ split cũ; không chuyển câu test v1 sang dev2.
 - **Schema `questions.jsonl` v2:** thêm `slice`, `dataset_version: "v2"`, `history` (tùy chọn). Validator (`eval/validate_dataset.py`) chấp nhận cả v1 và v2.
+  - **Contract chốt 15/11/2026 (01-T1):** `history` chỉ được có ở `slice: "follow_up"`, tại đó bắt buộc là danh sách không rỗng. Mỗi lượt có đúng `{role: "user" | "assistant", content: string}`; `content` không rỗng sau trim và lượt cuối phải là `assistant`. Slice khác có khóa `history` là lỗi, kể cả `null`/`[]`.
+  - v1 không có `dataset_version` được hiểu là `"v1"`; có thể ghi rõ `"v1"`. v1 dùng `dev/test`, v2 bắt buộc `dev2/test2` và một trong 9 slice nêu trên. Giữ nguyên `question_type`, kiểm tra gold spans và chống rò rỉ family/source block. Không viết lại câu hoặc snapshot v1.
+  - `validate_questions` kiểm tra từng câu; `validate` kiểm tra toàn gói theo giới hạn từng phiên bản. V2 có 60–80 câu mới; mức phủ slice đã nêu suy ra tối thiểu thực tế 68 câu. Gói có v2 nhận 14–24 tài liệu (14 mới, có thể kèm 10 v1); runner vẫn tách workspace v1/v2.
 - **Người duyệt:** Codex chỉ tạo **draft**. Người dùng và đồng đội duyệt theo `docs/human-review-guide.md` (2 người, ghi bất đồng). Codex **không** tự đánh dấu approved.
 
 ### Runner hồi quy retrieval
@@ -83,6 +86,8 @@ Có bộ eval **v2** đủ lớn và đủ đa dạng để so sánh các thay �
 
 - Thêm `slice`, `dataset_version`, `history` vào schema; validator hỗ trợ v1 và v2; thêm test cho câu v2 hợp lệ và không hợp lệ.
 - Không đổi snapshot `reviewed-v1`.
+
+Contract và ví dụ metadata: [eval/README.md](../../eval/README.md#schema-câu-hỏi-v2--01-t1).
 
 ### T2 — Corpus v2 (tài liệu), chia 3 đợt
 

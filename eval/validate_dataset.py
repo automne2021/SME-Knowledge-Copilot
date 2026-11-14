@@ -19,6 +19,18 @@ QUESTION_TYPES = {
     "conflict",
     "unanswerable",
 }
+QUESTION_SLICES = {
+    "text",
+    "table",
+    "identifier",
+    "multi_doc",
+    "conflict",
+    "unanswerable",
+    "no_diacritics",
+    "scan",
+    "follow_up",
+}
+VERSION_SPLITS = {"v1": {"dev", "test"}, "v2": {"dev2", "test2"}}
 
 
 def require(condition: bool, message: str) -> None:
@@ -38,7 +50,45 @@ def normalized(text: str) -> str:
     return " ".join(unicodedata.normalize("NFC", text).replace("\u00ad", "-").split())
 
 
+def validate_question_metadata(question: dict) -> None:
+    """Validate versioned question fields without changing legacy rows or coercing JSON."""
+    require(isinstance(question, dict), "Question must be an object")
+    version = question.get("dataset_version", "v1")
+    require(type(version) is str and version in VERSION_SPLITS, "Unknown dataset_version")
+    split = question.get("split")
+    require(type(split) is str and split in VERSION_SPLITS[version], "Invalid split for version")
+    if version == "v1":
+        require("slice" not in question, "slice requires dataset_version v2")
+        require("history" not in question, "history is only allowed for follow_up")
+        return
+
+    slice_name = question.get("slice")
+    require(type(slice_name) is str and slice_name in QUESTION_SLICES, "Unknown or missing slice")
+    if slice_name != "follow_up":
+        require("history" not in question, "history is only allowed for follow_up")
+        return
+
+    history = question.get("history")
+    require(type(history) is list and bool(history), "follow_up requires non-empty history")
+    for turn in history:
+        require(
+            isinstance(turn, dict) and set(turn) == {"role", "content"},
+            "History turn must contain exactly role and content",
+        )
+        require(
+            type(turn["role"]) is str and turn["role"] in {"user", "assistant"},
+            "History role must be user or assistant",
+        )
+        require(
+            type(turn["content"]) is str and bool(turn["content"].strip()),
+            "History content must be a non-empty string",
+        )
+    require(history[-1]["role"] == "assistant", "History must end with assistant")
+
+
 def validate_questions(questions: list[dict], blocks: list[dict], documents: list[dict]) -> None:
+    for question in questions:
+        validate_question_metadata(question)
     ids = [q["id"] for q in questions]
     require(len(ids) == len(set(ids)), "Duplicate question ID")
     by_block = {b["source_block_id"]: b for b in blocks}
@@ -47,7 +97,6 @@ def validate_questions(questions: list[dict], blocks: list[dict], documents: lis
     require(len(by_document) == len(documents), "Duplicate document ID")
     families, evidence_splits = {}, {}
     for q in questions:
-        require(q["split"] in {"dev", "test"}, "Invalid split")
         require(q["question_type"] in QUESTION_TYPES, "Unknown question type")
         require(bool(q["question"].strip()) and bool(q["expected_answer"].strip()), "Empty Q/A")
         family = q["family_id"]
@@ -175,7 +224,6 @@ def validate(root: Path, require_reviewed: bool = False) -> dict:
         "Unknown label status",
     )
     documents = manifest["documents"]
-    require(8 <= len(documents) <= 12, "Expected 8–12 documents")
     require({d["format"] for d in documents} == {"pdf", "docx", "txt", "md"}, "Format coverage")
     for entry in documents + manifest["fixtures"]:
         actual = hashlib.sha256(safe_path(root, entry["path"]).read_bytes()).hexdigest()
@@ -193,11 +241,23 @@ def validate(root: Path, require_reviewed: bool = False) -> dict:
         json.loads(line)
         for line in (root / "questions.jsonl").read_text(encoding="utf-8").splitlines()
     ]
-    require(
-        len(questions) == manifest["question_count"] and 30 <= len(questions) <= 60,
-        "Question count",
-    )
+    require(len(questions) == manifest["question_count"], "Question count")
     validate_questions(questions, blocks, documents)
+    versions = Counter(q.get("dataset_version", "v1") for q in questions)
+    require(bool(versions), "Question count")
+    for version, count in versions.items():
+        lower, upper = (30, 60) if version == "v1" else (60, 80)
+        require(lower <= count <= upper, f"Question count for {version}")
+    has_v2 = "v2" in versions
+    if has_v2:
+        # Fourteen new documents, optionally packaged with the ten unchanged v1 documents.
+        require(14 <= len(documents) <= 24, "Expected 14–24 documents for v2")
+        slices = Counter(q["slice"] for q in questions if q.get("dataset_version") == "v2")
+        for slice_name in QUESTION_SLICES:
+            minimum = 6 if slice_name in {"scan", "follow_up"} else 8
+            require(slices[slice_name] >= minimum, f"Slice coverage: {slice_name}")
+    else:
+        require(8 <= len(documents) <= 12, "Expected 8–12 documents")
     require({q["question_type"] for q in questions} == QUESTION_TYPES, "Question type coverage")
     require(
         sum(q["expected_abstain"] for q in questions) >= 5, "Need at least 5 unanswerable questions"
@@ -205,7 +265,8 @@ def validate(root: Path, require_reviewed: bool = False) -> dict:
     require(
         all(
             any(q["expected_abstain"] and q["split"] == split for q in questions)
-            for split in ["dev", "test"]
+            for version in versions
+            for split in VERSION_SPLITS[version]
         ),
         "Unanswerable split coverage",
     )
@@ -242,7 +303,7 @@ def validate(root: Path, require_reviewed: bool = False) -> dict:
             manifest["label_status"] == "human_reviewed",
             "Publish a reviewed snapshot before final benchmark",
         )
-    return {
+    result = {
         "structural_validation": "passed",
         "documents": len(documents),
         "fixtures": len(manifest["fixtures"]),
@@ -256,6 +317,9 @@ def validate(root: Path, require_reviewed: bool = False) -> dict:
         "parser_span_mapping": manifest["parser_span_mapping"],
         "model_benchmark": "not_run",
     }
+    if has_v2:
+        result.update(dataset_versions=dict(versions), slices=dict(slices))
+    return result
 
 
 if __name__ == "__main__":

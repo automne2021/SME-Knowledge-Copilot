@@ -216,6 +216,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
   - Chia dev/test theo *họ câu hỏi* để paraphrase không rò sang test.
   - Hai người duyệt độc lập; publish snapshot bất biến `reviewed-v1` có hash.
   - **Corpus v2 (kế hoạch, K-107):** 14 tài liệu của một công ty hư cấu, viết như văn bản thật (dài, có bảng, phiên bản mâu thuẫn, mã định danh, email không dấu, PDF scan). Mọi con số quan trọng nằm trong *fact registry* làm nguồn sự thật cho cả tài liệu lẫn gold. Spec: [01-corpus-v2-spec.md](docs/roadmap/01-corpus-v2-spec.md).
+  - **Schema câu hỏi v2 (K-110, đã kiểm chứng cấu trúc):** `dataset_version: "v2"` phân biệt split `dev2/test2`, `slice` chia 9 nhóm đánh giá mà vẫn giữ `question_type`. Chỉ `follow_up` có `history` bắt buộc không rỗng, mỗi lượt có `role/content`, kết thúc bằng `assistant`; câu hiện tại nằm riêng ở `question`. Metadata v1 có thể để nguyên, không viết lại snapshot đã khóa. Validator kiểm tra cấu trúc/gold và chống rò rỉ giữa split; không chứng minh nhãn đúng hoặc tự duyệt thay con người. Chi tiết: [contract](eval/README.md#schema-câu-hỏi-v2--01-t1), [test](eval/tests/test_dataset.py), [report](docs/eval-v2-20261115.md).
 - **Chấm khớp bằng chứng (K-058):** các quote thay thế trong một nhóm là OR, các span dựng một quote là AND, các nhóm cần cho câu trả lời là AND; span hợp trên cùng block, phủ ≥ 80% là đạt; lệch mapping thì fail, không loại câu khỏi mẫu số. Remap gold không fuzzy match (K-047).
 - **Kỷ luật chạy model thật (K-086 → K-097):**
   - **Ledger trước khi gọi:** SQLite `BEGIN IMMEDIATE` giữ chỗ trước mỗi request, không hoàn lại khi mất response (fail-closed).
@@ -416,3 +417,11 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - Ngủ cố định 2,2 s với lease 2 s phụ thuộc lịch thread/DB khi máy bận; thay bằng polling lease đã commit trong lúc fake inference bị chặn, yêu cầu hai lần tăng và timeout rõ ràng. Chỉ tăng lease của test này lên 30 s; giữ logic worker và fixture dùng chung.
 - Chỉ tăng thời gian ngủ vẫn dễ chập chờn; mock heartbeat/DB không chứng minh thread thật ghi được PostgreSQL. Chọn quan sát DB thật, chấp nhận test vẫn có giới hạn thời gian và phụ thuộc hạ tầng; xem lại nếu timeout/lock contention còn xuất hiện.
 - Đạt 20/20 lượt riêng; tắt heartbeat trong tiến trình kiểm tra âm làm test fail đúng với 0 lần gia hạn. Backend đạt 316/316 ở lượt 2 và 4; lượt 1 lỗi timeout Qdrant, lượt 3 lỗi guard đường dẫn upload (đều đạt khi chạy riêng, chưa sửa nguyên nhân gốc). Ruff đạt; xem [report 00-T1](docs/housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat).
+
+### K-110 — Schema eval v2 giữ tương thích v1 và khóa phạm vi history
+
+15/11/2026 · schema đánh giá · đã triển khai; kết quả kiểm chứng ở [report 01-T1](docs/eval-v2-20261115.md).
+- Phân nhánh bằng `dataset_version` trên từng câu: thiếu trường hiểu là v1, v2 bắt buộc có slice và split riêng; giữ guard family/source span để không chuyển gold held-out v1 sang dev2. Giới hạn phủ 9 slice suy ra tối thiểu 68 câu mới, không phải số câu đã tạo hay accuracy.
+- Theo contract người dùng duyệt, `history` là danh sách `{role, content}` chỉ cho `follow_up`, không rỗng và kết thúc bằng `assistant`; nội dung/role sai bị từ chối, không sửa ngầm. Danh sách chuỗi mất vai trò người nói; dùng object và validator Python hiện có tránh thêm dependency/schema thứ hai, xem lại khi cần công cụ ngoài Python tiêu thụ schema máy đọc được.
+- Test dùng bản sao/fixtures tạm và review `pending`; chưa tạo corpus v2 hay phát hành nhãn. Snapshot v1 được kiểm tra chỉ đọc; các số đo retrieval/generation v2 chờ T5 và đợt model riêng.
+- Đạt 115 test schema/validator, toàn bộ eval 367/367 và backend 316/316 ở lượt chạy riêng sau eval. Hai lượt backend trước lỗi setup index Qdrant 2 s; lượt sạch không chứng minh đã sửa nguyên nhân timeout. Chọn chạy suite backend riêng để giảm tải dùng chung, chưa quy kết nguyên nhân cho đồng thời; giữ traceback/kết quả từng lượt trong report.

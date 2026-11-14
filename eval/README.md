@@ -79,6 +79,57 @@ Tree là contract đích cho retrieval/answer eval; hiện đã có dataset/revi
 - Cố định dev/test theo nhóm câu cùng sự kiện; paraphrase của cùng câu không chia hai split. Dev dùng chọn model/chunk/threshold, test chạy sau freeze. Nếu tune trên test, ghi test đã bị sử dụng và tạo holdout mới trước tuyên bố tổng quát.
 - Bộ adversarial/prompt-injection và fixture malformed/scan tách khỏi average accuracy thông thường; vẫn báo kết quả riêng.
 
+### Schema câu hỏi v2 — 01-T1
+
+Contract mở rộng nằm trong [roadmap 01](../docs/roadmap/01-eval-expansion.md); thực thi ở
+[`validate_question_metadata` / `validate_questions`](validate_dataset.py). Đây là schema của
+từng dòng `questions.jsonl`, độc lập với tên phiên bản snapshot trong manifest.
+
+| Trường | v1 | v2 |
+|---|---|---|
+| `dataset_version` | Có thể bỏ qua (hiểu là `"v1"`) hoặc ghi `"v1"` | Bắt buộc `"v2"` |
+| `split` | `dev`, `test` | `dev2`, `test2` |
+| `slice` | Không có | Bắt buộc một trong 9 slice dưới đây |
+| `history` | Không có | Chỉ có ở `follow_up`, bắt buộc là danh sách không rỗng |
+
+Chín slice: `text`, `table`, `identifier`, `multi_doc`, `conflict`, `unanswerable`,
+`no_diacritics`, `scan`, `follow_up`. `slice` là lát cắt đánh giá chính, không thay thế
+`question_type` hay gold evidence hiện có.
+
+Mỗi phần tử `history` có đúng hai trường: `role` là `"user"` hoặc `"assistant"`,
+`content` là chuỗi không rỗng sau khi bỏ khoảng trắng ở hai đầu. Lượt cuối phải là
+`assistant`: câu hỏi hiện tại vẫn nằm ở `question`, sau phần lịch sử đã kết thúc một câu trả lời.
+Slice khác có khóa `history` đều là lỗi, kể cả `null` hoặc `[]`. Validator không ép chuyển
+kiểu, không tự sửa nội dung và không thêm luật buộc các vai trò phải luân phiên.
+
+Ví dụ phần metadata của câu hỏi nối tiếp (các trường Q/A và gold vẫn phải điền đầy đủ):
+
+```json
+{
+  "dataset_version": "v2",
+  "split": "dev2",
+  "slice": "follow_up",
+  "history": [
+    {"role": "user", "content": "Quy định này áp dụng thế nào?"},
+    {"role": "assistant", "content": "Quy định áp dụng theo điều kiện trong tài liệu."}
+  ]
+}
+```
+
+`validate_questions` kiểm tra từng câu, chống trùng ID, rò rỉ family/source block giữa
+các split và kiểm tra span/quote như v1. `validate` kiểm tra thêm toàn gói: v1 giữ giới hạn
+30–60 câu, 8–12 tài liệu; khi có v2, cần 60–80 câu v2 và 14–24 tài liệu (14 tài liệu mới,
+có thể kèm 10 tài liệu v1). Mỗi slice v2 cần ít nhất 8 câu, riêng `scan` và `follow_up` là 6;
+vì vậy tổng tối thiểu thực tế là **68 câu v2**. Số câu v1 được kiểm tra riêng nếu có trong gói.
+Mỗi split của từng phiên bản phải có câu không trả lời được. Kết quả kiểm tra gói v2 có thêm
+`dataset_versions` và `slices`; output kiểm tra v1 giữ nguyên cấu trúc cũ.
+
+Đây là kiểm tra cấu trúc và nguồn, chưa phải duyệt chất lượng nhãn. Việc đóng gói chung
+không cho phép ingest v1/v2 vào cùng workspace; runner vẫn phải tách theo roadmap.
+01-T1 dùng bản sao dữ liệu trong thư mục test tạm để kiểm tra schema, chưa tạo corpus/câu hỏi
+v2 thật, chưa publish snapshot hay chạy benchmark. T4 sẽ mở rộng publisher cho v2;
+không dùng publisher v1 hiện tại để phát hành v2.
+
 ## Chỉ số bắt buộc M1
 
 | Nhóm | Cách đo |
