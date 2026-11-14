@@ -141,6 +141,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 
 **Cách làm trong project**
 - **Queue trong PostgreSQL (K-049):** claim bằng `FOR UPDATE SKIP LOCKED` trong transaction ngắn; khóa document trước job theo thứ tự cố định; không giữ lock khi inference. Heartbeat 15 s, lease 60 s theo đồng hồ DB. Lease token + generation dùng để fence mọi lần ghi (stage, persist, publish, fail). Point ID = UUIDv5(generation, chunk), ổn định trong một attempt.
+- **Kiểm thử heartbeat bằng trạng thái đã commit (K-109):** giữ fake inference bằng `Event`, đọc lease qua session mới và chờ hai giá trị tăng liên tiếp với deadline `monotonic` 10 s. Lease 30 s chỉ áp dụng trong test này để giảm phụ thuộc lịch CPU; heartbeat vẫn 0,2 s. Lease còn hạn không đủ chứng minh heartbeat hoạt động: phải quan sát gia hạn khi inference chưa được thả, kiểm tra lấy được khóa document `NOWAIT`, rồi worker hoàn tất. So hạn lease với đồng hồ PostgreSQL, tránh lệch giờ host/container. Xem [test](backend/tests/test_worker.py) và [report 00-T1](docs/housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat).
 - **Publish nguyên tử qua hai hệ thống (K-051):** đóng băng manifest (ID, số lượng, hash) trước khi embed → upsert `wait=true` → scroll cả generation so đúng ID/số lượng/payload → **một transaction SQL** đặt revision ready + active generation + job completed. SQL là nơi quyết định.
 - **Retry (K-052):** tối đa 3 lần, backoff mũ 5 s → 60 s có jitter; chỉ lỗi tạm thời tự retry (lỗi parse, OCR, config là vĩnh viễn); admin retry thủ công khi `retryable=true`. Sweeper mỗi 60 s dọn generation không active và không được trích dẫn, sau thời gian chờ ≥ 1 giờ.
 - **Ràng buộc ở DB (K-038):** partial unique chặn upload trùng, 2 job active cùng loại, 2 câu hỏi chạy cùng session; composite FK ép scope (người tạo + workspace, revision + document). DB **không** chứng minh được đủ vector hay text đúng; phần đó do manifest và kiểm tra.
@@ -408,3 +409,10 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - GIF dùng bảng màu và transparency/disposal 1 cho pixel không đổi, giữ thời lượng khung 100 ms; encode toàn ảnh lặp lại vượt giới hạn 5 MB. Video giữ màu tốt hơn nhưng README cần ảnh động xem ngay; cân nhắc video khi cần demo dài hoặc âm thanh.
 - Lượt quay đầu gặp `session_busy` khi auto-send trong development StrictMode; backend vẫn hoàn tất. Script chuẩn bị phiên trống trước khi quay và từ chối khung có lỗi; không sửa app trong task này. Xem [script](scripts/record_demo_gif.mjs), [report](docs/housekeeping-20261115.md).
 - Bản cuối: 15 s, 960×600, 150 khung/10 fps, 484.047 bytes; giải mã kiểm tra đủ 150 khung. Hai lượt hỏi dùng 2 generation, countTokens suy ra 14; backend lần cuối 316/316 đạt sau hai lỗi setup Qdrant tạm thời đã ghi trong report.
+
+### K-109 — Chứng minh heartbeat bằng lease đã gia hạn
+
+15/11/2026 · kiểm thử worker · đã triển khai và kiểm chứng.
+- Ngủ cố định 2,2 s với lease 2 s phụ thuộc lịch thread/DB khi máy bận; thay bằng polling lease đã commit trong lúc fake inference bị chặn, yêu cầu hai lần tăng và timeout rõ ràng. Chỉ tăng lease của test này lên 30 s; giữ logic worker và fixture dùng chung.
+- Chỉ tăng thời gian ngủ vẫn dễ chập chờn; mock heartbeat/DB không chứng minh thread thật ghi được PostgreSQL. Chọn quan sát DB thật, chấp nhận test vẫn có giới hạn thời gian và phụ thuộc hạ tầng; xem lại nếu timeout/lock contention còn xuất hiện.
+- Đạt 20/20 lượt riêng; tắt heartbeat trong tiến trình kiểm tra âm làm test fail đúng với 0 lần gia hạn. Backend đạt 316/316 ở lượt 2 và 4; lượt 1 lỗi timeout Qdrant, lượt 3 lỗi guard đường dẫn upload (đều đạt khi chạy riêng, chưa sửa nguyên nhân gốc). Ruff đạt; xem [report 00-T1](docs/housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat).

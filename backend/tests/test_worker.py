@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from sqlalchemy import create_engine, event, select, update
+from sqlalchemy import create_engine, event, func, select, update
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -90,21 +90,46 @@ def test_concurrent_claim_and_skip_locked(worker_env):
 
 def test_heartbeat_runs_during_inference_without_document_lock(worker_env):
     env = worker_env
+    # Give a busy machine headroom without weakening the renewal assertion below.
+    # This fixture owns its settings; other tests retain the short recovery lease.
+    env.settings.job_lease_seconds = 30
     uploaded = env.upload()
     entered, release = threading.Event(), threading.Event()
 
     class SlowEmbedder(FakeEmbedder):
         def encode(self, texts):
             entered.set()
-            assert release.wait(8)
+            assert release.wait(30), "inference was not released before its safety timeout"
             return super().encode(texts)
 
     env.embedder = SlowEmbedder()
     with ThreadPoolExecutor(1) as pool:
         future = pool.submit(env.worker().run_once)
         try:
-            assert entered.wait(8)
-            time.sleep(2.2)  # longer than the original 2-second lease
+            assert entered.wait(15), "worker did not enter inference"
+            lease_query = select(ProcessingJob.lease_expires_at).where(
+                ProcessingJob.document_id == uploaded["document_id"]
+            )
+            with env.sessions() as db:
+                previous_lease = db.scalar(lease_query)
+            assert previous_lease is not None
+            renewals = 0
+            deadline = time.monotonic() + 10
+            while renewals < 2:
+                # A fresh session sees committed heartbeats, not cached ORM state.
+                with env.sessions() as db:
+                    current_lease = db.scalar(lease_query)
+                assert current_lease is not None
+                if current_lease > previous_lease:
+                    renewals += 1
+                    previous_lease = current_lease
+                if renewals == 2:
+                    break
+                assert time.monotonic() < deadline, (
+                    f"expected two committed lease renewals during inference; observed {renewals}"
+                )
+                time.sleep(0.05)  # polling backoff, not evidence that heartbeat ran
+            assert not release.is_set() and not future.done()
             with env.sessions() as db:
                 document = db.scalar(
                     select(Document)
@@ -114,10 +139,10 @@ def test_heartbeat_runs_during_inference_without_document_lock(worker_env):
                 job = db.scalar(
                     select(ProcessingJob).where(ProcessingJob.document_id == document.id)
                 )
-                assert job.lease_expires_at > datetime.now(UTC)
+                assert job.lease_expires_at > db.scalar(select(func.clock_timestamp()))
         finally:
             release.set()
-        assert future.result(timeout=8)["status"] == "completed"
+        assert future.result(timeout=15)["status"] == "completed"
 
 
 def test_old_attempt_is_fenced_after_recovery(worker_env):

@@ -1,4 +1,6 @@
-# 00-T4 — GIF demo cho README
+# 00 — Dọn nợ kỹ thuật: GIF demo và test heartbeat
+
+Phần đầu ghi kết quả **00-T4** tại thời điểm hoàn tất T4. Kết quả và tiến độ mới nhất sau **00-T1** nằm ở [phần heartbeat](#00-t1--ổn-định-test-heartbeat).
 
 **Ngày:** 15/11/2026 (giờ Việt Nam). **Nhánh:** `feat/00-housekeeping`, chưa push/merge.
 **Phạm vi:** chỉ task T4 trong [00-housekeeping](roadmap/00-housekeeping.md); T1–T3 chưa thực hiện.
@@ -83,3 +85,70 @@ cd backend
 - API/app/DB vẫn giữ nguyên hành vi; sự cố race của lượt đầu chưa được sửa trong app. Bản GIF cuối quay trực tiếp, không dùng kết quả từ lịch sử của lượt trước.
 - M1 giữ **97,4% / 100%** theo trạng thái PLAN v1.32 đã công bố; không đọc/sửa PLAN trong task roadmap.
 - **00: 1/4 task xong (chỉ T4)**. Trọng số: M2 41, M3 40, M4 48, tổng 129; tiến độ **M2 2,4% / 100%**, **M3 0% / 100%**, **M4 0% / 100%**, **tổng roadmap 0,8% / 100%**. T1–T3 chưa thực hiện; không tự chuyển task tiếp theo.
+
+## 00-T1 — Ổn định test heartbeat
+
+**Ngày:** 15/11/2026 (giờ Việt Nam). **Nhánh:** `feat/00-housekeeping`.
+**Trạng thái:** hoàn tất 00-T1; 20 lượt heartbeat liên tiếp đạt và hai lượt backend toàn bộ đạt. Phần T4 ở trên giữ nguyên kết quả tại thời điểm hoàn tất T4.
+
+### Vấn đề và cách sửa
+
+Test cũ giữ fake inference, ngủ cố định 2,2 s với lease 2 s rồi kiểm tra lease còn hạn. Cách này phụ thuộc thời điểm thread heartbeat được CPU/DB phục vụ; sleep không trực tiếp chứng minh heartbeat đã ghi. Đây là nguồn phụ thuộc thời gian xác định được từ code, không phải phép tái hiện chính xác mọi lần fail trước đây.
+
+Chỉ sửa `backend/tests/test_worker.py`, không sửa helper dùng chung hay logic worker:
+
+- Lease của riêng fixture instance trong test heartbeat tăng lên **30 s**, heartbeat vẫn **0,2 s**. Các test recovery/fencing giữ lease 2 s như trước.
+- Chờ fake inference báo đã vào bằng `Event`; lấy mốc lease hiện tại rồi đọc qua **session mới** mỗi lần, yêu cầu **hai lần tăng lease đã commit** khi inference vẫn bị chặn. Deadline dùng `time.monotonic()` **10 s**; khoảng nghỉ **50 ms** chỉ giảm tải polling.
+- Giữ kiểm tra `FOR UPDATE NOWAIT` lấy được khóa document trong lúc inference chờ. Kiểm tra lease còn hạn theo `clock_timestamp()` của PostgreSQL để cùng nguồn thời gian với queue.
+- Luôn thả inference trong `finally`, rồi yêu cầu worker `completed`. Timeout vào inference/kết quả **15 s**, safety timeout của fake inference **30 s**.
+
+Không chọn chỉ tăng sleep vì vẫn phụ thuộc lịch thực thi; không mock DB/heartbeat trong kiểm tra chính vì cần chứng minh thread thật gia hạn được lease. Hai lần tăng quan sát được là ít nhất hai commit, không phải phép đếm toàn bộ heartbeat. Test có timeout hữu hạn và vẫn phụ thuộc DB/Qdrant; 20 lần đạt không bảo đảm mọi môi trường đều hết flaky.
+
+### Kiểm chứng 00-T1
+
+- Dừng web stack bằng `stop-web.cmd`; Docker/storage/volumes giữ nguyên. Sandbox ban đầu chặn launcher, Python nền của venv và Docker; chạy lại các lệnh cần quyền ngoài sandbox, không sửa môi trường/dependencies để né lỗi.
+- Dùng `validate_test_database_url` xác nhận DB test tên `_test`, khác development, host **127.0.0.1** trước pytest. PostgreSQL và Qdrant đều healthy; Qdrant ở `http://127.0.0.1:6333`. Fixture tự tạo/dọn dữ liệu test riêng và áp migration hiện có nếu cần; không thêm migration.
+- **Heartbeat: 20/20 lượt độc lập liên tiếp đạt**, mỗi lượt gọi pytest trong tiến trình mới; thời gian pytest mỗi lượt **4,04–7,33 s**, tổng **89,05 s** (không tính overhead khởi động shell/interpreter). Log: `.cache/housekeeping-t1/heartbeat-1.log` đến `heartbeat-20.log` (gitignore).
+- **Kiểm tra âm:** patch `Heartbeat._run` thành chờ stop chỉ trong một tiến trình Python; pytest trả exit **1**, fail đúng assertion `expected two committed lease renewals during inference; observed 0`, sau **14,15 s**. Wrapper xác minh đúng exit/message rồi trả 0. Không sửa file production; patch kết thúc cùng tiến trình. Log: `.cache/housekeeping-t1/heartbeat-disabled.log`.
+- **Backend lần 1:** **315 passed, 1 failed, 1 warning** trong **362,28 s**. `test_multiple_collections_scoped_vector_filter_and_missing_files` lỗi `vector_timeout` khi tạo payload index `revision_id` của collection thứ hai với timeout 2 s; heartbeat đạt. Chạy lại riêng test deletion: **1 passed, 1 warning** trong **8,55 s**, không sửa code/config. Đây là bằng chứng lỗi tạm thời ở yêu cầu Qdrant, chưa xác định nguyên nhân gốc của độ trễ. Lượt full này không tính là đạt. Log: `backend-1.log`, `deletion-recheck.log` trong `.cache/housekeeping-t1/`.
+- **Backend lần 2:** **316 passed, 1 warning** trong **354,83 s**, exit 0; log `.cache/housekeeping-t1/backend-2.log`.
+- **Backend lần 3:** **315 passed, 1 failed, 1 warning** trong **341,96 s**. `test_concurrent_duplicate_real_transactions` lỗi `storage_error` tại guard `path.is_relative_to(root)` trong `store_stream` (`uploads.py:88`), heartbeat đạt. Chạy lại riêng: **1 passed, 1 warning** trong **0,80 s**. Chưa xác định nguyên nhân gốc của lỗi đường dẫn; không sửa uploads/test_uploads ngoài phạm vi T1. Log: `backend-3.log`, `uploads-recheck.log` trong `.cache/housekeeping-t1/`.
+- **Backend lần 4:** **316 passed, 1 warning** trong **330,97 s**, exit 0; log `.cache/housekeeping-t1/backend-4.log`. Đủ **hai lượt toàn bộ đạt (lần 2 và 4), không liên tiếp**; tổng cộng đã chạy bốn lượt, không gộp kết quả chạy riêng thành full pass. Heartbeat đạt trong cả bốn lượt.
+- Ruff sau sửa code: `check --no-cache .` đạt; `format --check --no-cache .`: **78 files already formatted**.
+- Rà soát trước commit: đúng **4 file** thuộc phạm vi được duyệt; `git diff --cached --check` đạt; **55 liên kết local** trong tài liệu staged tồn tại; quét bytes staged không phát hiện giá trị private lấy từ dotenv hay pattern API/private key. Log kiểm chứng nằm trong `.cache/` được gitignore.
+- Không chạy frontend/eval tooling vì không sửa UI, `eval/` hay service mà eval dùng. **0 lần gọi Gemini**; fake embedding có nhãn như fixture hiện có.
+
+Lệnh kiểm chứng từ `backend/` (PowerShell), từng lượt dừng nếu exit khác 0. Hai lượt có lỗi được chẩn đoán/chạy lại riêng như ghi trên, sau đó chạy thêm lượt toàn bộ; các lượt sau dùng thêm `--tb=short`:
+
+```powershell
+for ($heartbeatRun = 1; $heartbeatRun -le 20; $heartbeatRun++) {
+    .\.venv\Scripts\python.exe -B -m pytest tests/test_worker.py::test_heartbeat_runs_during_inference_without_document_lock -q -p no:cacheprovider
+    if ($LASTEXITCODE -ne 0) { throw "Heartbeat run $heartbeatRun failed" }
+}
+for ($backendRun = 1; $backendRun -le 2; $backendRun++) {
+    .\.venv\Scripts\python.exe -B -m pytest -q -p no:cacheprovider
+    if ($LASTEXITCODE -ne 0) { throw "Backend run $backendRun failed" }
+}
+.\.venv\Scripts\ruff.exe check --no-cache .
+.\.venv\Scripts\ruff.exe format --check --no-cache .
+```
+
+Tái tạo kiểm tra âm trong tiến trình riêng (kỳ vọng pytest exit 1 và đúng assertion 0 lần gia hạn):
+
+```powershell
+$heartbeatProbe = @'
+import pytest
+from app.worker import Heartbeat
+Heartbeat._run = lambda self: self.stop.wait()
+raise SystemExit(pytest.main(['tests/test_worker.py::test_heartbeat_runs_during_inference_without_document_lock', '-q', '-p', 'no:cacheprovider', '--tb=short']))
+'@
+.\.venv\Scripts\python.exe -B -c $heartbeatProbe
+```
+
+### Giới hạn và tiến độ 00-T1
+
+Không sửa worker, UI, API/schema, model/prompt hay dependency. Warning Starlette/HTTPX có sẵn; kiểm tra âm còn có warning pytest về module `anyio` đã import trước assertion rewrite. Không dùng test phần mềm làm bằng chứng chất lượng AI/human review.
+
+Hai lỗi ngoài heartbeat chưa được sửa nguyên nhân gốc: độ trễ tạo index Qdrant và guard đường dẫn upload đồng thời cần đợt điều tra riêng nếu tiếp tục xuất hiện. Test heartbeat vẫn có timeout hữu hạn; không khẳng định toàn bộ suite đã hết flaky. Web stack giữ trạng thái đã dừng sau kiểm thử. Không push/merge, không sửa `release/m1`, không chuyển T2/T3.
+
+**00: 2/4 task xong (T1, T4)**. Theo trọng số hiện có: **M2 4,9% / 100%** (2/41), **M3 0% / 100%**, **M4 0% / 100%**, **tổng roadmap 1,6% / 100%** (2/129). M1 giữ **97,4% / 100%** theo PLAN v1.32 đã công bố; không đọc/sửa PLAN trong task roadmap.
