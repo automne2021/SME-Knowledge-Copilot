@@ -161,7 +161,7 @@ Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính
 | # | Tính năng | Task xong / tổng | Trạng thái | Nhánh | Report |
 |---|---|---|---|---|---|
 | 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 2/4 | T1, T4 xong; T2–T3 chưa bắt đầu | `feat/00-housekeeping` | [00-T1 — Heartbeat](../housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat), [00-T4 — GIF demo](../housekeeping-20261115.md) |
-| 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 1/7 | T1 xong; T2a–T5 chưa bắt đầu | `feat/01-eval-v2` | [01-T1 — Schema v2](../eval-v2-20261115.md) |
+| 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 2/7 | T1, T2a xong; T2b–T5 chưa bắt đầu | `feat/01-eval-v2` | [01-T1 — Schema v2](../eval-v2-20261115.md), [01-T2a — Corpus](../corpus-v2-20261115.md) |
 | 02 | [Hybrid search](02-hybrid-search-reranker.md) | 0/5 | Chưa bắt đầu | — | — |
 | 03 | [Thư mục](03-folders-scoped-qa.md) | 0/4 | Chưa bắt đầu | — | — |
 | 04 | [Retrieval nhận biết bảng](04-table-aware-retrieval.md) | 0/3 | Chưa bắt đầu | — | — |

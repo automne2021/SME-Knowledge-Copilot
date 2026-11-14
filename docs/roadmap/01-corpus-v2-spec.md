@@ -75,6 +75,7 @@ Mọi tài liệu thuộc **cùng một công ty** và nhất quán với nhau v
 | F-MH-01 | Ma trận phê duyệt mua hàng: dưới 10 triệu → Trưởng phòng; 10–50 triệu → Trưởng phòng và Kế toán trưởng; trên 50–200 triệu → Tổng Giám đốc; trên 200 triệu → Hội đồng quản trị | D04 | **Slice bảng** |
 | F-MH-02 | Biên bản họp **đề xuất** nâng ngưỡng Trưởng phòng lên 15 triệu, giao HCNS dự thảo, **chưa ban hành** | D10 | **Bẫy:** đây là đề xuất, không phải quy định đang áp dụng; ngưỡng hiện hành vẫn là 10 triệu |
 | F-MH-03 | Đơn mua từ 20 triệu phải có ít nhất 3 báo giá (`BM-MH-01`) | D05 | |
+| F-MH-04 | `BM-MH-01`: Bảng tổng hợp báo giá và phương án lựa chọn; `BM-MH-02`: Phiếu đề nghị mua và trình duyệt; `BM-MH-03`: Biên bản giao nhận, nghiệm thu; `BM-MH-04`: Phiếu chuyển hồ sơ thanh toán | D05 | Bổ sung 01-T2a; cố định ý nghĩa mã cho slice identifier |
 | F-KHO-01 | Hàng lỗi phải chuyển vào khu `KQ-01` trong 24 giờ kể từ khi phát hiện | D06 | Slice mã định danh |
 | F-KHO-02 | Kiểm kê định kỳ cuối mỗi quý; chênh lệch trên 2% phải lập biên bản `BM-KHO-07` | D06 | |
 | F-DV-01 | Hợp đồng bảo trì gói **Tiêu chuẩn**: phản hồi trong 4 giờ làm việc, kỹ thuật viên có mặt trong 24 giờ (nội thành) | D07 | Nằm sâu trong văn bản dài |
@@ -186,10 +187,10 @@ Trạng thái gồm: `chưa viết` → `đã viết` → `người dùng đã d
 | # | Trạng thái | Commit | Ghi chú duyệt |
 |---|---|---|---|
 | D01 | chưa viết | — | — |
-| D02 | chưa viết | — | — |
-| D03 | chưa viết | — | Tài liệu mẫu văn phong |
-| D04 | chưa viết | — | — |
-| D05 | chưa viết | — | — |
+| D02 | đã viết | xem commit 01-T2a | 2 trang DOCX; chưa human review |
+| D03 | người dùng đã duyệt | xem commit 01-T2a | Chuẩn văn phong: người dùng xác nhận “D03 đạt” ngày 15/11/2026; 5 trang, 2 bảng |
+| D04 | đã viết | xem commit 01-T2a | 2 trang PDF text, bảng kẻ khung; chưa human review |
+| D05 | đã viết | xem commit 01-T2a | 4 trang DOCX; chưa human review |
 | D06 | chưa viết | — | — |
 | D07 | chưa viết | — | — |
 | D08 | chưa viết | — | — |
@@ -200,4 +201,4 @@ Trạng thái gồm: `chưa viết` → `đã viết` → `người dùng đã d
 | D13 | chưa viết | — | — |
 | D14 | chưa viết | — | — |
 
-**Chuẩn văn phong đã duyệt:** *(ghi tên tài liệu sau khi người dùng duyệt D03; các phiên sau đọc tài liệu này trước khi viết)*
+**Chuẩn văn phong đã duyệt: D03** — `quy_che_cong_tac_phi.docx`, người dùng duyệt ngày 15/11/2026. Các phiên sau đọc D03 trong `eval/seeds/corpus_v2.json` trước khi viết tài liệu tiếp theo.

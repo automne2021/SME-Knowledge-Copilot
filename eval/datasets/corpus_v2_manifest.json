@@ -1,0 +1,54 @@
+{
+  "corpus_version": "synthetic-sme-v2",
+  "corpus_seed_sha256": "3d48b53de45e1793e10ace0095445e9d8e74cf42d6a20991e7276d654823fae2",
+  "libraries": {
+    "python-docx": "1.2.0",
+    "PyMuPDF": "1.28.2"
+  },
+  "pdf_font_sha256": "0bf1b21b27b370039b60eca23d532c3fe3fb308750d8f13816db70a6cb666804",
+  "documents": [
+    {
+      "document_id": "D03",
+      "path": "corpus_v2/quy_che_cong_tac_phi.docx",
+      "format": "docx",
+      "sha256": "575b0c21c6bc6d164820a8b053a6e9612e4191f97bd9c915b30b182ba5f0a21c",
+      "facts": [
+        "F-CT-01",
+        "F-CT-02",
+        "F-CT-03"
+      ]
+    },
+    {
+      "document_id": "D02",
+      "path": "corpus_v2/thong_bao_sua_doi_che_do_phep_2026.docx",
+      "format": "docx",
+      "sha256": "0fbb1bcb47c70c262407860122a0b13dfd606fc3a01ded748cd5a638edafd167",
+      "facts": [
+        "F-HR-01",
+        "F-HR-02",
+        "F-HR-03",
+        "F-HR-04"
+      ]
+    },
+    {
+      "document_id": "D04",
+      "path": "corpus_v2/ma_tran_phe_duyet_mua_hang.pdf",
+      "format": "pdf",
+      "sha256": "423b74b0a7f30aa77432c96bb15fcaf642fe4211c220006a345e9bbd8cc6debd",
+      "facts": [
+        "F-MH-01"
+      ]
+    },
+    {
+      "document_id": "D05",
+      "path": "corpus_v2/quy_trinh_mua_hang.docx",
+      "format": "docx",
+      "sha256": "303d9f1db0bbe5b9e3780285f69c13aedab79ef0b1cdd8a85737a1021fec8b72",
+      "facts": [
+        "F-MH-01",
+        "F-MH-03",
+        "F-MH-04"
+      ]
+    }
+  ]
+}
