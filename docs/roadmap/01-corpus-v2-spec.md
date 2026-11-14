@@ -88,6 +88,15 @@ Mọi tài liệu thuộc **cùng một công ty** và nhất quán với nhau v
 | F-CSKH-01 | Tổng đài CSKH hoạt động 07:30–20:00, kể cả thứ Bảy | D09 | |
 | F-IT-01 | Mật khẩu đổi mỗi 90 ngày, tối thiểu 12 ký tự, bật MFA cho email | D11 | Email viết **không dấu**, lẫn tiếng Anh |
 | F-IT-02 | Truy cập ERP từ ngoài văn phòng phải qua VPN | D11 | |
+| F-BG-01 | Tiền công/máy/lần, chưa thuế và linh kiện: máy in đơn năng A4 xử lý kéo giấy 250.000đ; đa chức năng A4 350.000đ; photocopy A3 căn chỉnh giấy 550.000đ; máy chiếu vệ sinh đường gió/cụm quang 400.000đ | D12 | Bổ sung 01-T2c; bảng giá, không thu lặp phần đã thuộc hợp đồng |
+| F-BG-02 | Ngoài giờ: trước 08:00/sau 17:00 thứ Hai–thứ Sáu và thứ Bảy/Chủ nhật; phụ phí 30% tiền công cơ bản | D12 | Bổ sung 01-T2c; khác khung giờ tổng đài D09 |
+| F-BG-03 | Hợp đồng bảo trì còn hiệu lực: giảm 10% tiền công cơ bản cho việc ngoài phí định kỳ; không giảm linh kiện/phụ phí; kết hợp ngoài giờ = 90% cơ bản + 30% cơ bản | D12 | Bổ sung 01-T2c; ví dụ 250.000 → 225.000 + 75.000 = 300.000đ |
+| F-SCAN-01 | Bàn giao nội bộ ngày 12/10/2026 từ Võ Thành Nhân sang Đặng Minh Tuấn; 01 máy in đơn năng A4, mã TL-PR-026 | D13 | Bổ sung 01-T2c; chỉ có trong PDF ảnh |
+| F-SCAN-02 | Serial giả lập TL-SIM-000026; kèm 01 dây nguồn và 01 cáp USB | D13 | Bổ sung 01-T2c; scan/identifier |
+| F-SCAN-03 | Máy khởi động được, vỏ xước nhẹ bên trái, chưa ghi nhận lỗi khi in trang thử | D13 | Bổ sung 01-T2c; hiện trạng bàn giao |
+| F-SCAN-04 | Phiếu BM-KT-04 ngày 22/10/2026 do Đặng Minh Tuấn, KTDV, đề nghị | D14 | Bổ sung 01-T2c; điền mô phỏng |
+| F-SCAN-05 | Đề nghị 750.000đ tiền công sửa máy in dự phòng TL-PR-026, kèm 03 chứng từ | D14 | Bổ sung 01-T2c; không phải giá một lần sửa tiêu chuẩn D12 |
+| F-SCAN-06 | Phiếu đang chờ kiểm tra, chưa duyệt và chưa thanh toán | D14 | Bổ sung 01-T2c; không diễn giải thành đã chi |
 
 **Câu không có đáp án (unanswerable)** phải hỏi về chủ đề **gần** với corpus nhưng corpus không nói, ví dụ "phụ cấp gửi xe bao nhiêu?" hay "thưởng Tết năm 2026 mấy tháng lương?". Không được viết những chủ đề đó vào bất kỳ tài liệu nào.
 
@@ -195,11 +204,11 @@ Trạng thái gồm: `chưa viết` → `đã viết` → `người dùng đã d
 | D06 | đã viết | xem commit 01-T2b | 7 trang PDF text; 1 bảng mã lỗi kẻ khung; chưa human review |
 | D07 | đã viết | xem commit 01-T2b | 10 trang PDF text; SLA ở trang 7, phạt ở trang 8; chưa human review |
 | D08 | đã viết | xem commit 01-T2b | Markdown 7.143 ký tự parser, có bảng; chưa human review |
-| D09 | chưa viết | — | — |
-| D10 | chưa viết | — | — |
-| D11 | chưa viết | — | — |
-| D12 | chưa viết | — | — |
-| D13 | chưa viết | — | — |
-| D14 | chưa viết | — | — |
+| D09 | đã viết | xem commit 01-T2c | Markdown 7.632 ký tự parser, 16 cặp hỏi đáp; chưa human review |
+| D10 | đã viết | xem commit 01-T2c | 2 trang DOCX, 5.107 ký tự parser; đề xuất 15 triệu chưa ban hành; chưa human review |
+| D11 | đã viết | xem commit 01-T2c | TXT 2.509 ký tự parser, email không dấu (trừ notice), có MFA/VPN; chưa human review |
+| D12 | đã viết | xem commit 01-T2c | 2 trang PDF text, 5.181 ký tự parser, bảng kẻ khung; chưa human review |
+| D13 | đã viết | xem commit 01-T2c | 1 trang PDF ảnh 150 dpi, không lớp chữ; parser needs_ocr; chưa human review |
+| D14 | đã viết | xem commit 01-T2c | 1 trang PDF ảnh 150 dpi, BM-KT-04 điền mô phỏng; needs_ocr; chưa human review |
 
 **Chuẩn văn phong đã duyệt: D03** — `quy_che_cong_tac_phi.docx`, người dùng duyệt ngày 15/11/2026. Các phiên sau đọc D03 trong `eval/seeds/corpus_v2.json` trước khi viết tài liệu tiếp theo.

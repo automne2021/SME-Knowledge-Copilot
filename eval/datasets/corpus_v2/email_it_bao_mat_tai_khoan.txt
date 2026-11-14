@@ -1,0 +1,33 @@
+TÀI LIỆU GIẢ LẬP – dùng để kiểm thử SME Knowledge Copilot, không phải quy định của doanh nghiệp thật
+
+From: IT Thien Lam <it@thienlam.example>
+
+To: Toan the nhan vien <all@thienlam.example>
+
+Subject: Nhac doi password va bat MFA cho email cong ty
+
+Date: 05 Oct 2026 09:00 +0700
+
+Chao anh chi,
+
+IT gui lai huong dan bao mat tai khoan email va ERP. Anh chi kiem tra tren tai khoan duoc cap cho minh, khong dung chung user voi dong nghiep. Neu thay man hinh khac huong dan thi gui mo ta ve it@thienlam.example de IT ho tro; dung chup anh co password hay ma xac thuc.
+
+- Password phai doi moi 90 ngay, toi thieu 12 ky tu. Chon passphrase de nho nhung kho doan; khong lay ten phong ban hay ma may lam mat khau. Khong gui password qua chat de nho nguoi khac dang nhap giup.
+
+- Bat MFA cho email cong ty. Khi dang nhap, chi approve yeu cau do chinh minh vua thuc hien. Neu dien thoai hien len request la thi tu choi va bao IT, ke ca khi nguoi goi tu nhan la support. Ma OTP va recovery code khong gui cho bat ky ai.
+
+- Truy cap ERP tu ngoai van phong phai qua VPN. Ket noi VPN cong ty truoc roi moi mo ERP; khong dung cong cu VPN mien phi tu cai de thay the. Neu VPN loi thi gui thoi diem va noi dung thong bao, khong nho nguoi o van phong dang nhap ho de xu ly tam.
+
+- Can than email phishing gia danh nha cung cap hoac thong bao khoa tai khoan. Kiem tra dia chi nguoi gui va dich cua link; file dinh kem khong ro nguon thi dung mo. Yeu cau chuyen sang trang dang nhap la can duoc xac minh qua kenh da biet, khong tra loi ngay vao email dang nghi ngo.
+
+- Neu lo bam link la, dung nhap tiep thong tin va bao IT bang kenh noi bo. Giu email goc de IT kiem tra header; khong forward file nghi ngo cho nhieu nguoi. Neu da nhap password, neu ro viec nay de IT huong dan doi va kiem tra phien dang nhap.
+
+- Khi doi dien thoai hoac mat thiet bi MFA, lien he IT de xac minh va dang ky lai theo huong dan. Khong tat MFA truoc roi de quen bat lai. Viec cap lai quyen can dung chu tai khoan; IT khong yeu cau anh chi doc mat khau hien tai qua dien thoai.
+
+Quan ly bo phan vui long nhac cac ban moi vao nhom doc email nay va xac nhan da truy cap duoc bang tai khoan rieng. Nguoi chuyen vi tri can bao IT de ra soat quyen ERP; khong tu chia se user cu cho nguoi nhan ban giao. IT se phan hoi tung truong hop theo thong tin da kiem tra, tranh sua cau hinh khi chua ro nguyen nhan.
+
+Minh go hoi voi nen co cho viet tat, anh chi chua ro thi reply ve IT nhe. Cam on moi nguoi da phoi hop.
+
+Bo phan IT
+Cong ty Co phan Thiet bi Van phong Thien Lam
+it@thienlam.example

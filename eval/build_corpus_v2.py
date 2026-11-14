@@ -239,6 +239,9 @@ def pdf_bytes(document: dict, company: str, notice: str, font: Path) -> bytes:
     th,td {{border: 0.6pt solid black; padding: 6pt; font-size: 11pt;}}
     th {{background-color: #eeeeee;}}
     """
+    if document["format"] == "scan":
+        # Blue entries simulate a filled paper form before rasterization.
+        css += "td {font-style: italic; color: #173c73;}"
     parts = [
         "".join(
             f'<p class="admin">{escape(text)}</p>'
@@ -357,6 +360,36 @@ def markdown_bytes(document: dict, company: str, notice: str) -> bytes:
     return ("\n\n".join(parts) + "\n").encode("utf-8")
 
 
+def text_bytes(document: dict, company: str, notice: str) -> bytes:
+    """Plain email source: preserve the seed's From/To/Subject/Date lines verbatim."""
+    parts = [notice]
+    for block in document["blocks"]:
+        kind = block["type"]
+        if kind == "table":
+            parts.append("\n".join(" | ".join(row) for row in [block["header"], *block["rows"]]))
+        elif kind == "signature":
+            parts.append("\n".join(block["lines"]))
+        elif kind != "page_break":
+            parts.append(("- " if kind == "list_item" else "") + block["text"])
+    return ("\n\n".join(parts) + "\n").encode("utf-8")
+
+
+def scan_bytes(document: dict, company: str, notice: str, font: Path) -> bytes:
+    """Rasterize the complete seeded page at 150 dpi; publish no text or OCR layer."""
+    import pymupdf
+
+    source = pdf_bytes(document, company, notice, font)
+    with pymupdf.open(stream=source, filetype="pdf") as original, pymupdf.open() as scanned:
+        for page in original:
+            pixmap = page.get_pixmap(dpi=150, alpha=False)
+            target = scanned.new_page(width=page.rect.width, height=page.rect.height)
+            target.insert_image(target.rect, stream=pixmap.tobytes("png"))
+        scanned.set_metadata(
+            {"title": document["title"], "author": company, "producer": "synthetic-sme-v2"}
+        )
+        return scanned.tobytes(garbage=4, deflate=True, no_new_id=True)
+
+
 def build(
     seed_path: Path = SEED, output: Path = ROOT / "datasets", font: Path = DEFAULT_FONT
 ) -> dict:
@@ -372,8 +405,12 @@ def build(
             data = pdf_bytes(doc, seed["company"], seed["notice"], font)
         elif doc["format"] == "md":
             data = markdown_bytes(doc, seed["company"], seed["notice"])
+        elif doc["format"] == "txt":
+            data = text_bytes(doc, seed["company"], seed["notice"])
+        elif doc["format"] == "scan":
+            data = scan_bytes(doc, seed["company"], seed["notice"], font)
         else:
-            raise ValueError("This stage implements DOCX, text PDF and Markdown only")
+            raise ValueError("Unsupported document format")
         path = f"corpus_v2/{doc['file_name']}"
         artifacts[path] = data
         documents.append(
@@ -390,7 +427,7 @@ def build(
         "corpus_seed_sha256": sha256(seed_data),
         "libraries": {"python-docx": version("python-docx"), "PyMuPDF": version("PyMuPDF")},
         "pdf_font_sha256": sha256(font.read_bytes())
-        if any(d["format"] == "pdf" for d in seed["documents"])
+        if any(d["format"] in {"pdf", "scan"} for d in seed["documents"])
         else None,
         "documents": documents,
     }

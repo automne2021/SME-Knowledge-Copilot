@@ -4,6 +4,7 @@ import copy
 import io
 import json
 import re
+import unicodedata
 import zipfile
 from difflib import SequenceMatcher
 
@@ -17,6 +18,8 @@ from eval.build_corpus_v2 import (
     docx_bytes,
     markdown_bytes,
     pdf_bytes,
+    scan_bytes,
+    text_bytes,
     validate_seed,
 )
 
@@ -37,6 +40,12 @@ def test_stage_fact_coverage_and_unanswerable_exclusions(seed):
         "D06",
         "D07",
         "D08",
+        "D09",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14",
     }
     registry = (SEED.parents[2] / "docs/roadmap/01-corpus-v2-spec.md").read_text(encoding="utf-8")
     known = set(re.findall(r"^\| (F-[A-Z]+-\d{2}) \|", registry, re.M))
@@ -56,6 +65,19 @@ def test_stage_fact_coverage_and_unanswerable_exclusions(seed):
             "trong bộ dữ liệu mẫu",
         ):
             assert forbidden not in body
+        unaccented = "".join(
+            c for c in unicodedata.normalize("NFD", body) if not unicodedata.combining(c)
+        ).replace("đ", "d")
+        for forbidden in (
+            "phu cap gui xe",
+            "phu cap trong xe",
+            "thuong tet",
+            "tet bonus",
+            "parking allowance",
+            "cong tac nuoc ngoai",
+            "cong tac ngoai nuoc",
+        ):
+            assert forbidden not in unaccented
 
 
 @pytest.mark.parametrize(
@@ -189,7 +211,7 @@ def test_approved_d03_is_byte_identical(seed):
     )
 
 
-@pytest.mark.parametrize("doc_id", ["D02", "D03", "D05"])
+@pytest.mark.parametrize("doc_id", ["D02", "D03", "D05", "D10"])
 def test_every_docx_has_one_notice_and_no_duplicate_paragraphs(seed, doc_id):
     source = next(d for d in seed["documents"] if d["document_id"] == doc_id)
     data = docx_bytes(source, seed["company"], seed["notice"])
@@ -220,6 +242,10 @@ def test_list_blocks_keep_ordered_semantics(seed, ordered, style):
         ("D06", 15000, 24000),
         ("D07", 25000, 36000),
         ("D08", 5000, 9000),
+        ("D09", 5000, 9000),
+        ("D10", 5000, 6000),
+        ("D11", 2500, 3000),
+        ("D12", 5000, 6000),
     ],
 )
 def test_production_parser_length_and_real_chunks(tmp_path, doc_id, min_chars, max_chars):
@@ -237,7 +263,7 @@ def test_production_parser_length_and_real_chunks(tmp_path, doc_id, min_chars, m
     if doc_id == "D03":
         assert len(rows) == 8
         assert {b.location["kind"] for b in rows} == {"docx_table"}
-    elif doc_id in {"D04", "D06"}:
+    elif doc_id in {"D04", "D06", "D12"}:
         assert len(rows) == 5
         assert {b.location["kind"] for b in rows} == {"pdf_page"}
     else:
@@ -322,7 +348,7 @@ def test_conflict_and_quote_policy_are_explicit(seed):
     assert "09/2026/QĐ-TL" in purchasing
 
 
-@pytest.mark.parametrize("doc_id", ["D01", "D06", "D07", "D08"])
+@pytest.mark.parametrize("doc_id", ["D01", "D06", "D07", "D08", "D09", "D10", "D11", "D12"])
 def test_new_documents_do_not_pad_length_by_repeating_paragraphs(seed, doc_id):
     doc = next(d for d in seed["documents"] if d["document_id"] == doc_id)
     paragraphs = [b["text"] for b in doc["blocks"] if b["type"] == "paragraph"]
@@ -476,14 +502,182 @@ def test_markdown_block_semantics_and_table_escaping(seed):
         assert value in text
 
 
-@pytest.mark.parametrize("file_format,file_name", [("txt", "email.txt"), ("scan", "scan.pdf")])
-def test_future_formats_fail_before_writing_anything(tmp_path, seed, file_format, file_name):
+def test_unknown_format_fails_before_writing_anything(tmp_path, seed):
     doc = copy.deepcopy(seed["documents"][0])
-    doc.update(document_id="D14", format=file_format, file_name=file_name)
-    seed["documents"].append(doc)
+    doc.update(format="exe", file_name="unknown.exe")
+    seed["documents"] = [doc]
     source = tmp_path / "seed.json"
     source.write_text(json.dumps(seed, ensure_ascii=False), encoding="utf-8")
     output = tmp_path / "out"
-    with pytest.raises(ValueError, match="This stage implements"):
+    with pytest.raises(ValueError, match="Invalid file_name/format"):
         build(source, output)
     assert not output.exists()
+
+
+def test_email_is_plain_unaccented_utf8_with_source_lines(tmp_path, seed):
+    from app.services.parsing import parse_file
+
+    doc = next(d for d in seed["documents"] if d["document_id"] == "D11")
+    data = text_bytes(doc, seed["company"], seed["notice"])
+    text = data.decode("utf-8")
+    lines = text.splitlines()
+    assert lines[0] == seed["notice"] and text.count(seed["notice"]) == 1
+    assert text.endswith("\n") and "\r" not in text
+    assert "\n".join(lines[1:]).isascii()
+    assert all(
+        any(line.startswith(field + ":") for line in lines)
+        for field in ["From", "To", "Subject", "Date"]
+    )
+    for value in ("90 ngay", "12 ky tu", "MFA", "ERP", "VPN", "phishing", "it@thienlam.example"):
+        assert value in text
+    assert text == text_bytes(doc, seed["company"], seed["notice"]).decode("utf-8")
+    path = tmp_path / doc["file_name"]
+    path.write_bytes(data)
+    parsed = parse_file(path, "txt")
+    assert not parsed.warnings
+    for block in parsed.blocks:
+        assert block.location["kind"] == "line_range"
+        assert block.raw_text.strip() == lines[block.location["line_start"] - 1]
+
+
+def test_faq_has_sixteen_pairs_and_correct_cross_document_facts(seed):
+    doc = next(d for d in seed["documents"] if d["document_id"] == "D09")
+    pairs = [(i, b) for i, b in enumerate(doc["blocks"]) if b.get("text", "").startswith("Câu ")]
+    assert len(pairs) == 16
+    for index, (position, block) in enumerate(pairs, 1):
+        assert block["text"].startswith(f"Câu {index}. ")
+        assert doc["blocks"][position + 1]["type"] == "paragraph"
+    text = json.dumps(doc["blocks"], ensure_ascii=False)
+    for value in (
+        "07:30–20:00",
+        "kể cả thứ Bảy",
+        "E-FD-12",
+        "E-PR-08",
+        "E-PW-03",
+        "E-CN-05",
+        "12 tháng",
+        "3 tháng",
+        "7 ngày",
+        "D06",
+        "D07",
+        "D08",
+        "D12",
+    ):
+        assert value in text
+
+
+def test_minutes_proposal_is_not_a_new_purchasing_policy(seed):
+    doc = next(d for d in seed["documents"] if d["document_id"] == "D10")
+    tagged = [b["text"] for b in doc["blocks"] if "F-MH-02" in b.get("facts", [])]
+    assert len(tagged) >= 3
+    text = " ".join(tagged)
+    for value in (
+        "dưới 15 triệu",
+        "chưa ban hành",
+        "chưa có ngày hiệu lực",
+        "giao HCNS",
+        "dự thảo",
+        "09/2026/QĐ-TL",
+        "dưới 10 triệu",
+        "từ 10 đến 50 triệu",
+        "Không lấy mức 15 triệu",
+    ):
+        assert value in text
+
+
+def test_price_pdf_preserves_two_pages_all_cells_and_terms(seed):
+    import pymupdf
+
+    from app.services.parsing import normalize
+
+    doc = next(d for d in seed["documents"] if d["document_id"] == "D12")
+    with pymupdf.open(
+        stream=pdf_bytes(doc, seed["company"], seed["notice"], DEFAULT_FONT), filetype="pdf"
+    ) as pdf:
+        assert len(pdf) == 2
+        text = normalize(" ".join(page.get_text() for page in pdf))
+        assert text.count(seed["notice"]) == 1
+        for block in doc["blocks"]:
+            for value in [block["text"]] if "text" in block else block.get("lines", []):
+                assert normalize(value) in text
+        tables = [
+            t.extract() for page in pdf for t in page.find_tables(strategy="lines_strict").tables
+        ]
+        expected = next(b for b in doc["blocks"] if b["type"] == "table")
+        assert len(tables) == 1
+        assert [[normalize(c) for c in row] for row in tables[0]] == [
+            [normalize(c) for c in row] for row in [expected["header"], *expected["rows"]]
+        ]
+        for value in (
+            "30%",
+            "10%",
+            "90%",
+            "225.000",
+            "75.000",
+            "300.000",
+            "chưa bao gồm thuế và linh kiện",
+        ):
+            assert value in text
+        for page in pdf:
+            assert all(
+                x0 >= 29 and x1 <= 566 and y0 >= 23 and y1 <= 788
+                for x0, y0, x1, y1, *_ in page.get_text("words")
+            )
+
+
+@pytest.mark.parametrize("doc_id", ["D13", "D14"])
+def test_scans_are_single_image_pages_without_text_and_need_ocr(tmp_path, seed, doc_id):
+    import pymupdf
+
+    from app.services.parsing import ParseError, normalize, parse_file
+
+    doc = next(d for d in seed["documents"] if d["document_id"] == doc_id)
+    source = pdf_bytes(doc, seed["company"], seed["notice"], DEFAULT_FONT)
+    data = scan_bytes(doc, seed["company"], seed["notice"], DEFAULT_FONT)
+    assert data == scan_bytes(doc, seed["company"], seed["notice"], DEFAULT_FONT)
+    with (
+        pymupdf.open(stream=data, filetype="pdf") as scanned,
+        pymupdf.open(stream=source, filetype="pdf") as original,
+    ):
+        assert len(scanned) == len(original) == 1
+        assert not scanned[0].get_text().strip() and not scanned[0].get_fonts()
+        images = scanned[0].get_images(full=True)
+        assert len(images) == 1
+        image = pymupdf.Pixmap(scanned, images[0][0])
+        expected = original[0].get_pixmap(dpi=150, alpha=False)
+        assert (image.width, image.height, image.samples) == (
+            expected.width,
+            expected.height,
+            expected.samples,
+        )
+        text = normalize(original[0].get_text())
+        assert text.count(seed["notice"]) == 1
+        for block in doc["blocks"]:
+            values = [block["text"]] if "text" in block else block.get("lines", [])
+            if block["type"] == "table":
+                values = [cell for row in [block["header"], *block["rows"]] for cell in row]
+            assert all(normalize(value) in text for value in values)
+        expected_values = (
+            ("TL-PR-026", "TL-SIM-000026", "01 dây nguồn", "01 cáp USB", "xước nhẹ bên trái")
+            if doc_id == "D13"
+            else ("BM-KT-04", "750.000 đồng", "03 chứng từ", "chưa duyệt và chưa thanh toán")
+        )
+        assert all(value in text for value in expected_values)
+    path = tmp_path / doc["file_name"]
+    path.write_bytes(data)
+    with pytest.raises(ParseError) as exc:
+        parse_file(path, "pdf")
+    assert exc.value.code == "needs_ocr"
+
+
+def test_scan_only_build_tracks_font_and_missing_font_writes_nothing(tmp_path, seed):
+    from eval.build_dataset import sha256
+
+    seed["documents"] = [d for d in seed["documents"] if d["format"] == "scan"]
+    source = tmp_path / "seed.json"
+    source.write_text(json.dumps(seed, ensure_ascii=False), encoding="utf-8")
+    with pytest.raises(ValueError, match="font"):
+        build(source, tmp_path / "missing", tmp_path / "missing.ttf")
+    assert not (tmp_path / "missing").exists()
+    result = build(source, tmp_path / "good")
+    assert result["pdf_font_sha256"] == sha256(DEFAULT_FONT.read_bytes())

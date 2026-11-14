@@ -1832,6 +1832,807 @@
           ]
         }
       ]
+    },
+    {
+      "document_id": "D09",
+      "file_name": "faq_cham_soc_khach_hang.md",
+      "format": "md",
+      "title": "CÂU HỎI THƯỜNG GẶP VỀ CHĂM SÓC KHÁCH HÀNG",
+      "doc_number": "31/2026/HD-TL",
+      "issue_line": "TP.HCM, ngày 01 tháng 10 năm 2026",
+      "effective_date": "2026-10-01",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "1. Mục đích và phạm vi"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tài liệu giúp nhân viên CSKH tiếp nhận yêu cầu về máy in, máy photocopy và máy chiếu do Thiên Lam cung cấp hoặc bảo trì. Khi khách hỏi qua điện thoại hay email, nhân viên xác định thiết bị và nhu cầu trước khi hướng dẫn. Câu trả lời tại đây hỗ trợ bước tiếp nhận; kết luận kỹ thuật và việc áp dụng chính sách phải dựa trên hồ sơ của từng thiết bị."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "2. Từ ngữ và cách sử dụng"
+        },
+        {
+          "type": "paragraph",
+          "text": "Phiếu tiếp nhận là hồ sơ ghi một yêu cầu của khách hàng, có người phụ trách và lịch sử trao đổi. Mã lỗi là dấu hiệu khách quan sát hoặc thiết bị hiển thị, chưa đủ để kết luận nguyên nhân. Nhân viên đọc cả câu hỏi và phần hướng dẫn; nếu cần đối chiếu chính sách thì mở đúng tài liệu được dẫn, tránh gửi riêng một câu thiếu điều kiện."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "3. Câu hỏi thường gặp"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 1. Tôi có thể gọi tổng đài vào lúc nào?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tổng đài CSKH 1800-0000 (giả lập) hoạt động 07:30–20:00, kể cả thứ Bảy. Khách gửi email đến cskh@thienlam.example cần nêu tên đơn vị và thiết bị để nhân viên tra cứu. Ngoài khung tiếp nhận, email vẫn là nơi lưu yêu cầu; không suy từ thời điểm gửi thư thành cam kết kỹ thuật viên đến ngay.",
+          "facts": [
+            "F-CSKH-01"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 2. Khi báo máy hỏng tôi cần chuẩn bị gì?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hãy cung cấp mã máy hoặc số serial trong biên bản bàn giao, địa điểm đặt máy, mô tả hiện tượng và thông tin người phối hợp tại chỗ. Ảnh màn hình báo lỗi giúp phân biệt dấu hiệu với lời phỏng đoán. Không yêu cầu khách gửi mật khẩu quản trị hay ảnh tài liệu đang in để chứng minh máy có vấn đề."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 3. Máy báo E-FD-12 thì có phải thay cụm kéo giấy không?"
+        },
+        {
+          "type": "paragraph",
+          "text": "E-FD-12 là mã lỗi kéo giấy theo bảng mã tại SOP nhập xuất kho D06. CSKH ghi đúng mã và hỏi thêm tình trạng giấy, thời điểm lỗi; không tự kết luận phải thay cụm kéo. Nếu chưa an toàn để thao tác, khách giữ nguyên hiện trạng và chờ bộ phận KTDV hướng dẫn, tránh tự tháo máy.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 4. Bản in có vệt được ghi nhận bằng mã nào?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Bản in có vệt được ghi nhận bằng E-PR-08. Nhân viên hỏi vệt xuất hiện liên tục hay theo từng lần in và chuyển thông tin cho KTDV. Khi cần ảnh minh họa, đề nghị dùng trang thử không chứa dữ liệu riêng tư. Mã tiếp nhận này không xác định sẵn bộ phận hỏng hoặc quyền được bảo hành.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 5. Máy không lên nguồn có nên khởi động lại liên tục?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Không yêu cầu khách bật tắt liên tục nếu có mùi lạ, dấu hiệu nóng hoặc dây điện hỏng. Ghi hiện tượng không lên nguồn bằng mã E-PW-03, chuyển kỹ thuật xác minh điều kiện an toàn trước khi thử tiếp. Khách mô tả những gì đã quan sát; nhân viên không đoán lỗi bo mạch chỉ qua cuộc gọi.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 6. Máy mất kết nối nhưng vẫn bật thì tôi báo thế nào?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ghi mã E-CN-05 cho hiện tượng mất kết nối và cho biết máy dùng mạng dây hay không dây, máy tính nào bị ảnh hưởng, có thay đổi cấu hình gần đây hay không. CSKH chuyển thông tin cho KTDV thay vì yêu cầu khách mở quyền truy cập từ xa ngay. Mọi thao tác hỗ trợ cần có sự phối hợp của người được khách giao phụ trách.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 7. Máy mới và linh kiện thay thế có cùng thời hạn bảo hành không?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hai loại có thời hạn khác nhau: máy mới 12 tháng, linh kiện thay thế 3 tháng, theo mục Thời hạn của Chính sách bảo hành đổi trả D08. Trước khi trả lời cho một máy cụ thể, CSKH kiểm tra chứng từ và biên bản liên quan; ngày khách gọi không tự trở thành mốc bắt đầu tính thời hạn.",
+          "facts": [
+            "F-BH-01"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 8. Máy mới bị lỗi có được đổi ngay không?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Chính sách D08 cho đổi máy mới trong 7 ngày nếu lỗi do nhà sản xuất. CSKH tiếp nhận yêu cầu và hồ sơ, sau đó phối hợp KTDV kiểm tra điều kiện. Không hứa đổi chỉ vì khách báo sự cố trong khoảng thời gian này; cũng không bỏ qua quyền đề nghị kiểm tra của khách khi chưa có kết luận nguyên nhân.",
+          "facts": [
+            "F-BH-02"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 9. Dùng mực ngoài rồi máy hỏng có được bảo hành không?"
+        },
+        {
+          "type": "paragraph",
+          "text": "D08 loại trừ bảo hành đối với lỗi do dùng mực hoặc linh kiện không chính hãng. Cần phân biệt việc phát hiện vật tư ngoài với kết luận lỗi do vật tư đó gây ra. CSKH ghi thông tin khách cung cấp và chuyển KTDV xác minh nguyên nhân, sau đó giải thích bằng kết quả kiểm tra thay vì tranh luận qua điện thoại.",
+          "facts": [
+            "F-BH-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 10. Tôi gửi máy đi kiểm tra bằng cách nào?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Nhân viên xác nhận nơi nhận và người phối hợp, hướng dẫn đóng gói phù hợp, đồng thời lập danh sách máy và phụ kiện gửi kèm. Khách nên giữ bản biên nhận để đối chiếu khi trả thiết bị. Với máy có dữ liệu lưu trữ, đề nghị người có thẩm quyền của khách thực hiện việc sao lưu và xử lý dữ liệu theo quy trình nội bộ của họ."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 11. Tôi phải gửi cả giấy và mực đang dùng không?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Chỉ gửi vật tư khi KTDV xác định cần để tái hiện hiện tượng và đã hướng dẫn cách đóng gói. CSKH ghi rõ vật tư nhận kèm, tình trạng và mục đích kiểm tra để tránh nhầm với hàng thay thế. Không hướng dẫn đổ mực hoặc tháo hộp chứa nếu khách chưa được chỉ dẫn phù hợp cho loại máy đang sử dụng."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 12. Vì sao báo đã tiếp nhận mà chưa có giờ sửa xong?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tiếp nhận xác nhận yêu cầu đã vào luồng xử lý; lịch kiểm tra và khả năng khắc phục còn phụ thuộc tình trạng thực tế, quyền tiếp cận thiết bị và phạm vi hợp đồng. CSKH tra hợp đồng bảo trì D07 khi khách hỏi SLA, phân biệt phản hồi, có mặt và khắc phục; không đổi tên các mốc để tạo một lời hứa chung là sửa xong."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 13. Làm sao biết ai đang xử lý yêu cầu của tôi?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dùng mã phiếu hoặc thông tin biên nhận để CSKH tìm người phụ trách và lần cập nhật gần nhất. Nếu chuyển người xử lý, hồ sơ phải giữ lý do chuyển và nội dung đã trao đổi. Nhân viên trả lời theo thông tin đã được xác nhận, không yêu cầu khách kể lại từ đầu mỗi lần đổi ca khi hồ sơ vẫn còn đầy đủ."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 14. Khách có hợp đồng bảo trì có trả tiền công sửa không?"
+        },
+        {
+          "type": "paragraph",
+          "text": "CSKH đối chiếu phạm vi hợp đồng D07 với bảng giá dịch vụ sửa chữa D12 và hạng mục thực tế. Có hợp đồng không có nghĩa mọi linh kiện hay mọi công việc đều được miễn phí. Phần đã nằm trong phí định kỳ phải được nhận diện trước khi báo giá để tránh tính thêm; yêu cầu ngoài phạm vi cần giải thích riêng cho khách."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 15. Tôi không đồng ý với kết quả kiểm tra thì làm gì?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Gửi ý kiến kèm mã phiếu và điểm chưa thống nhất tới CSKH. Nhân viên chuyển người phụ trách xem lại hồ sơ, ảnh và nội dung trao đổi, sau đó phản hồi điều đã xác minh và phần còn cần kiểm tra. Không sửa biên nhận cũ để làm mất lịch sử; nếu thông tin trước đó sai, lập nội dung đính chính có thể đối chiếu."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Câu 16. Khi nhận lại máy tôi kiểm tra những gì?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Đối chiếu mã máy, serial và phụ kiện trên biên nhận, xem mô tả việc đã làm, cùng kỹ thuật chạy thử theo nội dung đã thống nhất. Khách ghi ý kiến còn tồn tại trước khi xác nhận bàn giao. CSKH lưu bản phản hồi và chuyển việc chưa hoàn tất cho người phụ trách; chữ ký nhận máy không được diễn giải thành đồng ý với một chi phí chưa được thông báo."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "4. Các bước tiếp nhận và trách nhiệm"
+        },
+        {
+          "type": "list_item",
+          "ordered": true,
+          "text": "Xác nhận thiết bị và người liên hệ, hỏi dấu hiệu thực tế, tạo phiếu để thông tin không nằm riêng trong cuộc gọi."
+        },
+        {
+          "type": "list_item",
+          "ordered": true,
+          "text": "Tra chính sách hoặc hợp đồng phù hợp, chuyển KTDV khi cần kết luận chuyên môn, ghi rõ điều chưa thể xác nhận."
+        },
+        {
+          "type": "list_item",
+          "ordered": true,
+          "text": "Thông báo người phụ trách, theo dõi cập nhật và bàn giao hồ sơ giữa các ca; chỉ đóng phiếu khi nội dung xử lý đã được ghi nhận."
+        },
+        {
+          "type": "paragraph",
+          "text": "CSKH chịu trách nhiệm về thông tin tiếp nhận và lời phản hồi. KTDV chịu trách nhiệm kiểm tra, kết luận kỹ thuật và xác nhận công việc thực hiện. Kho vận đối chiếu thiết bị/phụ kiện khi luân chuyển; bộ phận quản lý chính sách trả lời vướng mắc về phạm vi áp dụng."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "5. Lịch sử phiên bản"
+        },
+        {
+          "type": "paragraph",
+          "text": "Bản 1.0, ban hành ngày 01/10/2026. CSKH tổng hợp câu hỏi từ luồng bảo trì, bảo hành và giao nhận; tài liệu dẫn chiếu D06, D07, D08 và bảng giá D12. Khi tài liệu gốc sửa đổi, người phụ trách FAQ kiểm tra lại câu liên quan trước khi phổ biến bản tiếp theo."
+        }
+      ]
+    },
+    {
+      "document_id": "D10",
+      "file_name": "bien_ban_hop_giao_ban_thang_10_2026.docx",
+      "format": "docx",
+      "title": "BIÊN BẢN HỌP GIAO BAN THÁNG 10 NĂM 2026",
+      "doc_number": "34/2026/TB-TL",
+      "issue_line": "TP.HCM, ngày 20 tháng 10 năm 2026",
+      "effective_date": "2026-10-20",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương I. Thành phần và mục đích"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 1. Thông tin cuộc họp"
+        },
+        {
+          "type": "paragraph",
+          "text": "Cuộc họp giao ban tháng 10 diễn ra ngày 20/10/2026 tại phòng họp trụ sở Thiên Lam, có kết nối với chi nhánh Đà Nẵng. Ông Lê Hoàng Phúc, Tổng Giám đốc, chủ trì; ông Phạm Quốc Bảo, Trưởng phòng HCNS, ghi biên bản. Thành phần gồm bà Nguyễn Thị Thu Hà, Kế toán trưởng, ông Võ Thành Nhân, Trưởng kho HCM, ông Đặng Minh Tuấn, Trưởng phòng KTDV và đại diện KD, CSKH, IT."
+        },
+        {
+          "type": "paragraph",
+          "text": "Mục tiêu là rà soát phối hợp giao hàng, bảo trì và hồ sơ mua sắm. Người tham dự phát biểu theo việc được giao, nêu hồ sơ còn vướng và đề xuất xử lý. Biên bản ghi diễn biến, ý kiến và công việc tiếp theo; không dùng thay quyết định sửa quy định hoặc làm căn cứ bỏ qua thẩm quyền đang áp dụng."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 2. Các vấn đề phối hợp"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kho phản ánh một số phiếu điều chuyển chưa thống nhất mã thiết bị với biên nhận khách hàng. KTDV đề nghị người bàn giao giữ nguyên mô tả hiện trạng thay vì thay bằng tên linh kiện dự đoán hỏng. Các bộ phận thống nhất đối chiếu hồ sơ trước khi điều xe; trường hợp chưa rõ người nhận thì trả việc về bộ phận yêu cầu để bổ sung."
+        },
+        {
+          "type": "paragraph",
+          "text": "CSKH đề nghị khi chuyển yêu cầu giữa các ca phải ghi người đang xử lý và lần liên hệ gần nhất. KD bổ sung rằng báo giá cần thể hiện phạm vi công việc để tránh khách hiểu phí kiểm tra bao gồm cả linh kiện. Chủ trì giao các bộ phận rà lại cách bàn giao, dùng biểu mẫu hiện có và báo vướng mắc bằng tình huống cụ thể."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương II. Nội dung đề xuất"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 3. Ý kiến về ngưỡng duyệt mua hàng"
+        },
+        {
+          "type": "paragraph",
+          "text": "Đại diện bộ phận sử dụng đề xuất nâng ngưỡng Trưởng phòng tự duyệt từ dưới 10 triệu lên dưới 15 triệu đồng để giảm vòng trình với đơn nhỏ. Bà Nguyễn Thị Thu Hà đề nghị rà tác động tới kiểm soát ngân sách, cách xác định giá trị đơn và trách nhiệm đối chiếu báo giá trước khi trình phương án. Đây là đề xuất đang thảo luận, chưa ban hành và chưa có ngày hiệu lực.",
+          "facts": [
+            "F-MH-02",
+            "F-MH-01"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 4. Kết luận đối với đề xuất"
+        },
+        {
+          "type": "paragraph",
+          "text": "Chủ trì giao HCNS phối hợp KT dự thảo phương án nâng ngưỡng, lấy ý kiến các bộ phận và trình cấp có thẩm quyền xem xét. Cuộc họp chưa thông qua việc sửa ma trận. Trong thời gian chờ văn bản mới, tiếp tục áp dụng 09/2026/QĐ-TL tại D04: dưới 10 triệu đồng thuộc Trưởng phòng; từ 10 đến 50 triệu đồng cần Trưởng phòng và Kế toán trưởng. Không lấy mức 15 triệu trong biên bản để duyệt đơn hiện tại.",
+          "facts": [
+            "F-MH-02",
+            "F-MH-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Các ngưỡng còn lại của ma trận hiện hành được giữ nguyên: trên 50 đến 200 triệu đồng thuộc Tổng Giám đốc; trên 200 triệu đồng thuộc Hội đồng quản trị. Bộ phận mua hàng tiếp tục thực hiện yêu cầu báo giá và hồ sơ theo D05. Một ý kiến thuận tại cuộc họp không thay chữ ký duyệt của đúng cấp trong hồ sơ mua.",
+          "facts": [
+            "F-MH-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Các ý kiến khác nhau được ghi nhận để người soạn dự thảo xử lý: bộ phận sử dụng muốn bớt vòng trình đối với đơn nhỏ, trong khi KT cần nhìn được tổng giá trị của các đơn cùng mục đích. Chủ trì yêu cầu dự thảo phân tích cách kiểm tra hồ sơ và trách nhiệm người duyệt, không chỉ thay một con số trong bảng. Nếu phương án chưa làm rõ điểm kiểm soát, HCNS trả lại nội dung cần bổ sung trước khi trình; không coi việc được giao soạn là đã được chấp thuận phương án."
+        },
+        {
+          "type": "paragraph",
+          "text": "Đại diện chi nhánh Đà Nẵng lưu ý người lập phiếu cần tra được văn bản đang dùng ngay tại nơi làm việc. HCNS ghi nhận yêu cầu phổ biến cùng một bản cho trụ sở và chi nhánh khi có sửa đổi được ký; email trao đổi dự thảo phải thể hiện rõ trạng thái để người nhận không nhầm với thông báo áp dụng. Các bộ phận giữ nguyên luồng xử lý đang có và chuyển vướng mắc về người phụ trách, không tự tạo ngoại lệ trong thời gian lấy ý kiến."
+        },
+        {
+          "type": "paragraph",
+          "text": "Chủ trì đề nghị bản tổng hợp sau họp tách ý kiến đề xuất, nội dung cần xác minh và việc đã giao. Mỗi việc cần có đầu mối phản hồi để HCNS có thể đối chiếu tại phiên tiếp theo; phần chưa thống nhất được giữ trong hồ sơ, không xóa khỏi bản gửi các bên. Kết quả rà soát phải kèm tình huống minh họa đã bỏ thông tin riêng của khách hàng, giúp người xem xét hiểu vướng mắc mà không phát tán hồ sơ giao dịch."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương III. Công việc sau cuộc họp"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 5. Phân công và theo dõi"
+        },
+        {
+          "type": "paragraph",
+          "text": "HCNS tập hợp ý kiến sửa ngưỡng thành bản dự thảo, ghi rõ nội dung đề nghị thay và căn cứ cần xem xét. KT rà mối liên hệ giữa thẩm quyền mua, chứng từ và ngân sách. Kho cùng KTDV đối chiếu mẫu bàn giao thiết bị để thống nhất trường mã máy, serial và tình trạng; CSKH cập nhật cách ghi nhận người phụ trách khi đổi ca."
+        },
+        {
+          "type": "paragraph",
+          "text": "Người nhận việc phản hồi kết quả hoặc vướng mắc tại phiên giao ban tiếp theo. HCNS giữ bản biên bản đã ký và danh sách việc giao, lưu ý kiến khác nhau kèm hồ sơ thay vì sửa lời phát biểu sau cuộc họp. Nếu dự thảo được ban hành sau này, thông báo sửa đổi phải chỉ rõ văn bản, ngày hiệu lực và nội dung thay thế."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 6. Xác nhận biên bản"
+        },
+        {
+          "type": "paragraph",
+          "text": "Biên bản được đọc lại trước khi kết thúc; các bộ phận xác nhận nội dung việc được giao. Phần nâng ngưỡng vẫn mang trạng thái đề xuất. Việc ký xác nhận biên bản chứng minh nội dung cuộc họp đã được ghi nhận, không đồng nghĩa với ban hành quy định mua hàng mới.",
+          "facts": [
+            "F-MH-02"
+          ]
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: BGĐ; HCNS; KT; KD; KHO; KTDV; CSKH; IT.",
+            "THƯ KÝ: Phạm Quốc Bảo",
+            "CHỦ TRÌ: Lê Hoàng Phúc"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D11",
+      "file_name": "email_it_bao_mat_tai_khoan.txt",
+      "format": "txt",
+      "title": "Nhac bao mat tai khoan email va ERP",
+      "doc_number": "32/2026/HD-TL",
+      "issue_line": "TP.HCM, ngay 05 thang 10 nam 2026",
+      "effective_date": "2026-10-05",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "From: IT Thien Lam <it@thienlam.example>"
+        },
+        {
+          "type": "paragraph",
+          "text": "To: Toan the nhan vien <all@thienlam.example>"
+        },
+        {
+          "type": "paragraph",
+          "text": "Subject: Nhac doi password va bat MFA cho email cong ty"
+        },
+        {
+          "type": "paragraph",
+          "text": "Date: 05 Oct 2026 09:00 +0700"
+        },
+        {
+          "type": "paragraph",
+          "text": "Chao anh chi,"
+        },
+        {
+          "type": "paragraph",
+          "text": "IT gui lai huong dan bao mat tai khoan email va ERP. Anh chi kiem tra tren tai khoan duoc cap cho minh, khong dung chung user voi dong nghiep. Neu thay man hinh khac huong dan thi gui mo ta ve it@thienlam.example de IT ho tro; dung chup anh co password hay ma xac thuc."
+        },
+        {
+          "type": "list_item",
+          "ordered": false,
+          "text": "Password phai doi moi 90 ngay, toi thieu 12 ky tu. Chon passphrase de nho nhung kho doan; khong lay ten phong ban hay ma may lam mat khau. Khong gui password qua chat de nho nguoi khac dang nhap giup.",
+          "facts": [
+            "F-IT-01"
+          ]
+        },
+        {
+          "type": "list_item",
+          "ordered": false,
+          "text": "Bat MFA cho email cong ty. Khi dang nhap, chi approve yeu cau do chinh minh vua thuc hien. Neu dien thoai hien len request la thi tu choi va bao IT, ke ca khi nguoi goi tu nhan la support. Ma OTP va recovery code khong gui cho bat ky ai.",
+          "facts": [
+            "F-IT-01"
+          ]
+        },
+        {
+          "type": "list_item",
+          "ordered": false,
+          "text": "Truy cap ERP tu ngoai van phong phai qua VPN. Ket noi VPN cong ty truoc roi moi mo ERP; khong dung cong cu VPN mien phi tu cai de thay the. Neu VPN loi thi gui thoi diem va noi dung thong bao, khong nho nguoi o van phong dang nhap ho de xu ly tam.",
+          "facts": [
+            "F-IT-02"
+          ]
+        },
+        {
+          "type": "list_item",
+          "ordered": false,
+          "text": "Can than email phishing gia danh nha cung cap hoac thong bao khoa tai khoan. Kiem tra dia chi nguoi gui va dich cua link; file dinh kem khong ro nguon thi dung mo. Yeu cau chuyen sang trang dang nhap la can duoc xac minh qua kenh da biet, khong tra loi ngay vao email dang nghi ngo."
+        },
+        {
+          "type": "list_item",
+          "ordered": false,
+          "text": "Neu lo bam link la, dung nhap tiep thong tin va bao IT bang kenh noi bo. Giu email goc de IT kiem tra header; khong forward file nghi ngo cho nhieu nguoi. Neu da nhap password, neu ro viec nay de IT huong dan doi va kiem tra phien dang nhap."
+        },
+        {
+          "type": "list_item",
+          "ordered": false,
+          "text": "Khi doi dien thoai hoac mat thiet bi MFA, lien he IT de xac minh va dang ky lai theo huong dan. Khong tat MFA truoc roi de quen bat lai. Viec cap lai quyen can dung chu tai khoan; IT khong yeu cau anh chi doc mat khau hien tai qua dien thoai.",
+          "facts": [
+            "F-IT-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Quan ly bo phan vui long nhac cac ban moi vao nhom doc email nay va xac nhan da truy cap duoc bang tai khoan rieng. Nguoi chuyen vi tri can bao IT de ra soat quyen ERP; khong tu chia se user cu cho nguoi nhan ban giao. IT se phan hoi tung truong hop theo thong tin da kiem tra, tranh sua cau hinh khi chua ro nguyen nhan."
+        },
+        {
+          "type": "paragraph",
+          "text": "Minh go hoi voi nen co cho viet tat, anh chi chua ro thi reply ve IT nhe. Cam on moi nguoi da phoi hop."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Bo phan IT",
+            "Cong ty Co phan Thiet bi Van phong Thien Lam",
+            "it@thienlam.example"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D12",
+      "file_name": "bang_gia_dich_vu_sua_chua_2026.pdf",
+      "format": "pdf",
+      "title": "BẢNG GIÁ DỊCH VỤ SỬA CHỮA NĂM 2026",
+      "doc_number": "02/2026/QĐ-TL",
+      "issue_line": "TP.HCM, ngày 01 tháng 01 năm 2026",
+      "effective_date": "2026-01-01",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương I. Phạm vi và cách đọc bảng giá"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 1. Đối tượng áp dụng"
+        },
+        {
+          "type": "paragraph",
+          "text": "Bảng giá áp dụng cho tiền công sửa chữa theo yêu cầu đối với máy in, máy photocopy và máy chiếu do Thiên Lam tiếp nhận trong năm 2026. Đơn giá tại Điều 2 là tiền công cho một thiết bị trong một lần xử lý thuộc nhóm ghi trong bảng, chưa bao gồm thuế và linh kiện. KTDV xác định nhóm sau khi kiểm tra; CSKH không ghép nhiều dòng chỉ vì khách mô tả nhiều dấu hiệu.",
+          "facts": [
+            "F-BG-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Đối với máy có hợp đồng bảo trì, phải đối chiếu D07 trước khi báo giá. Công việc đã thuộc phí dịch vụ định kỳ không thu lặp tiền công theo bảng này. Hạng mục ngoài phạm vi hợp đồng được nêu riêng, có xác nhận của khách về phạm vi và giá trước khi thực hiện. Bảng giá không thay điều kiện bảo hành trong D08.",
+          "facts": [
+            "F-BG-01",
+            "F-BG-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 2. Đơn giá tiền công theo nhóm máy"
+        },
+        {
+          "type": "table",
+          "header": [
+            "Nhóm thiết bị và công việc",
+            "Đơn vị",
+            "Tiền công (đồng)"
+          ],
+          "rows": [
+            [
+              "Máy in đơn năng A4: xử lý cơ cấu kéo giấy",
+              "máy/lần",
+              "250.000"
+            ],
+            [
+              "Máy in đa chức năng A4: xử lý cơ cấu kéo giấy",
+              "máy/lần",
+              "350.000"
+            ],
+            [
+              "Máy photocopy A3: căn chỉnh cơ cấu giấy",
+              "máy/lần",
+              "550.000"
+            ],
+            [
+              "Máy chiếu: vệ sinh đường gió và cụm quang",
+              "máy/lần",
+              "400.000"
+            ]
+          ],
+          "facts": [
+            "F-BG-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Đơn vị máy/lần gắn với thiết bị và công việc đã được xác định trên phiếu. Không lấy giá máy in đơn năng để báo cho máy đa chức năng chỉ vì cùng khổ A4. Khi cần thay linh kiện, kỹ thuật ghi tên và tình trạng linh kiện, chuyển bộ phận phụ trách lập báo giá riêng; khách có thể đối chiếu tiền công với vật tư thay thế.",
+          "facts": [
+            "F-BG-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Trước khi xác định công việc trong bảng, nhân viên tiếp nhận ghi mã máy, loại máy và hiện tượng vào phiếu; KTDV kiểm tra để xác nhận nội dung cần làm. Cùng một dấu hiệu kẹt giấy có thể xuất hiện ở nhiều loại thiết bị, vì vậy giá không được chọn theo tên lỗi khách đọc qua điện thoại. Nếu khách đề nghị thêm công việc khác trong quá trình kiểm tra, hồ sơ phải mô tả rõ phần phát sinh để khách cân nhắc trước khi sửa."
+        },
+        {
+          "type": "paragraph",
+          "text": "Mỗi báo giá cần giữ được căn cứ tra cứu: thiết bị nào, công việc gì và phạm vi đã xác nhận. Phần tiền công ghi riêng với linh kiện để khách không nhầm rằng đơn giá đã bao gồm vật tư. Người phụ trách dùng cùng thông tin trên phiếu kiểm tra và biên nhận; khi phát hiện tên máy hoặc nội dung công việc chưa thống nhất, phải làm rõ trước khi chuyển báo giá, tránh sửa tên sau nghiệm thu để khớp một mức giá đã chọn sẵn."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "paragraph",
+          "text": "Khi khách chỉ yêu cầu kiểm tra rồi mới quyết định sửa, CSKH ghi rõ phạm vi đang được yêu cầu và chuyển KTDV xác nhận cách xử lý. Không coi việc nhận máy là sự đồng ý với toàn bộ hạng mục đề nghị. Nếu báo giá chưa được chấp thuận, hồ sơ giữ trạng thái chờ để người nhận ca sau tiếp tục trao đổi từ nội dung đã có."
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương II. Phụ phí và khách hàng hợp đồng"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 3. Phụ phí ngoài giờ"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ngoài giờ trong bảng giá là trước 08:00 hoặc sau 17:00 từ thứ Hai đến thứ Sáu, cùng ngày thứ Bảy và Chủ nhật. Phần tiền công thực hiện ngoài giờ được cộng 30% tiền công cơ bản tương ứng tại Điều 2. Mốc này dùng để tính giá, không thay giờ tiếp nhận tổng đài CSKH. CSKH phải xác nhận lịch với khách và KTDV trước khi ghi phụ phí; không tự chuyển toàn bộ hồ sơ sang giá ngoài giờ chỉ vì cuộc gọi đến muộn.",
+          "facts": [
+            "F-BG-02"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 4. Chiết khấu cho khách có hợp đồng"
+        },
+        {
+          "type": "paragraph",
+          "text": "Khách còn hợp đồng bảo trì hiệu lực được giảm 10% tiền công cơ bản đối với công việc ngoài phạm vi phí định kỳ. Chiết khấu không áp dụng cho linh kiện và không giảm phần phụ phí ngoài giờ. Khi phát sinh cả hai, tổng tiền công bằng 90% tiền công cơ bản cộng phụ phí 30% tính trên tiền công cơ bản, chưa tính thuế. Không áp dụng chiết khấu lần nữa cho công việc đã nằm trong hợp đồng.",
+          "facts": [
+            "F-BG-02",
+            "F-BG-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Ví dụ: xử lý cơ cấu kéo giấy của máy in đơn năng A4 có tiền công cơ bản 250.000 đồng. Nếu khách đủ điều kiện chiết khấu và công việc thực hiện ngoài giờ, tiền công sau chiết khấu là 225.000 đồng, phụ phí là 75.000 đồng, tổng 300.000 đồng trước thuế, chưa gồm linh kiện. Ví dụ chỉ minh họa phép tính; hồ sơ vẫn phải xác định đúng thiết bị, lịch làm và tình trạng hợp đồng.",
+          "facts": [
+            "F-BG-01",
+            "F-BG-02",
+            "F-BG-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương III. Báo giá và xác nhận"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 5. Trách nhiệm thực hiện"
+        },
+        {
+          "type": "paragraph",
+          "text": "KTDV ghi kết quả kiểm tra và nhóm công việc; CSKH thông báo phạm vi, tiền công, phụ phí và khoản vật tư riêng nếu có. KT kiểm tra điều kiện chiết khấu với hợp đồng còn hiệu lực và đối chiếu xác nhận của khách. Khi khách chưa đồng ý, người tiếp nhận lưu phần đang chờ, không ghi công việc là đã hoàn thành để chuyển thu tiền."
+        },
+        {
+          "type": "paragraph",
+          "text": "Báo giá sửa đổi phải chỉ rõ phần thay đổi so với bản trước và được khách xác nhận trước khi thực hiện phần bổ sung. Trường hợp hiện tượng không thuộc nhóm trong bảng, KTDV mô tả công việc để lập báo giá riêng; không chọn một dòng gần giống nhằm tạo giá tạm rồi coi là giá cuối cùng. Hồ sơ nghiệm thu giữ cùng mã phiếu với yêu cầu ban đầu."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 6. Hiệu lực"
+        },
+        {
+          "type": "paragraph",
+          "text": "Bảng giá có hiệu lực từ 01/01/2026. KT lưu bản áp dụng và giải đáp cách tính; KTDV xác nhận nội dung kỹ thuật. Mọi thay đổi đơn giá hoặc điều kiện chiết khấu phải có văn bản được phổ biến đến bộ phận báo giá. Tin nhắn xử lý một trường hợp riêng không tự thay bảng giá chung."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: KT; KTDV; CSKH; KD; Lưu HCNS.",
+            "TỔNG GIÁM ĐỐC",
+            "Lê Hoàng Phúc"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D13",
+      "file_name": "bien_ban_ban_giao_thiet_bi_scan.pdf",
+      "format": "scan",
+      "title": "BIÊN BẢN BÀN GIAO THIẾT BỊ",
+      "doc_number": "33/2026/TB-TL",
+      "issue_line": "TP.HCM, ngày 12 tháng 10 năm 2026",
+      "effective_date": "2026-10-12",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 1. Bên giao và bên nhận"
+        },
+        {
+          "type": "paragraph",
+          "text": "Ngày 12/10/2026, tại trụ sở Thiên Lam, bên giao là ông Võ Thành Nhân, Trưởng kho HCM; bên nhận là ông Đặng Minh Tuấn, Trưởng phòng KTDV. Thiết bị được bàn giao nội bộ để bố trí máy dự phòng phục vụ bảo trì, không phải giao dịch bán máy.",
+          "facts": [
+            "F-SCAN-01"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 2. Thiết bị và phụ kiện"
+        },
+        {
+          "type": "table",
+          "header": [
+            "Nội dung",
+            "Thông tin bàn giao"
+          ],
+          "rows": [
+            [
+              "Mã thiết bị",
+              "TL-PR-026"
+            ],
+            [
+              "Loại máy",
+              "Máy in đơn năng A4"
+            ],
+            [
+              "Serial giả lập",
+              "TL-SIM-000026"
+            ],
+            [
+              "Số lượng",
+              "01 máy"
+            ],
+            [
+              "Phụ kiện",
+              "01 dây nguồn; 01 cáp USB"
+            ]
+          ],
+          "facts": [
+            "F-SCAN-01",
+            "F-SCAN-02"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Máy khởi động được, vỏ có vết xước nhẹ bên trái, chưa ghi nhận lỗi khi in trang thử. Bên nhận đối chiếu serial và phụ kiện trên bảng trước khi ký; không dùng mô tả máy mới để thay tình trạng thực tế.",
+          "facts": [
+            "F-SCAN-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 3. Trách nhiệm sau bàn giao"
+        },
+        {
+          "type": "paragraph",
+          "text": "KTDV giữ máy tại khu thiết bị dự phòng, ghi lần điều động tiếp theo vào hồ sơ. Khi phát hiện khác biệt, hai bên lập ghi chú bổ sung cùng biên bản. Biên bản có hiệu lực từ ngày ký, mỗi bên giữ một bản để đối chiếu."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: KHO; KTDV; Lưu hồ sơ thiết bị.",
+            "BÊN GIAO: Võ Thành Nhân",
+            "BÊN NHẬN: Đặng Minh Tuấn"
+          ],
+          "facts": [
+            "F-SCAN-01"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D14",
+      "file_name": "phieu_de_nghi_thanh_toan_scan.pdf",
+      "format": "scan",
+      "title": "PHIẾU ĐỀ NGHỊ THANH TOÁN",
+      "doc_number": "35/2026/HD-TL",
+      "issue_line": "TP.HCM, ngày 22 tháng 10 năm 2026",
+      "effective_date": "2026-10-22",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 1. Thông tin đề nghị"
+        },
+        {
+          "type": "paragraph",
+          "text": "Phiếu được điền mô phỏng ngày 22/10/2026, gửi Phòng Kế toán để kiểm tra hồ sơ. Nội dung dưới đây là thông tin người đề nghị kê khai, chưa phải xác nhận chi tiền. Ngày hiệu lực của phiếu là ngày lập để theo dõi hồ sơ, không thay ngày duyệt thanh toán.",
+          "facts": [
+            "F-SCAN-04"
+          ]
+        },
+        {
+          "type": "table",
+          "header": [
+            "Trường thông tin",
+            "Nội dung đã điền"
+          ],
+          "rows": [
+            [
+              "Biểu mẫu",
+              "BM-KT-04"
+            ],
+            [
+              "Người đề nghị",
+              "Đặng Minh Tuấn"
+            ],
+            [
+              "Bộ phận",
+              "KTDV"
+            ],
+            [
+              "Nội dung chi",
+              "Tiền công sửa máy in dự phòng TL-PR-026"
+            ],
+            [
+              "Số tiền đề nghị",
+              "750.000 đồng"
+            ],
+            [
+              "Hồ sơ kèm theo",
+              "03 chứng từ"
+            ]
+          ],
+          "facts": [
+            "F-SCAN-04",
+            "F-SCAN-05"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 2. Kiểm tra và xử lý"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người đề nghị xác nhận nội dung kê khai và chuyển chứng từ gốc cho KT đối chiếu. Kế toán kiểm tra khoản chi, chứng từ và thẩm quyền trước khi trình duyệt. Phiếu đang chờ kiểm tra, chưa duyệt và chưa thanh toán; không dùng chữ ký người đề nghị làm căn cứ khẳng định tiền đã được chi.",
+          "facts": [
+            "F-SCAN-06"
+          ]
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: KT; KTDV; Lưu hồ sơ thanh toán.",
+            "NGƯỜI ĐỀ NGHỊ: Đặng Minh Tuấn",
+            "KẾ TOÁN KIỂM TRA: Chưa ký",
+            "NGƯỜI DUYỆT: Chưa ký"
+          ],
+          "facts": [
+            "F-SCAN-04",
+            "F-SCAN-06"
+          ]
+        }
+      ]
     }
   ]
 }

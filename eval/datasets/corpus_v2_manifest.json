@@ -1,6 +1,6 @@
 {
   "corpus_version": "synthetic-sme-v2",
-  "corpus_seed_sha256": "05df4452a5e67a59abad677eef7a39424a813583d4d1a816ef11e5d22c28407e",
+  "corpus_seed_sha256": "7984fa285ae49969d6b0ca464250f70d6c514640fab003d95866fa6a96e571f0",
   "libraries": {
     "python-docx": "1.2.0",
     "PyMuPDF": "1.28.2"
@@ -96,6 +96,72 @@
         "F-BH-01",
         "F-BH-02",
         "F-BH-03"
+      ]
+    },
+    {
+      "document_id": "D09",
+      "path": "corpus_v2/faq_cham_soc_khach_hang.md",
+      "format": "md",
+      "sha256": "4d81ee5f52667ad0fff4d60b5a7936bdac9f844be6ce4b31df05fce220227c23",
+      "facts": [
+        "F-BH-01",
+        "F-BH-02",
+        "F-BH-03",
+        "F-CSKH-01",
+        "F-KHO-03"
+      ]
+    },
+    {
+      "document_id": "D10",
+      "path": "corpus_v2/bien_ban_hop_giao_ban_thang_10_2026.docx",
+      "format": "docx",
+      "sha256": "1e2341ed35e8ea051ebbfa1689c2a59778acc6d49cdc9d904a44da0126209cac",
+      "facts": [
+        "F-MH-01",
+        "F-MH-02"
+      ]
+    },
+    {
+      "document_id": "D11",
+      "path": "corpus_v2/email_it_bao_mat_tai_khoan.txt",
+      "format": "txt",
+      "sha256": "08dc9d5e0f43e3b4f9e8883dc6fdc21f71715df793c492d4cbb3a24d1457fe1a",
+      "facts": [
+        "F-IT-01",
+        "F-IT-02"
+      ]
+    },
+    {
+      "document_id": "D12",
+      "path": "corpus_v2/bang_gia_dich_vu_sua_chua_2026.pdf",
+      "format": "pdf",
+      "sha256": "9dcb6831eb50b21fc3574faa75ac0151ca73d175dbf691413fbc8cd9a39d8e1e",
+      "facts": [
+        "F-BG-01",
+        "F-BG-02",
+        "F-BG-03"
+      ]
+    },
+    {
+      "document_id": "D13",
+      "path": "corpus_v2/bien_ban_ban_giao_thiet_bi_scan.pdf",
+      "format": "scan",
+      "sha256": "ab5eed9de673f4b00e84cae051f1d142fcf2e7a8bd27fa48119f8b621473adfd",
+      "facts": [
+        "F-SCAN-01",
+        "F-SCAN-02",
+        "F-SCAN-03"
+      ]
+    },
+    {
+      "document_id": "D14",
+      "path": "corpus_v2/phieu_de_nghi_thanh_toan_scan.pdf",
+      "format": "scan",
+      "sha256": "8a62eb94c98e46b29d9417490a5c50c386d960eb314f2121afef51c69d7f084e",
+      "facts": [
+        "F-SCAN-04",
+        "F-SCAN-05",
+        "F-SCAN-06"
       ]
     }
   ]
