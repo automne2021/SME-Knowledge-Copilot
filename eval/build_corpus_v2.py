@@ -311,6 +311,52 @@ def pdf_bytes(document: dict, company: str, notice: str, font: Path) -> bytes:
         return pdf.tobytes(garbage=4, deflate=True, no_new_id=True)
 
 
+def markdown_bytes(document: dict, company: str, notice: str) -> bytes:
+    """Keep headings and table rows on stable UTF-8 source lines for gold spans."""
+    parts = [
+        notice,
+        f"# {document['title']}",
+        company,
+        f"Số: {document['doc_number']}",
+        document["issue_line"],
+        f"Ngày hiệu lực: {document['effective_date']}",
+    ]
+    ordered_index = 0
+    for block in document["blocks"]:
+        kind = block["type"]
+        if kind != "list_item" or not block.get("ordered"):
+            ordered_index = 0
+        if kind == "heading":
+            parts.append("#" * min(block["level"] + 1, 6) + " " + block["text"])
+        elif kind == "table":
+
+            def row(cells):
+                return (
+                    "| "
+                    + " | ".join(
+                        cell.replace("\\", "\\\\").replace("|", "\\|").replace("\n", " ")
+                        for cell in cells
+                    )
+                    + " |"
+                )
+
+            parts.append(
+                "\n".join(
+                    [row(block["header"]), row(["---"] * len(block["header"]))]
+                    + [row(cells) for cells in block["rows"]]
+                )
+            )
+        elif kind == "signature":
+            parts.append("\n\n".join(block["lines"]))
+        elif kind == "list_item":
+            ordered_index += int(block["ordered"])
+            prefix = f"{ordered_index}." if block["ordered"] else "-"
+            parts.append(f"{prefix} {block['text']}")
+        elif kind != "page_break":
+            parts.append(block["text"])
+    return ("\n\n".join(parts) + "\n").encode("utf-8")
+
+
 def build(
     seed_path: Path = SEED, output: Path = ROOT / "datasets", font: Path = DEFAULT_FONT
 ) -> dict:
@@ -324,8 +370,10 @@ def build(
             data = docx_bytes(doc, seed["company"], seed["notice"])
         elif doc["format"] == "pdf":
             data = pdf_bytes(doc, seed["company"], seed["notice"], font)
+        elif doc["format"] == "md":
+            data = markdown_bytes(doc, seed["company"], seed["notice"])
         else:
-            raise ValueError("This stage implements DOCX and text PDF only")
+            raise ValueError("This stage implements DOCX, text PDF and Markdown only")
         path = f"corpus_v2/{doc['file_name']}"
         artifacts[path] = data
         documents.append(

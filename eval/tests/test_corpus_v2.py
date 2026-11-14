@@ -5,11 +5,20 @@ import io
 import json
 import re
 import zipfile
+from difflib import SequenceMatcher
 
 import pytest
 from docx import Document
 
-from eval.build_corpus_v2 import DEFAULT_FONT, SEED, build, docx_bytes, pdf_bytes, validate_seed
+from eval.build_corpus_v2 import (
+    DEFAULT_FONT,
+    SEED,
+    build,
+    docx_bytes,
+    markdown_bytes,
+    pdf_bytes,
+    validate_seed,
+)
 
 
 @pytest.fixture
@@ -19,7 +28,16 @@ def seed():
 
 def test_stage_fact_coverage_and_unanswerable_exclusions(seed):
     validate_seed(seed)
-    assert {d["document_id"] for d in seed["documents"]} == {"D02", "D03", "D04", "D05"}
+    assert {d["document_id"] for d in seed["documents"]} == {
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05",
+        "D06",
+        "D07",
+        "D08",
+    }
     registry = (SEED.parents[2] / "docs/roadmap/01-corpus-v2-spec.md").read_text(encoding="utf-8")
     known = set(re.findall(r"^\| (F-[A-Z]+-\d{2}) \|", registry, re.M))
     for doc in seed["documents"]:
@@ -198,6 +216,10 @@ def test_list_blocks_keep_ordered_semantics(seed, ordered, style):
         ("D03", 10000, 15000),
         ("D04", 5000, 6000),
         ("D05", 7500, 12000),
+        ("D01", 25000, 36000),
+        ("D06", 15000, 24000),
+        ("D07", 25000, 36000),
+        ("D08", 5000, 9000),
     ],
 )
 def test_production_parser_length_and_real_chunks(tmp_path, doc_id, min_chars, max_chars):
@@ -215,7 +237,7 @@ def test_production_parser_length_and_real_chunks(tmp_path, doc_id, min_chars, m
     if doc_id == "D03":
         assert len(rows) == 8
         assert {b.location["kind"] for b in rows} == {"docx_table"}
-    elif doc_id == "D04":
+    elif doc_id in {"D04", "D06"}:
         assert len(rows) == 5
         assert {b.location["kind"] for b in rows} == {"pdf_page"}
     else:
@@ -298,3 +320,170 @@ def test_conflict_and_quote_policy_are_explicit(seed):
     purchasing = " ".join(b.get("text", "") for b in docs["D05"]["blocks"])
     assert "từ 20 triệu đồng" in purchasing and "ít nhất 3 báo giá" in purchasing
     assert "09/2026/QĐ-TL" in purchasing
+
+
+@pytest.mark.parametrize("doc_id", ["D01", "D06", "D07", "D08"])
+def test_new_documents_do_not_pad_length_by_repeating_paragraphs(seed, doc_id):
+    doc = next(d for d in seed["documents"] if d["document_id"] == doc_id)
+    paragraphs = [b["text"] for b in doc["blocks"] if b["type"] == "paragraph"]
+    assert len(paragraphs) == len(set(paragraphs))
+    for index, paragraph in enumerate(paragraphs):
+        for other in paragraphs[:index]:
+            assert SequenceMatcher(None, paragraph, other, autojunk=False).ratio() < 0.82
+    sentences = [
+        sentence.strip()
+        for paragraph in paragraphs
+        for sentence in re.split(r"(?<=[.!?])\s+", paragraph)
+        if len(sentence.strip()) >= 120
+    ]
+    assert len(sentences) == len(set(sentences))
+
+
+@pytest.mark.parametrize(
+    "doc_id,min_pages,max_pages", [("D01", 10, 12), ("D06", 6, 8), ("D07", 10, 12)]
+)
+def test_new_pdf_layout_preserves_all_text_and_table(tmp_path, seed, doc_id, min_pages, max_pages):
+    import pymupdf
+
+    from app.services.parsing import normalize
+
+    source = next(d for d in seed["documents"] if d["document_id"] == doc_id)
+    data = pdf_bytes(source, seed["company"], seed["notice"], DEFAULT_FONT)
+    with pymupdf.open(stream=data, filetype="pdf") as pdf:
+        assert min_pages <= len(pdf) <= max_pages
+        text = normalize(" ".join(p.get_text() for p in pdf))
+        assert text.count(seed["notice"]) == 1
+        assert "\ufffd" not in text
+        for block in source["blocks"]:
+            for value in [block["text"]] if "text" in block else block.get("lines", []):
+                assert normalize(value) in text
+        for page in pdf:
+            for x0, y0, x1, y1, *_ in page.get_text("words"):
+                if y0 >= 60:  # First-page notice intentionally uses a separate header area.
+                    assert x0 >= 55 and x1 <= 540 and y1 <= 788
+        if doc_id == "D06":
+            tables = [t for p in pdf for t in p.find_tables(strategy="lines_strict").tables]
+            assert len(tables) == 1
+            rows = tables[0].extract()
+            assert len(rows) == 5
+            expected = next(b for b in source["blocks"] if b["type"] == "table")
+            assert [[normalize(cell) for cell in row] for row in rows] == [
+                [normalize(cell) for cell in row] for row in [expected["header"], *expected["rows"]]
+            ]
+            assert [normalize(r[0]) for r in rows[1:]] == [
+                "E-FD-12",
+                "E-PR-08",
+                "E-PW-03",
+                "E-CN-05",
+            ]
+        elif doc_id == "D07":
+            sla_pages = [
+                i + 1 for i, p in enumerate(pdf) if "Gói Tiêu chuẩn" in normalize(p.get_text())
+            ]
+            assert sla_pages and sla_pages[0] >= 7
+
+
+def test_t2b_facts_and_sla_are_explicit(seed):
+    docs = {d["document_id"]: d for d in seed["documents"]}
+    bodies = {key: json.dumps(doc["blocks"], ensure_ascii=False) for key, doc in docs.items()}
+    for value in (
+        "phép năm 12 ngày",
+        "5 năm",
+        "1 ngày",
+        "tối đa 5 ngày",
+        "31/03",
+        "60 ngày",
+        "85%",
+        "BM-NS-03",
+        "3 ngày làm việc",
+        "08:00",
+        "17:00",
+        "12:00",
+        "13:00",
+        "11:30",
+    ):
+        assert value in bodies["D01"]
+    assert "14 ngày" not in bodies["D01"] and "30/06" not in bodies["D01"]
+    for value in ("KQ-01", "24 giờ", "cuối mỗi quý", "trên 2%", "BM-KHO-07", "K1-A03-T2"):
+        assert value in bodies["D06"]
+    for value in (
+        "4 giờ làm việc",
+        "24 giờ",
+        "nội thành",
+        "phản hồi 2 giờ",
+        "8 giờ",
+        "0,5%",
+        "10%",
+        "phí dịch vụ tháng",
+    ):
+        assert value in bodies["D07"]
+    for value in ("12 tháng", "3 tháng", "7 ngày", "lỗi do nhà sản xuất", "không chính hãng"):
+        assert value in bodies["D08"]
+
+
+def test_markdown_notice_headings_table_context_and_stable_lines(tmp_path, seed):
+    from app.services.parsing import parse_file
+
+    doc = next(d for d in seed["documents"] if d["document_id"] == "D08")
+    data = markdown_bytes(doc, seed["company"], seed["notice"])
+    assert data == markdown_bytes(doc, seed["company"], seed["notice"])
+    text = data.decode("utf-8")
+    assert text.splitlines()[0] == seed["notice"]
+    assert text.count(seed["notice"]) == 1
+    assert "\r" not in text and text.endswith("\n")
+    assert "## 2. Thời hạn" in text and "### Bước 1." in text
+    path = tmp_path / doc["file_name"]
+    path.write_bytes(data)
+    parsed = parse_file(path, "md")
+    assert not parsed.warnings
+    header = next(b for b in parsed.blocks if b.normalized_text.startswith("| Đối tượng |"))
+    rows = [
+        b
+        for b in parsed.blocks
+        if b.normalized_text.startswith(("| Máy mới |", "| Linh kiện thay thế |"))
+    ]
+    assert len(rows) == 2
+    for block in rows:
+        assert block.location["kind"] == "line_range"
+        assert header.block_id in block.context_ids
+        line = block.location["line_start"]
+        assert text.splitlines()[line - 1] == block.normalized_text
+
+
+def test_markdown_block_semantics_and_table_escaping(seed):
+    doc = copy.deepcopy(seed["documents"][0])
+    doc["blocks"] = [
+        {"type": "heading", "level": 6, "text": "Mục sâu"},
+        {"type": "list_item", "ordered": True, "text": "Nhận hàng"},
+        {"type": "list_item", "ordered": True, "text": "Đối chiếu"},
+        {"type": "list_item", "ordered": False, "text": "Ghi chú"},
+        {"type": "page_break"},
+        {"type": "list_item", "ordered": True, "text": "Nhập lại"},
+        {"type": "table", "header": ["Mã", "Mô tả"], "rows": [["A|B", "Dòng\nkhác\\ghi"]]},
+        {"type": "signature", "lines": ["Người lập", "Người kiểm"]},
+    ]
+    validate_seed({**seed, "documents": [doc]})
+    text = markdown_bytes(doc, seed["company"], seed["notice"]).decode()
+    for value in (
+        "###### Mục sâu",
+        "1. Nhận hàng",
+        "2. Đối chiếu",
+        "- Ghi chú",
+        "1. Nhập lại",
+        r"| A\|B | Dòng khác\\ghi |",
+        "Người lập\n\nNgười kiểm",
+    ):
+        assert value in text
+
+
+@pytest.mark.parametrize("file_format,file_name", [("txt", "email.txt"), ("scan", "scan.pdf")])
+def test_future_formats_fail_before_writing_anything(tmp_path, seed, file_format, file_name):
+    doc = copy.deepcopy(seed["documents"][0])
+    doc.update(document_id="D14", format=file_format, file_name=file_name)
+    seed["documents"].append(doc)
+    source = tmp_path / "seed.json"
+    source.write_text(json.dumps(seed, ensure_ascii=False), encoding="utf-8")
+    output = tmp_path / "out"
+    with pytest.raises(ValueError, match="This stage implements"):
+        build(source, output)
+    assert not output.exists()

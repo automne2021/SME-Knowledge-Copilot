@@ -182,6 +182,1656 @@
         {"type": "paragraph", "text": "2. Vướng mắc được chuyển cùng hồ sơ cụ thể để Kế toán tổng hợp và trình Tổng Giám đốc xem xét. Hướng dẫn cho một trường hợp không tự sửa tên biểu mẫu, ngưỡng duyệt hoặc yêu cầu báo giá của quy trình. Khi có sửa đổi chung, bản mới phải được phổ biến tới trụ sở và chi nhánh, đồng thời chỉ rõ phần thay thế để tránh sử dụng lẫn phiên bản."},
         {"type": "signature", "lines": ["Nơi nhận: Các phòng ban; Chi nhánh Đà Nẵng; Lưu KT, HCNS.", "TỔNG GIÁM ĐỐC", "Lê Hoàng Phúc"]}
       ]
+    },
+    {
+      "document_id": "D01",
+      "file_name": "so_tay_nhan_su_2025.pdf",
+      "format": "pdf",
+      "title": "SỔ TAY NHÂN SỰ 2025",
+      "doc_number": "01/2025/QĐ-TL",
+      "issue_line": "TP.HCM, ngày 01 tháng 01 năm 2025",
+      "effective_date": "2025-01-01",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương I. Phạm vi và trách nhiệm sử dụng sổ tay"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 1. Mục đích và đối tượng áp dụng"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Sổ tay nhân sự 2025 hướng dẫn việc tiếp nhận, bố trí công việc và quản lý quan hệ lao động tại Công ty Cổ phần Thiết bị Văn phòng Thiên Lam. Văn bản áp dụng cho người lao động tại trụ sở TP.HCM và Chi nhánh Đà Nẵng; người quản lý có trách nhiệm giải thích nội dung liên quan trước khi giao việc. Tài liệu giúp các bộ phận dùng cùng căn cứ khi xử lý hồ sơ nhân sự, không thay thế hợp đồng đã ký với từng người."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Các nội dung được trình bày theo vòng đời làm việc, từ xác định nhu cầu tuyển dụng đến bàn giao khi kết thúc công việc. Phòng HCNS quản lý bản lưu, tiếp nhận vướng mắc và phối hợp với Trưởng bộ phận làm rõ tình huống. Người lao động được hướng dẫn xem bản áp dụng tại nơi làm việc; bản ghi chú cá nhân chỉ phục vụ tra cứu, không được sử dụng làm căn cứ thay đổi quy định chung."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 2. Cách đọc và phối hợp thực hiện"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Trong sổ tay, Trưởng bộ phận là người trực tiếp quản lý phạm vi công việc được giao; HCNS là đầu mối quản lý hồ sơ và hướng dẫn thủ tục; Kế toán thực hiện phần đối chiếu, chi trả thuộc trách nhiệm. Việc một bộ phận tiếp nhận đề nghị không có nghĩa đề nghị đã được chấp thuận. Người gửi cần theo dõi phản hồi và hoàn thành nội dung còn thiếu trước khi thực hiện phần việc cần xác nhận."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người quản lý phổ biến điều khoản liên quan đến vị trí và ghi nhận nội dung đã hướng dẫn trong hồ sơ tiếp nhận. Nếu công việc phát sinh khác mô tả ban đầu, các bên làm rõ phạm vi và điều kiện thực hiện, tránh dùng một câu xác nhận đã đọc sổ tay để suy ra người lao động đồng ý mọi thay đổi nhiệm vụ. Vướng mắc được chuyển cùng tình huống cụ thể để HCNS có căn cứ phản hồi."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Khi dẫn chiếu sổ tay trong thư hoặc biên bản, người lập ghi tên văn bản, năm áp dụng và điều khoản liên quan. Không sao chép một đoạn thiếu ngoại lệ rồi phổ biến như toàn bộ quy định. Ý kiến giải thích cho hồ sơ riêng được lưu cùng hồ sơ đó; sửa đổi nội dung chung phải do người có thẩm quyền ban hành và chỉ rõ phần được thay thế."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương II. Xác định nhu cầu và lựa chọn nhân sự"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 3. Chuẩn bị yêu cầu tuyển dụng"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Trưởng bộ phận mô tả vị trí cần bổ sung, nhiệm vụ chính, yêu cầu chuyên môn và lý do phát sinh nhu cầu. Với vị trí Kỹ thuật dịch vụ, mô tả phải phân biệt công việc tại xưởng với công việc tại địa điểm khách hàng; với Kho vận, phải nêu trách nhiệm giao nhận và điều kiện sử dụng phương tiện hỗ trợ. HCNS kiểm tra sự rõ ràng của yêu cầu trước khi lập phương án tìm ứng viên, tránh tuyển theo một tên chức danh nhưng giao việc theo phạm vi khác."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Nhu cầu thay người cần có thông tin về công việc đang chờ bàn giao, những phần có thể bố trí tạm thời và đầu mối hướng dẫn người mới. Nhu cầu bổ sung vị trí mới phải thể hiện mối liên hệ với tổ chức bộ phận hiện có. Việc bộ phận đã trao đổi với một ứng viên không đồng nghĩa công ty đã chấp thuận tuyển; người trao đổi không được tự cam kết điều kiện nằm ngoài phạm vi được giao."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 4. Phỏng vấn và ghi nhận kết quả"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. HCNS tiếp nhận thông tin ứng viên phục vụ tuyển dụng và chuyển đúng người tham gia đánh giá. Bộ phận chuyên môn chuẩn bị tình huống gắn với công việc, chẳng hạn phân biệt lỗi vận hành với lỗi thiết bị hoặc kiểm tra một bộ hồ sơ giao hàng. Không yêu cầu ứng viên cung cấp tài liệu khách hàng cũ để chứng minh năng lực. Bài thực hành sử dụng dữ liệu giả lập, không đưa người dự tuyển vào xử lý công việc khách hàng khi chưa xác định trách nhiệm."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người phỏng vấn ghi nhận căn cứ đánh giá thay vì chỉ ghi phù hợp hoặc chưa phù hợp. Nếu ứng viên cần được đào tạo về một dòng máy, kết quả phải thể hiện nội dung đó để người quyết định tuyển và người hướng dẫn cùng biết. Trường hợp ý kiến đánh giá khác nhau, HCNS lưu cả nội dung khác biệt và đề nghị làm rõ; không tự sửa nhận xét chuyên môn thành kết luận nhất trí."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Trước khi gửi thông báo nhận việc, HCNS đối chiếu vị trí, nơi làm việc, người quản lý và điều kiện đã được chấp thuận. Thông tin gửi ứng viên phải đủ để nhận biết công việc dự kiến và đầu mối hỏi lại. Hồ sơ không tiếp tục được xử lý theo phạm vi tuyển dụng, không phát tán trong nhóm trao đổi của công ty. Người quản lý không giữ riêng hồ sơ ứng viên để sử dụng cho mục đích khác."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Nếu ứng viên chưa thể bắt đầu theo lịch đã thống nhất, HCNS hỏi lại khả năng tiếp nhận của bộ phận và ghi nhận lịch điều chỉnh. Không chuyển phần việc của vị trí đang trống sang nhân sự khác bằng một lời hứa sẽ tuyển người sớm; việc bố trí tạm cần có người chịu trách nhiệm và hướng dẫn rõ nhiệm vụ."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương III. Tiếp nhận và thử việc"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 5. Hồ sơ nhận việc và hướng dẫn ban đầu"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. HCNS đối chiếu thông tin người nhận việc với thông báo tuyển và lập danh mục hồ sơ còn thiếu để hai bên hoàn thiện. Người lao động được giới thiệu đầu mối quản lý, vị trí làm việc và cách đề nghị hỗ trợ. Bộ phận tiếp nhận chuẩn bị nhiệm vụ phù hợp giai đoạn đầu, xác định người hướng dẫn và giới thiệu những khu vực không được tự ý tiếp cận. Không giao tài khoản dùng chung rồi để người mới tự tìm hiểu trên dữ liệu đang vận hành."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Việc bàn giao máy tính, công cụ hoặc thiết bị kiểm tra được ghi theo loại và tình trạng thực tế. Người nhận xác nhận phần đã nhận, nêu ngay phần thiếu hoặc chưa hoạt động. Tài khoản nghiệp vụ được IT cấp theo yêu cầu công việc đã được bộ phận xác nhận; việc nhận thiết bị không tự tạo quyền truy cập mọi thư mục. Người hướng dẫn chỉ dùng dữ liệu cần thiết cho nội dung đào tạo, không chuyển cả kho tài liệu để tiết kiệm thao tác."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Nhân sự tiếp nhận được hướng dẫn cách tìm quy trình đang áp dụng và cách báo khi tài liệu chưa khớp việc thực tế. Người hướng dẫn thực hiện mẫu một hồ sơ phù hợp vị trí, cho người mới thử và giải thích phần cần sửa. Không chỉ gửi đường dẫn tài liệu rồi ghi đã đào tạo khi chưa kiểm tra người nhận có thể mở và sử dụng đúng bản."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 6. Thời gian và đánh giá thử việc"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Thời gian thử việc là 60 ngày; lương thử việc bằng 85% lương chính thức của vị trí đã thống nhất. HCNS ghi rõ điều kiện này trong hồ sơ thử việc để người lao động đối chiếu. Việc thực hiện một nhiệm vụ đạt yêu cầu trước khi hết thời gian thử việc không tự thay đổi ngày kết thúc hoặc mức lương; mọi điều chỉnh cần được thông báo và ghi nhận trong hồ sơ liên quan.",
+          "facts": [
+            "F-HR-05"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người hướng dẫn giao nhiệm vụ có tiêu chí quan sát được: thực hiện đúng quy trình, ghi nhận thông tin đủ căn cứ và biết chuyển việc vượt khả năng xử lý. Với nhân sự đi cùng kỹ thuật viên, cần phân biệt quan sát học việc với trực tiếp chịu trách nhiệm thao tác trên máy. Vướng mắc được phản hồi trong quá trình làm, tránh để người mới tiếp tục lặp một cách làm sai rồi chỉ nêu lỗi khi đánh giá cuối kỳ."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Kết quả thử việc được Trưởng bộ phận tổng hợp theo nhiệm vụ đã giao và ý kiến của người hướng dẫn. HCNS trao đổi với người lao động về kết quả, phần còn cần làm rõ và bước xử lý tiếp theo. Không ghi đã đạt chỉ vì hệ thống chấm công vẫn có tên; cũng không coi việc chưa nhận thông báo là bằng chứng công ty đã quyết định một kết quả khác với hồ sơ."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Trước khi chuyển sang làm việc chính thức, bộ phận tiếp nhận rà soát lại nhiệm vụ, công cụ và quyền truy cập. Các nội dung còn chờ đào tạo được đưa vào kế hoạch hướng dẫn tiếp theo, không che đi bằng nhận xét chung đã quen việc. Người lao động được biết đầu mối giải đáp khi điều kiện nhận việc và nội dung thực tế chưa thống nhất."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương IV. Thời giờ làm việc và theo dõi hiện diện"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 7. Lịch làm việc của trụ sở và chi nhánh"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Tại trụ sở TP.HCM, giờ làm việc từ 08:00 đến 17:00, nghỉ trưa từ 12:00 đến 13:00, từ thứ Hai đến thứ Sáu. Chi nhánh Đà Nẵng áp dụng lịch trên và làm thêm sáng thứ Bảy từ 08:00 đến 11:30. Người quản lý căn cứ nơi bố trí công việc để phổ biến đúng lịch; không lấy một cuộc hẹn khách hàng vào ngày nghỉ làm căn cứ tự sửa lịch làm việc chung của chi nhánh.",
+          "facts": [
+            "F-HR-06"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Công việc lắp đặt, bảo trì hoặc giao hàng có lịch tại địa điểm khách hàng được bộ phận lập kế hoạch riêng, ghi rõ nhiệm vụ và người phối hợp. Thời điểm khách hàng cho vào làm việc cần được trao đổi trước, không mặc nhiên đồng nhất với giờ mở cửa trụ sở. Nếu lịch thay đổi ảnh hưởng người tham gia, người điều phối thông báo và lưu xác nhận thay vì chỉ sửa lịch trên bản cá nhân."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 8. Ghi nhận thời gian và xử lý sai lệch"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Người lao động thực hiện ghi nhận hiện diện theo hướng dẫn tại nơi làm việc. Khi quên ghi nhận hoặc phát sinh lỗi công cụ, phải báo nội dung thực tế để người quản lý xác nhận. Xác nhận dựa trên công việc và thời gian có thể đối chiếu, không nhờ đồng nghiệp ghi nhận thay. HCNS giữ cả thông tin ban đầu và căn cứ điều chỉnh để giải thích được chênh lệch khi tổng hợp."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người làm tại khách hàng nêu địa điểm, nhiệm vụ và đầu mối xác nhận công việc. Biên bản dịch vụ hoặc giao nhận có thể hỗ trợ đối chiếu nhưng không được sửa chỉ để khớp bảng hiện diện. Nếu một hồ sơ có giờ đến và giờ hoàn tất khác với lịch dự kiến, người theo dõi cần phân biệt thay đổi kế hoạch với lỗi nhập liệu, tránh tự chọn số thuận tiện hơn để hoàn tất bảng tổng hợp."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Việc đến muộn, về sớm hoặc phải rời nơi làm việc giữa ca được báo cho người quản lý để bố trí công việc. Xác nhận đã nhận thông tin không đồng nghĩa đã giải quyết mọi vấn đề liên quan. Trưởng bộ phận phối hợp HCNS làm rõ tình huống, không dùng việc khách hàng chưa phản ánh để kết luận rằng nhân sự luôn có mặt đúng lịch hoặc đã hoàn thành phần việc được giao."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Nhu cầu làm ngoài lịch thông thường được mô tả theo công việc cần hoàn tất và lý do chưa thể bố trí trong lịch. Người quản lý trao đổi với người tham gia và bộ phận liên quan trước khi xác nhận phương án. Không suy ra người lao động phải luôn nhận việc ngoài lịch chỉ vì có điện thoại công ty; cách ghi nhận và xử lý được hướng dẫn theo hồ sơ đã được chấp thuận."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương V. Nghỉ phép và bố trí người thay thế"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 9. Số ngày phép và phần được chuyển"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Theo Sổ tay nhân sự 2025, nhân viên chính thức có phép năm 12 ngày. HCNS theo dõi số đã sử dụng và số còn lại trong hồ sơ của từng người, đồng thời đối chiếu các đề nghị đã được xác nhận nhưng chưa thực hiện. Số dư trên một bản tổng hợp chưa cập nhật không phải căn cứ để người lao động tự bố trí nghỉ khi bộ phận chưa xác nhận khả năng bàn giao.",
+          "facts": [
+            "F-HR-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Cứ đủ 5 năm thâm niên, người lao động được cộng thêm 1 ngày phép năm. HCNS kiểm tra mốc thâm niên và ghi rõ căn cứ khi cập nhật số ngày; người lao động có thể đề nghị kiểm tra nếu hồ sơ chưa thống nhất. Việc nhận nhiệm vụ mới hoặc được bổ nhiệm làm quản lý không tự thay thế mốc thâm niên đang theo dõi.",
+          "facts": [
+            "F-HR-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Phép chưa dùng được chuyển tối đa 5 ngày, phải dùng trước 31/03 năm sau. Phần chuyển được thể hiện riêng với phép phát sinh của năm đang theo dõi để tránh tính trùng. Người lao động cần đối chiếu kế hoạch nghỉ với HCNS; việc từng đề nghị nghỉ nhưng sau đó hủy không có nghĩa số ngày đó đã được sử dụng và được khôi phục thêm một lần nữa.",
+          "facts": [
+            "F-HR-04"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 10. Thủ tục đề nghị và xác nhận nghỉ"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Người lao động xin nghỉ phép bằng biểu mẫu BM-NS-03, gửi trước ít nhất 3 ngày làm việc. Phiếu ghi thời gian nghỉ, người nhận bàn giao và công việc cần tiếp tục xử lý. Trưởng bộ phận kiểm tra kế hoạch nhân sự; HCNS đối chiếu điều kiện và số dư. Việc gửi biểu mẫu hoặc nhắn trong nhóm chỉ ghi nhận đề nghị, chưa thay thế xác nhận cho lịch nghỉ.",
+          "facts": [
+            "F-HR-07"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Khi đề nghị có thay đổi, người gửi nêu rõ phiên bản lịch nào cần thay thế và những phần bàn giao bị ảnh hưởng. Nếu không thể nghỉ theo lịch đã xác nhận, phải thông báo để bộ phận điều chỉnh bố trí và HCNS cập nhật theo tình trạng thực tế. Không tạo một đề nghị mới trùng thời gian rồi để hai hồ sơ cùng được hiểu là đang có hiệu lực."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Trước khi nghỉ, người lao động chuyển tình trạng công việc, nơi lưu tài liệu cần dùng và những nội dung đang chờ khách hàng phản hồi cho người nhận bàn giao. Không chia sẻ mật khẩu cá nhân để người khác làm thay. Khi có việc phát sinh trong thời gian nghỉ, người quản lý phối hợp người được phân công; việc đã bàn giao không làm mất trách nhiệm giải thích phần hồ sơ người lao động lập trước đó."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Trường hợp đột xuất khiến không thể chuẩn bị lịch thông thường, người lao động liên hệ người quản lý ngay khi có thể để bố trí phần việc còn lại. HCNS hướng dẫn hồ sơ theo tình huống; không yêu cầu ghi lùi ngày tạo phiếu để thể hiện đã đáp ứng hạn gửi của Điều 10. Nội dung thực tế và cách giải quyết được giữ trong hồ sơ."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương VI. Hồ sơ lương và thông tin chế độ"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 11. Đối chiếu thông tin phục vụ chi trả"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. HCNS tổng hợp thông tin về tình trạng làm việc, thay đổi vị trí và các nội dung đã được xác nhận để chuyển Kế toán đối chiếu. Trưởng bộ phận chịu trách nhiệm phần xác nhận thuộc phạm vi quản lý, không tự ghi nhận một điều kiện chi trả mà chưa có căn cứ. Hồ sơ gửi Kế toán cần thể hiện nội dung nào đã chốt, nội dung nào còn chờ làm rõ, tránh biến việc tiếp nhận bảng tổng hợp thành xác nhận toàn bộ số liệu."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người lao động kiểm tra thông tin cá nhân và phản hồi sai lệch qua đầu mối HCNS. Khi nhận được đề nghị đối chiếu, HCNS xác định nguồn dữ liệu liên quan, yêu cầu người phụ trách làm rõ và ghi nhận kết quả. Không gửi thông tin chi trả của cả phòng cho người không có trách nhiệm xử lý để hỏi một trường hợp; phần hồ sơ chuyển giữa các bộ phận phải giới hạn theo nội dung cần xác minh."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 12. Cập nhật điều kiện làm việc và hồ sơ cá nhân"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Thay đổi công việc hoặc nơi bố trí có ảnh hưởng đến điều kiện đã thống nhất được HCNS phối hợp Trưởng bộ phận trao đổi với người lao động. Bản mô tả cập nhật nêu phần giữ nguyên, phần cần điều chỉnh và thời điểm thực hiện sau khi được xác nhận. Việc một người hỗ trợ chi nhánh trong một nhiệm vụ không được tự ghi thành chuyển hẳn nơi làm việc trên hồ sơ nhân sự."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Hồ sơ chế độ được lập theo loại việc phát sinh và hướng dẫn hiện hành. Người lao động cung cấp thông tin trung thực, HCNS kiểm tra tính đầy đủ và thông báo rõ nội dung còn thiếu. Nếu một giấy tờ được dùng cho nhiều phần việc, người quản lý bản lưu giữ liên kết thay vì tạo các bản chép có thông tin khác nhau. Không yêu cầu bổ sung lại giấy tờ đã có chỉ vì hồ sơ đổi người theo dõi mà chưa kiểm tra bản lưu."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Khi chưa đủ căn cứ để giải quyết, người phụ trách nói rõ phần chưa xác định và đầu mối tiếp tục xử lý. Một câu trả lời tạm thời không được chuyển thành quy định chung cho cả công ty. Người lao động có quyền hỏi lại căn cứ áp dụng; Trưởng bộ phận không dùng việc chưa có kết quả đối chiếu làm lý do phổ biến thông tin suy đoán về hồ sơ của cá nhân."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Phần việc công tác được đối chiếu theo quy chế công tác phí áp dụng cho chuyến đi tương ứng, tách khỏi hồ sơ lương. Chứng từ tạm ứng hoặc hoàn ứng không được đưa vào bảng đối chiếu cá nhân dưới một tên khoản khác để làm hồ sơ trông đã cân đối. Nếu có nhầm loại hồ sơ, các đầu mối ghi nhận điều chỉnh và giữ căn cứ liên hệ giữa hai phần việc."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương VII. Công cụ, tài sản và an toàn công việc"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 13. Sử dụng thiết bị được giao"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Người lao động sử dụng công cụ, máy tính và thiết bị kiểm tra theo nhiệm vụ được phân công. Khi chuyển thiết bị cho người khác, phải có nội dung bàn giao giúp xác định người đang giữ và tình trạng hiện tại. Thiết bị dùng thử cho khách hàng được quản lý theo hồ sơ riêng, không lấy danh nghĩa đang phục vụ công việc để bỏ bước xác nhận của bộ phận phụ trách tài sản hoặc Kho vận."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Nếu công cụ không hoạt động, người sử dụng ngừng phần thao tác có thể làm hỏng thêm và báo đầu mối hỗ trợ. Nội dung báo cần mô tả dấu hiệu và thời điểm phát hiện, tránh chỉ ghi máy lỗi rồi chuyển tài sản sang người khác mà không nêu tình trạng. Thiết bị chưa được kiểm tra không tự trở lại trạng thái sẵn dùng chỉ vì đã được khởi động lại hoặc người sử dụng chưa quan sát thấy lỗi lặp lại."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 14. Bố trí công việc an toàn"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Người quản lý giới thiệu yêu cầu an toàn phù hợp với công việc thực tế, đặc biệt khi nâng chuyển máy, thao tác gần bộ phận nóng hoặc kiểm tra thiết bị điện. Nhân sự chưa được hướng dẫn không tự mở cụm máy để rút ngắn thời gian chờ. Với công việc ở khách hàng, cần kiểm tra điều kiện ra vào và vị trí đặt thiết bị trước khi bắt đầu, không đặt vật tư hoặc công cụ chắn lối đi chung."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Khi thấy nguy cơ mất an toàn, người lao động báo người phụ trách và giữ khu vực phù hợp để tránh người khác tiếp tục thao tác. Mô tả sự việc dựa trên điều quan sát được, không tự xác định nguyên nhân khi chưa có kiểm tra chuyên môn. Nếu phải chuyển thiết bị khỏi vị trí, người điều phối xác nhận cách di chuyển và ghi lại tình trạng trước khi thực hiện để không làm mất căn cứ kiểm tra."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Sau công việc, vật tư còn lại và công cụ mượn được đối chiếu với nội dung đã nhận. Người nhận bàn giao cần biết phần thiếu, phần hỏng và phần đang ở địa điểm khách hàng. Không xác nhận trả đủ chỉ dựa trên việc đã nhận lại túi công cụ; các phần chưa xác định phải được ghi riêng để người quản lý tiếp tục xử lý."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Sự cố ảnh hưởng người hoặc tài sản được thông báo theo đầu mối tại nơi làm việc và chuyển HCNS phối hợp với bộ phận chuyên môn. Người có mặt hỗ trợ theo khả năng, không đăng ảnh hiện trường có thông tin cá nhân hoặc khách hàng lên kênh ngoài công việc. Hồ sơ sự cố giữ diễn biến, biện pháp đã thực hiện và người tiếp tục theo dõi, không thay bằng lời kể chung sau khi khu vực đã được thu dọn."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương VIII. Thông tin nội bộ và giao tiếp với khách hàng"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 15. Quản lý dữ liệu theo nhiệm vụ"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Hồ sơ nhân sự, báo giá, hợp đồng và dữ liệu thiết bị khách hàng được sử dụng theo phạm vi công việc. Người lao động chỉ chuyển phần cần thiết cho người đang xử lý, kiểm tra người nhận trước khi gửi. Một tài liệu được gửi trong nhóm của bộ phận không có nghĩa đã được phép chuyển ra ngoài. Khi cần hỗ trợ từ người không có quyền truy cập, phải nhờ đầu mối có trách nhiệm chuẩn bị nội dung phù hợp."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Tài khoản được cấp cho cá nhân không chia sẻ để đồng nghiệp xử lý thay. Nếu cần người thay thế trong thời gian nghỉ, Trưởng bộ phận gửi yêu cầu bố trí quyền phù hợp cho IT. Dấu vết công việc phải phản ánh người thực hiện thật, tránh dùng chung danh tính rồi yêu cầu người đứng tên giải thích một thao tác họ không làm. Người phát hiện gửi nhầm thông tin báo ngay để phối hợp hạn chế việc tiếp tục phát tán."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 16. Xác nhận nội dung giao tiếp"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Nhân sự trao đổi với khách hàng giới thiệu đúng vai trò và phần việc được giao. Khi nhận yêu cầu nằm ngoài khả năng quyết định, cần ghi lại thông tin và chuyển người phụ trách; không cam kết thay máy, miễn phí hoặc thay điều kiện hợp đồng để kết thúc cuộc gọi nhanh. Thông tin đã chuyển phải đủ để người nhận tiếp tục xử lý, gồm thiết bị liên quan, tình trạng đang quan sát và nội dung khách hàng mong được giải quyết."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Trước khi gửi báo cáo dịch vụ hoặc biên bản cho khách hàng, người lập kiểm tra thiết bị, địa điểm và phần việc đã thực hiện. Không sử dụng lại mẫu của một khách hàng khác khi chưa loại bỏ dữ liệu không liên quan. Nội dung chưa kiểm chứng được nêu là đang chờ xác minh; tránh viết đã xử lý triệt để khi mới chỉ thực hiện một phép thử mà chưa xác nhận tình trạng vận hành tiếp theo."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Phản ánh của khách hàng được chuyển cho đầu mối phụ trách dịch vụ để đối chiếu hồ sơ. Người tiếp nhận phân biệt lời mô tả của khách hàng với kết luận chuyên môn; cả hai phần đều có giá trị theo vai trò của chúng nhưng không thay thế lẫn nhau. Không xóa nhận xét bất lợi khỏi bản lưu để báo cáo trông thuận lợi hơn; nếu có nhầm lẫn, bổ sung căn cứ điều chỉnh và giữ dấu vết nội dung ban đầu."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Giao tiếp giữa các bộ phận cần chỉ rõ việc cần người nhận thực hiện và tài liệu làm căn cứ. Việc đưa một người vào nhóm trao đổi không tự chuyển trách nhiệm hồ sơ cho họ. Khi thay đầu mối, người bàn giao nêu phần đang chờ và xác nhận người tiếp tục theo dõi, để khách hàng không phải lặp lại yêu cầu chỉ vì công ty đổi người xử lý nội bộ."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương IX. Hướng dẫn khắc phục và xem xét vi phạm"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 17. Ghi nhận vấn đề trong công việc"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Khi phát hiện cách làm chưa đúng, người quản lý xác định yêu cầu đã được hướng dẫn, phần việc thực tế và ảnh hưởng quan sát được. Trao đổi tập trung vào hành vi, hồ sơ và cách khắc phục; không gán kết luận về động cơ khi chưa có căn cứ. Người lao động được biết nội dung đang được xem xét và có cơ hội giải thích tình huống, nêu tài liệu hoặc người có thể giúp làm rõ diễn biến."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Sai sót do hướng dẫn chưa rõ cần được phân biệt với trường hợp đã được hướng dẫn nhưng vẫn làm khác. Trưởng bộ phận kiểm tra cách giao việc và điều kiện thực hiện, không chỉ xem chữ ký đã đọc tài liệu. Nếu nhiều người hiểu một bước theo các cách khác nhau, bộ phận phải thống nhất lại hướng dẫn và xem xét các hồ sơ bị ảnh hưởng, thay vì chỉ yêu cầu từng người tự rút kinh nghiệm."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 18. Phối hợp xem xét và theo dõi khắc phục"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Hồ sơ chuyển HCNS nêu sự việc, nguồn thông tin, phần đã xác minh và phần còn chờ kiểm tra. Người lập không tự thay lời giải thích của người lao động bằng bản tóm tắt khác nghĩa. Nếu dùng hình ảnh hoặc dữ liệu nghiệp vụ, phải nêu mối liên hệ với sự việc và hạn chế người được tiếp cận. Việc tiếp nhận hồ sơ không phải kết luận đã có vi phạm hoặc đã xác định trách nhiệm cá nhân."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Những tình huống cần xử lý kỷ luật được thực hiện theo quy định của pháp luật lao động hiện hành và quy định nội bộ áp dụng. Không dùng việc điều chuyển nhiệm vụ tạm thời như một thông báo kỷ luật khi chưa có kết quả xem xét. Nội dung vượt thẩm quyền của Trưởng bộ phận được trình đúng người quyết định; trao đổi trong nhóm không thay thế hồ sơ và thủ tục cần có."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Phương án khắc phục xác định công việc phải làm, người phụ trách và căn cứ xác nhận kết quả. Nếu cần hướng dẫn lại, người quản lý tổ chức thực hành trên tình huống phù hợp và kiểm tra cách thực hiện, tránh chỉ yêu cầu ký thêm một bản cam kết. Kết quả được ghi nhận bằng việc đã hoàn tất và phần còn cần theo dõi, không kết luận đã khắc phục chỉ vì hết thời gian dự kiến."
+        },
+        {
+          "type": "paragraph",
+          "text": "4. Người lao động có thể phản ánh việc hướng dẫn hoặc xử lý chưa thống nhất qua HCNS. Bộ phận tiếp nhận ghi rõ nội dung cần xem xét lại và phản hồi theo hồ sơ cụ thể. Người quản lý giữ quan hệ phối hợp công việc trong thời gian xác minh; không phổ biến thông tin cá nhân hoặc kết luận chưa được kiểm chứng cho người không tham gia xử lý."
+        },
+        {
+          "type": "paragraph",
+          "text": "5. Hồ sơ kết thúc phải giúp người kiểm tra phân biệt sự việc ban đầu, ý kiến giải thích, quyết định và kết quả thực hiện. Nếu nhận được bằng chứng mới, người phụ trách báo đầu mối đã xử lý để xem xét bổ sung. Không ghi đè bản cũ nhằm làm cho lịch sử hồ sơ chỉ còn một diễn biến đơn giản hơn thực tế."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương X. Thay đổi công việc và kết thúc quan hệ lao động"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 19. Chuẩn bị bàn giao khi thay đổi vị trí"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Trước khi chuyển nhiệm vụ, người lao động và người quản lý lập danh mục công việc, tài liệu và công cụ cần bàn giao. Danh mục xác định nội dung đang chờ xử lý, thông tin liên hệ phục vụ nhiệm vụ và nơi lưu bản chính. Việc gửi một thư mục lớn không được xem là đã bàn giao đầy đủ nếu người nhận không thể xác định tài liệu nào đang có hiệu lực hoặc công việc nào cần tiếp tục ưu tiên."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người nhận kiểm tra khả năng tiếp cận hồ sơ theo quyền được cấp và phản hồi phần chưa rõ. Tài liệu khách hàng được giữ trong hệ thống công ty, không chuyển sang tài khoản cá nhân để việc bàn giao thuận tiện hơn. Với công việc liên phòng ban, Trưởng bộ phận thông báo đầu mối mới cho những người đang phối hợp, tránh để hồ sơ tiếp tục gửi đến người không còn phụ trách."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 20. Kết thúc làm việc và đối chiếu hồ sơ"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Đề nghị kết thúc làm việc được gửi HCNS để hướng dẫn thủ tục theo hợp đồng và quy định áp dụng. Người quản lý xác định kế hoạch bàn giao phù hợp tình trạng công việc, không tự coi việc đã tìm được người thay là hoàn tất hồ sơ nhân sự. Phần đối chiếu tài sản, công việc và chế độ được các đầu mối phụ trách thực hiện theo phạm vi; kết quả chưa thống nhất cần được nêu rõ để tiếp tục giải quyết."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. IT phối hợp cập nhật quyền truy cập theo thời điểm kết thúc hoặc chuyển nhiệm vụ được xác nhận. Dữ liệu nghiệp vụ được bàn giao cho người có trách nhiệm, không xóa tùy ý khỏi máy trước khi kiểm tra bản lưu. Người lao động trả công cụ theo danh mục thực tế; thiết bị đang ở khách hàng cần được xác nhận riêng, không ghi đã trả về kho khi chưa có căn cứ nhận lại."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. HCNS tổng hợp tình trạng hoàn tất của các đầu mối và thông tin còn cần đối chiếu. Một khoản đang làm rõ không được tự chuyển thành kết luận người lao động đã chấp nhận nội dung đề xuất. Những xác nhận sau khi nghỉ việc vẫn phải có căn cứ và được lưu trong đúng hồ sơ; không nhờ người mới ký thay phần công việc họ không tham gia chỉ để đóng danh mục bàn giao."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 21. Hiệu lực và quản lý phiên bản"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Sổ tay có hiệu lực từ ngày 01/01/2025. Trưởng phòng HCNS Phạm Quốc Bảo quản lý bản áp dụng và phối hợp Trưởng các bộ phận hướng dẫn tại trụ sở, chi nhánh. Khi phát hành bản sửa đổi, HCNS chỉ rõ điều khoản được thay thế và thời điểm áp dụng; bản cũ được giữ để đối chiếu hồ sơ phát sinh trong giai đoạn tương ứng, không tiếp tục phổ biến như bản hiện hành sau khi đã có văn bản thay thế."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Nội dung chưa rõ được gửi HCNS cùng trường hợp cụ thể để tổng hợp và trình Tổng Giám đốc xem xét. Không dùng một trao đổi riêng làm căn cứ sửa toàn bộ sổ tay. Người quản lý bản lưu kiểm tra thông tin phiên bản trước khi cung cấp cho bộ phận khác, giúp người đọc phân biệt hướng dẫn lịch sử với nội dung đang được áp dụng."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: Các phòng ban; Chi nhánh Đà Nẵng; Lưu HCNS.",
+            "TỔNG GIÁM ĐỐC",
+            "Lê Hoàng Phúc"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D06",
+      "file_name": "sop_nhap_xuat_kho.pdf",
+      "format": "pdf",
+      "title": "SOP NHẬP, XUẤT VÀ KIỂM SOÁT KHO",
+      "doc_number": "12/2026/QT-TL",
+      "issue_line": "TP.HCM, ngày 08 tháng 01 năm 2026",
+      "effective_date": "2026-01-15",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "1. Mục đích, phạm vi và trách nhiệm"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "1.1. Nhận diện luồng hàng"
+        },
+        {
+          "type": "paragraph",
+          "text": "SOP hướng dẫn nhận, nhập vị trí, xuất và kiểm kê thiết bị, linh kiện tại Kho vận Thiên Lam. Áp dụng cho kho TP.HCM và kho Đà Nẵng, kể cả hàng chuyển giữa kho và hàng khách gửi kiểm tra. Mục đích là giữ được liên kết giữa hàng thực tế, tình trạng kỹ thuật và hồ sơ nghiệp vụ. Người nhận một kiện hàng chỉ xác nhận phần đã kiểm tra; chữ ký nhận kiện không tự thay thế kết quả nghiệm thu chuyên môn hoặc xác nhận hàng đủ điều kiện cấp dùng."
+        },
+        {
+          "type": "paragraph",
+          "text": "Hàng đang sở hữu, hàng cho thuê và hàng khách gửi được phân biệt trong hồ sơ. Không thay nhãn khách gửi bằng nhãn hàng sẵn có khi hai thiết bị cùng loại máy. Nếu chưa xác định nguồn hàng, nhân viên tiếp nhận giữ thông tin giao nhận và chuyển Trưởng kho kiểm tra trước khi xếp vào vị trí chính thức. Không dùng một mã tạm giống mã hàng thật để tránh bỏ trống trường dữ liệu trên hệ thống."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "1.2. Phân công xử lý"
+        },
+        {
+          "type": "paragraph",
+          "text": "Trưởng kho HCM Võ Thành Nhân tổ chức thực hiện tại kho TP.HCM và phối hợp đầu mối kho Đà Nẵng khi điều chuyển. Nhân viên nhận kiểm tra số kiện, nhận diện thiết bị và tình trạng nhìn thấy; nhân viên bố trí vị trí đối chiếu nhãn với hồ sơ; người xuất kiểm tra yêu cầu được xác nhận. KTDV chịu trách nhiệm kết luận kiểm tra chuyên môn; Kế toán đối chiếu chênh lệch có ảnh hưởng số liệu quản lý. Một người có thể hỗ trợ nhiều công đoạn nhưng phải ghi rõ phần thực tế mình thực hiện."
+        },
+        {
+          "type": "paragraph",
+          "text": "Khi người phụ trách vắng mặt, Trưởng kho xác định người thay và phạm vi tiếp nhận. Nội dung bàn giao nêu hàng đang chờ kiểm tra, hồ sơ chưa khớp và lịch giao cần phối hợp. Không chỉ giao chìa khóa rồi hiểu rằng mọi tồn đọng đã chuyển trách nhiệm. Người nhận ca đọc lại danh mục, xác nhận phần đã kiểm tra và phản hồi ngay những kiện không thể nhận diện theo ghi chú."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "1.3. Nguyên tắc an toàn và chứng từ"
+        },
+        {
+          "type": "paragraph",
+          "text": "Nhân viên kiểm tra lối đi, phương tiện hỗ trợ và khả năng đặt máy an toàn trước khi dỡ hàng. Không mở cụm thiết bị khi chưa có người đủ chuyên môn hoặc dùng vật tư chưa xác định nguồn cho máy đang lưu kho. Ảnh kiện hàng phục vụ đối chiếu được lưu cùng hồ sơ, tránh gửi lẫn ảnh từ lần giao trước. Hàng không phù hợp được nhận diện tách biệt, không chuyển sang vị trí bán chỉ vì cần giải phóng khu nhận."
+        },
+        {
+          "type": "paragraph",
+          "text": "Chứng từ nhận, xuất và điều chỉnh phải chỉ đến cùng thiết bị hoặc lô hàng thực tế. Nếu có thông tin chưa khớp, người lập giữ nguyên nội dung nhận được và bổ sung ghi chú xác minh; không sửa chứng từ nhà cung cấp bằng cách ghi đè. Khi thao tác trên hệ thống chưa hoàn tất, hàng vẫn mang trạng thái thực tế tương ứng, không dùng việc có phiếu in làm bằng chứng đã xử lý xong."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "2. Mã kho, vị trí và nhận diện lỗi"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "2.1. Cách đọc nhãn vị trí"
+        },
+        {
+          "type": "paragraph",
+          "text": "Mã KHO-HCM-01 dùng cho kho TP.HCM, mã KHO-DN-01 dùng cho kho Đà Nẵng. Kệ được ghi theo dạng K<kho>-<dãy><số>-T<tầng>; ví dụ K1-A03-T2 xác định kho số 1, dãy A, kệ 03, tầng 2. KQ-01 là khu chờ kiểm định, không phải một vị trí hàng đạt để đưa vào danh sách sẵn xuất. Nhân viên phải đọc cả mã kho và vị trí, tránh coi cùng ký hiệu dãy kệ tại hai kho là cùng một nơi lưu hàng.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Nhãn thiết bị ghi thông tin có thể đối chiếu với thân máy và hồ sơ nguồn. Với linh kiện đóng gói theo lô, người nhận lưu quan hệ giữa nhãn lô và các phần đã tách. Khi nhãn cũ mờ, nhân viên báo để kiểm tra nguồn trước khi thay; không suy ra danh tính bằng hình dáng bên ngoài. Vị trí mới được cập nhật khi hàng thực sự được chuyển, tránh để hệ thống thể hiện hàng ở kệ mới trong khi kiện vẫn nằm tại khu chờ."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "2.2. Bảng mã lỗi dùng khi tiếp nhận"
+        },
+        {
+          "type": "paragraph",
+          "text": "Bảng dưới thống nhất cách ghi nhận dấu hiệu ban đầu, không thay kết luận kỹ thuật về nguyên nhân. Các mã E-FD-12, E-PR-08, E-PW-03 và E-CN-05 phân biệt lỗi kéo giấy, bản in có vệt, thiết bị không lên nguồn và mất kết nối. Trường mô tả kèm mã ghi tình trạng quan sát được và thiết bị liên quan; nếu chưa đủ dấu hiệu để chọn mã, ghi chưa xác định và chuyển KTDV.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "table",
+          "widths_cm": [
+            2.5,
+            4.5,
+            10.0
+          ],
+          "header": [
+            "Mã lỗi (Identifier)",
+            "Dấu hiệu nhận diện",
+            "Xử lý tại bước tiếp nhận"
+          ],
+          "rows": [
+            [
+              "E-FD-12",
+              "Lỗi kéo giấy",
+              "Ghi hiện tượng nạp giấy; không tháo cụm kéo tại khu nhận."
+            ],
+            [
+              "E-PR-08",
+              "Bản in có vệt",
+              "Giữ bản in kiểm tra và ghi vị trí vệt quan sát được."
+            ],
+            [
+              "E-PW-03",
+              "Thiết bị không lên nguồn",
+              "Ngừng bật thử khi có dấu hiệu không an toàn; chuyển KTDV."
+            ],
+            [
+              "E-CN-05",
+              "Mất kết nối",
+              "Ghi kiểu kết nối và tình trạng hiển thị, không tự đổi cấu hình khách."
+            ]
+          ],
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Không đổi mã lỗi chỉ để gộp hồ sơ đang chờ vào một nhóm dễ xuất báo cáo. Nếu KTDV xác định lại tình trạng, người cập nhật giữ dấu vết mã nhận ban đầu và kết luận sau kiểm tra. Những hỏng hóc có nhiều dấu hiệu được mô tả đầy đủ, tránh bỏ phần liên quan nguồn điện hoặc bao bì chỉ vì phiếu đã có một mã lỗi chính. Hàng có dấu hiệu không an toàn không được bật thử tại khu nhận để tìm cho đủ mã."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "2.3. Kiểm tra trước khi đổi vị trí"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người chuyển đối chiếu hàng, nhãn, trạng thái và vị trí đích. Kệ chứa hàng đang chờ kết luận phải có cách nhận diện rõ, không để lẫn với hàng đã kiểm tra mà chỉ phân biệt bằng một ghi chú trong thư cá nhân. Nếu vị trí dự kiến không đủ chỗ hoặc không phù hợp thiết bị, nhân viên báo Trưởng kho thống nhất vị trí khác và cập nhật dấu vết di chuyển. Hàng vừa trả về từ khách phải đi qua bước nhận lại, không tự nhập về vị trí trước đây."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "3. Tiếp nhận và nhập kho"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "3.1. Bước 1 — Chuẩn bị hồ sơ và khu nhận"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người nhận kiểm tra lịch giao với yêu cầu mua, điều chuyển hoặc thông tin khách gửi. Hồ sơ cần cho biết bên giao, loại hàng, số lượng dự kiến và người phối hợp kiểm tra. Nếu lịch thay đổi, nhân viên nhận thông báo cho bên liên quan để bố trí người có thể kiểm tra, không yêu cầu lái xe tự đặt máy vào kệ vì kho chưa chuẩn bị khu nhận. Những kiện có yêu cầu vận chuyển riêng được xem xét trước khi tháo phương tiện giữ cố định."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "3.2. Bước 2 — Đối chiếu khi giao thực tế"
+        },
+        {
+          "type": "paragraph",
+          "text": "Nhân viên nhận kiểm đếm số kiện và ghi lại tình trạng bao bì trước khi mở. Với thiết bị có serial, thông tin trên thân máy được đối chiếu với hồ sơ giao; khi không khớp, lưu cả hai nguồn để làm rõ. Không ký đã nhận đúng toàn bộ nếu mới kiểm số kiện bên ngoài. Phần chưa mở hoặc chưa thử được ghi riêng, cùng đầu mối tiếp tục kiểm tra, để người theo dõi không hiểu nhầm hàng đã đạt mọi điều kiện sử dụng."
+        },
+        {
+          "type": "paragraph",
+          "text": "Hàng mua theo quy trình mua hàng được liên kết với hồ sơ BM-MH-03 do các bộ phận liên quan lập. Kho vận xác nhận nội dung thuộc bước nhận thực tế, KTDV hoặc bộ phận sử dụng xác nhận phần chuyên môn theo nhiệm vụ. Khi chưa có kết quả kỹ thuật, hàng nằm ở vị trí chờ phù hợp; người nhập không tự đánh dấu đạt chỉ vì phiếu đề nghị mua và hóa đơn cùng mô tả một tên hàng.",
+          "facts": [
+            "F-MH-04"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "3.3. Bước 3 — Ghi nhận số lượng và vị trí"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người nhập tạo liên kết từ hàng nhận tới hồ sơ nguồn và trạng thái đã xác minh. Thiết bị cần theo dõi riêng giữ thông tin nhận diện từng máy, không cộng thành số lượng chung làm mất quan hệ với serial. Nếu hàng nhận thiếu hoặc thừa so với dự kiến, người lập ghi số thực nhận và chuyển nội dung chênh lệch cho người phụ trách mua hoặc điều chuyển; không nhập theo số dự kiến rồi để việc tìm hàng thiếu sang ca khác."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "3.4. Bước 4 — Hoàn tất và chuyển hồ sơ"
+        },
+        {
+          "type": "paragraph",
+          "text": "Sau khi bố trí vào vị trí, người thực hiện kiểm tra nhãn nhìn được và thông tin trên hồ sơ khớp nơi lưu. Trưởng kho kiểm tra các phần còn chờ, phân công người làm việc với bộ phận liên quan và lưu phản hồi vào đúng hồ sơ. Phiếu nhận có sửa đổi cần giúp nhận biết bản thay thế và lý do; không để hai bản khác số lượng cùng được gửi cho Kế toán mà thiếu thông tin bản nào phản ánh thực nhận."
+        },
+        {
+          "type": "paragraph",
+          "text": "Nếu bên giao yêu cầu nhận lại hàng chưa phù hợp, nhân viên ghi nhận việc trả theo thực tế và dẫn về hồ sơ nhận ban đầu. Hàng đã rời kho không còn được thể hiện là đang chờ kiểm tra tại khu nhận. Việc nhà cung cấp hứa giao bù được theo dõi như phần việc tiếp theo, không ghi thành hàng đã có sẵn để bộ phận kinh doanh đặt lịch giao cho khách."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "4. Xuất kho, giao hàng và điều chuyển"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "4.1. Bước 1 — Kiểm tra yêu cầu xuất"
+        },
+        {
+          "type": "paragraph",
+          "text": "Nhân viên xuất đối chiếu yêu cầu với loại nghiệp vụ: giao khách, cấp cho kỹ thuật, chuyển kho hoặc trả bên gửi. Hồ sơ phải giúp xác định người nhận, hàng cần xuất và điều kiện đã được xác nhận. Yêu cầu gửi trong nhóm trao đổi mà chưa đủ căn cứ được chuyển lại đầu mối phụ trách; người xuất không dùng việc người nhận đang chờ tại cửa kho làm lý do bỏ bước kiểm tra tình trạng hoặc thông tin thiết bị."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "4.2. Bước 2 — Chọn đúng hàng và kiểm tra trạng thái"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người lấy hàng đối chiếu mã kho, vị trí, nhãn và thông tin nhận diện trên máy. Cùng model không đồng nghĩa có thể tự đổi thiết bị đã được chỉ định cho khách. Nếu hàng đang giữ cho hồ sơ khác, nhân viên nêu tình trạng và chuyển Trưởng kho xử lý; không xóa ghi chú giữ hàng để đáp ứng một yêu cầu đến sau. Hàng chưa có kết luận kiểm định không được đưa vào khu tập kết cùng hàng đủ điều kiện giao."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "4.3. Bước 3 — Đóng gói và bàn giao thực tế"
+        },
+        {
+          "type": "paragraph",
+          "text": "Danh sách bàn giao ghi thiết bị và phụ kiện thực giao, tình trạng nhìn thấy và phần tài liệu kèm theo. Người đóng gói lựa chọn cách bảo vệ phù hợp, giữ nhãn có thể đối chiếu mà không phải mở cụm máy. Khi bàn giao cho người vận chuyển, người xuất xác nhận số kiện đã chuyển, phần còn ở kho và căn cứ liên hệ với hồ sơ giao. Không ghi khách đã nhận chỉ vì hàng đã được đưa lên xe."
+        },
+        {
+          "type": "paragraph",
+          "text": "Với linh kiện cấp cho kỹ thuật viên, hồ sơ xác định máy hoặc công việc dự kiến sử dụng nếu đã có thông tin. Phần dùng thực tế và phần mang về được đối chiếu khi kết thúc nhiệm vụ. Linh kiện tháo từ máy khách không tự nhập thành hàng sử dụng được; phải có hồ sơ nhận lại và đánh giá tình trạng. Nếu người giao nhận thay đổi, đầu mối điều phối xác nhận trước khi bàn giao để tránh chuyển hàng theo lời nhắn không thể kiểm tra nguồn."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "4.4. Bước 4 — Theo dõi hàng đang chuyển"
+        },
+        {
+          "type": "paragraph",
+          "text": "Điều chuyển từ KHO-HCM-01 đến KHO-DN-01 phải giữ liên kết giữa lần xuất nơi đi và lần nhận nơi đến. Vị trí kệ ở kho đích chỉ được ghi là đã nhận sau khi đầu mối đích kiểm tra thực tế. Trong thời gian vận chuyển, hàng được nhận diện là đang chuyển; không cùng xuất hiện như tồn sẵn dùng tại hai kho chỉ vì bên đi và bên đến dùng ngày ghi nhận khác nhau.",
+          "facts": [
+            "F-KHO-03"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "4.5. Bước 5 — Khép hồ sơ và xử lý giao không thành"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người theo dõi đối chiếu phản hồi giao với danh sách đã xuất. Nếu khách không nhận hoặc hàng quay về, nhân viên thực hiện bước tiếp nhận lại để ghi nhận đủ tình trạng, số lượng và phụ kiện. Không hủy phiếu xuất cũ để lịch sử trông như hàng chưa từng rời kho. Những kiện chưa xác định nơi đang giữ phải được nêu trong bàn giao ca, kèm người đang liên hệ và thông tin gần nhất có thể kiểm chứng."
+        },
+        {
+          "type": "paragraph",
+          "text": "Nếu phát hiện nhầm hàng sau khi đã giao, Trưởng kho phối hợp đầu mối khách hàng và KTDV thống nhất cách thu hồi, thay thế. Hồ sơ giữ cả thiết bị giao nhầm và thiết bị giao lại, giúp người kiểm tra theo được luồng di chuyển. Không chỉ sửa serial trên phiếu ban đầu khi hàng thực tế ở khách chưa được xác nhận đã đổi."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "5. Hàng lỗi và khu chờ kiểm định"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "5.1. Bước 1 — Nhận diện và tách luồng"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hàng lỗi phải chuyển vào khu KQ-01 trong 24 giờ kể từ khi phát hiện. Nhân viên ghi thời điểm phát hiện, dấu hiệu lỗi, vị trí hiện tại và người đã nhận thông tin. Thời hạn được tính từ khi phát hiện tình trạng, không từ lúc có kết luận nguyên nhân. Trưởng kho bố trí cách di chuyển phù hợp; việc đã báo cho KTDV không tự thay thế bước chuyển hàng vào khu chờ kiểm định.",
+          "facts": [
+            "F-KHO-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Nếu việc di chuyển ngay có thể làm hỏng thêm hoặc không an toàn, người phát hiện khoanh vùng, báo Trưởng kho và KTDV để tổ chức xử lý, đồng thời ghi rõ trở ngại và tình trạng thực tế. Biện pháp giữ an toàn không được dùng để đánh dấu hàng đã vào KQ-01 khi còn nằm tại vị trí cũ, cũng không tự tạo một thời hạn chuyển mới. Nội dung chưa đáp ứng phải được theo dõi và báo cho người chịu trách nhiệm.",
+          "facts": [
+            "F-KHO-01"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "5.2. Bước 2 — Lập thông tin chờ kiểm tra"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hồ sơ ghi mã lỗi hoặc mô tả chưa xác định, nhận diện thiết bị, nguồn hàng và phụ kiện đi cùng. KTDV tiếp nhận thông tin, kiểm tra điều kiện thao tác và ghi nhận những phần cần xác minh. Người báo lỗi không tự kết luận phải loại bỏ thiết bị nếu mới thấy bản in có vệt; người kiểm tra cũng không bỏ qua dấu hiệu ban đầu chỉ vì máy chạy bình thường trong một lượt thử. Ảnh và ghi chú được gắn đúng hồ sơ để tránh dùng nhầm bằng chứng của máy cùng model."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "5.3. Bước 3 — Ghi kết luận và phương án xử lý"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kết quả kiểm định nêu tình trạng, căn cứ kiểm tra và phương án: sửa, gửi bảo hành, trả bên giao hoặc đề nghị xử lý khác. Trưởng kho kiểm tra phần việc thuộc kho và chuyển nội dung cần quyết định tới đầu mối có thẩm quyền. Kết luận kỹ thuật không tự cho phép xuất trả hoặc thanh lý nếu hồ sơ nghiệp vụ còn thiếu. Khi cần linh kiện thay thế, yêu cầu được liên kết với công việc tương ứng thay vì lấy hàng đang giữ cho khách khác."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "5.4. Bước 4 — Ra khỏi khu chờ"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hàng chỉ được chuyển khỏi trạng thái chờ sau khi có kết quả và hồ sơ xử lý phù hợp. Người thực hiện đối chiếu máy, phụ kiện, vị trí đích và tình trạng sau xử lý; nếu trở lại luồng hàng đạt, lưu căn cứ xác nhận đó. Máy đã được sửa nhưng chưa kiểm tra lại vẫn thể hiện phần còn chờ. Không tháo nhãn lỗi để giải phóng diện tích mà không cập nhật tình trạng cho người chịu trách nhiệm xuất."
+        },
+        {
+          "type": "paragraph",
+          "text": "Trưởng kho xem lại danh mục chờ cùng KTDV để phát hiện hồ sơ chưa có người tiếp tục xử lý. Việc một máy nằm lâu tại khu chờ không phải căn cứ tự kết luận không còn giá trị. Nếu khách hoặc nhà cung cấp yêu cầu nhận lại, hồ sơ chỉ rõ phần đã làm và phần chưa hoàn tất; biên bản bàn giao không mô tả như máy đã đạt khi kết quả kiểm tra chưa cho phép kết luận đó."
+        },
+        {
+          "type": "paragraph",
+          "text": "Các công cụ hoặc vật tư dùng trong kiểm định được thu hồi và đối chiếu khi kết thúc công việc. Phần tháo khỏi máy phải có nhãn liên hệ với thiết bị gốc và tình trạng được ghi nhận; không để lẫn trong khay linh kiện chung khiến người sau không xác định được đâu là bộ phận cần giữ làm căn cứ kiểm tra."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "6. Kiểm kê và xử lý chênh lệch"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "6.1. Bước 1 — Chuẩn bị danh sách và phạm vi"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kiểm kê định kỳ được thực hiện cuối mỗi quý. Trưởng kho phối hợp Kế toán xác định danh sách, vị trí và trạng thái hàng cần kiểm, bao gồm hàng đang chuyển và hàng chờ kiểm định. Việc kiểm đếm phải giúp phân biệt hàng có thật tại kho với hàng chỉ đang được theo dõi qua hồ sơ. Các nghiệp vụ phát sinh trong lúc kiểm được ghi nhận riêng để đối chiếu, không tự dừng cập nhật thực tế chỉ để số liệu trên danh sách không thay đổi.",
+          "facts": [
+            "F-KHO-02"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "6.2. Bước 2 — Kiểm đếm theo vị trí thực tế"
+        },
+        {
+          "type": "paragraph",
+          "text": "Người kiểm bắt đầu từ khu vực được phân công, ghi hàng thực thấy và thông tin nhận diện cần đối chiếu. Kiện chưa thể mở phải được nêu là chưa kiểm chi tiết, tránh lấy số trên nhãn ngoài làm kết quả kiểm toàn bộ bên trong. Với hàng đang ở khách hoặc đang vận chuyển, đầu mối phụ trách cung cấp căn cứ gần nhất; không cộng vào số đếm tại kệ rồi để người tổng hợp tự loại trùng."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "6.3. Bước 3 — Làm rõ sai lệch"
+        },
+        {
+          "type": "paragraph",
+          "text": "Khi phát hiện khác biệt, người kiểm đối chiếu phiếu nhận, xuất, di chuyển nội bộ và thông tin hàng chờ. Cần phân biệt sai vị trí, sai trạng thái, nhầm danh tính máy với thiếu hoặc thừa số lượng thực. Việc tổng số máy cùng model khớp không xóa được sai lệch serial giữa hai hồ sơ. Người phụ trách kiểm lại căn cứ và giữ kết quả trước, sau xác minh thay vì sửa trực tiếp danh sách ban đầu thành một số đã khớp."
+        },
+        {
+          "type": "paragraph",
+          "text": "Chênh lệch trên 2% phải lập biên bản BM-KHO-07. Biên bản nêu phạm vi đối chiếu, số liệu làm căn cứ, kết quả kiểm lại và phần chưa xác minh; không chỉ ghi một tỷ lệ thiếu cách tính. Trường hợp đúng 2% chưa thuộc ngưỡng bắt buộc trên 2% này, nhưng sai lệch vẫn phải được theo dõi, giải thích và xử lý theo hồ sơ. Không làm tròn một tỷ lệ trên ngưỡng xuống bằng ngưỡng để bỏ biên bản.",
+          "facts": [
+            "F-KHO-02"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "6.4. Bước 4 — Đề nghị điều chỉnh có căn cứ"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kết quả xác minh được chuyển Trưởng kho và Kế toán để xử lý đúng trách nhiệm. Người nhập liệu chỉ cập nhật điều chỉnh sau khi có nội dung được xác nhận, giữ liên kết với lần kiểm kê và căn cứ quyết định. Không tự tạo phiếu nhập để bù thiếu lịch sử hoặc tạo phiếu xuất không có người nhận để làm số tồn khớp. Phần chưa đủ căn cứ được tiếp tục theo dõi, không xếp vào mục đã hoàn tất chỉ vì báo cáo cần gửi."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "6.5. Bước 5 — Lưu kết quả và cải tiến cách kiểm soát"
+        },
+        {
+          "type": "paragraph",
+          "text": "Danh mục cuối cùng phân biệt sai lệch đã giải thích, điều chỉnh đã thực hiện và nội dung còn chờ. Trưởng kho rà soát nguyên nhân liên quan nhận diện, bàn giao hoặc cập nhật vị trí để hướng dẫn lại công đoạn có vấn đề. Nếu thay cách ghi nhãn, cần kiểm tra những hàng đang lưu chịu ảnh hưởng; không chỉ đổi mẫu cho hàng nhập mới rồi bỏ phần tồn cũ chưa thể đọc theo quy ước chung."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "7. Tình huống chuyển ca và quản lý phiên bản"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "7.1. Phối hợp khi thông tin chưa thống nhất"
+        },
+        {
+          "type": "paragraph",
+          "text": "Nếu phiếu xuất chỉ định một serial nhưng hàng thực tế tại vị trí mang serial khác, người lấy dừng việc đưa hàng vào luồng giao, ghi lại cả hai thông tin và chuyển người phụ trách đối chiếu. Không chọn máy trông mới hơn để thay cho máy đã chỉ định. Khi nguyên nhân là chuyển vị trí chưa cập nhật, hồ sơ ghi lại bước di chuyển đã xác minh; khi chưa tìm được máy, danh mục chờ cần nêu rõ nội dung chưa thể kết luận."
+        },
+        {
+          "type": "paragraph",
+          "text": "Nếu hai kho cùng báo đang giữ một thiết bị, đầu mối điều chuyển kiểm tra thời điểm xuất, chứng từ vận chuyển và kết quả nhận thực tế tại nơi đến. Xác nhận qua điện thoại có thể giúp điều phối nhưng cần được gắn với căn cứ để khép hồ sơ. Không xóa một dòng tồn kho theo suy đoán rằng bên còn lại chắc đã nhận, nhất là khi phụ kiện và máy chính được vận chuyển bằng các kiện khác nhau."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "7.2. Nội dung bàn giao ca"
+        },
+        {
+          "type": "paragraph",
+          "text": "Danh mục bàn giao ghi hàng tại khu nhận, hàng đã tập kết nhưng chưa giao, hàng khách trả và thiết bị đang chờ KTDV. Mỗi nội dung phải giúp người nhận biết hồ sơ nguồn, vị trí hiện tại và việc tiếp theo. Các cuộc hẹn chưa xác nhận được nêu riêng với lịch giao đã chốt. Người giao không ghi chung không có phát sinh khi vẫn còn kiện chưa đối chiếu chỉ vì chưa tạo phiếu trên hệ thống."
+        },
+        {
+          "type": "paragraph",
+          "text": "Người nhận ca kiểm tra các phần có thể ảnh hưởng việc xuất ngay và báo lại nếu tình trạng khác danh mục. Ghi nhận đã nhận bàn giao không làm mất trách nhiệm giải thích hồ sơ của ca trước. Khi phát hiện thêm thông tin, các bên bổ sung vào cùng danh mục, tránh tạo một bản riêng chỉ nằm trong thư cá nhân khiến ca sau không thể theo dõi diễn biến."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "7.3. Lưu trữ và phạm vi tiếp cận"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hồ sơ kho được lưu theo nghiệp vụ và giữ liên kết giữa lần nhận, thay đổi trạng thái, xuất và kiểm kê. Thông tin khách gửi hoặc hình ảnh thiết bị chỉ dùng cho người đang xử lý; bản chia sẻ phải đủ căn cứ công việc nhưng không đưa dữ liệu không liên quan. Khi Kế toán hoặc KTDV cần kiểm tra lại, người quản lý bản lưu chuyển đúng phiên bản và nêu nội dung đã được cập nhật."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "7.4. Hiệu lực và lịch sử phiên bản"
+        },
+        {
+          "type": "paragraph",
+          "text": "Phiên bản ban hành đầu của SOP có số hiệu 12/2026/QT-TL, hiệu lực từ ngày 15/01/2026. Trưởng kho HCM Võ Thành Nhân phổ biến tại kho TP.HCM và phối hợp đầu mối Đà Nẵng; Trưởng phòng KTDV Đặng Minh Tuấn hướng dẫn nội dung nhận diện và kiểm định kỹ thuật. Lịch sử phiên bản ghi đây là bản ban hành đầu, chưa thay thế một SOP trước đó. Các thay đổi sau phải nêu phạm vi, người xác nhận và thời điểm áp dụng."
+        },
+        {
+          "type": "paragraph",
+          "text": "Vướng mắc về mã, trạng thái hoặc luồng hồ sơ được gửi Trưởng kho cùng tình huống để thống nhất hướng dẫn. Chưa có bản sửa đổi thì không tự đổi ý nghĩa mã trên nhãn hoặc bảng tra tại một kho. Khi phát hành hướng dẫn mới, người quản lý kiểm tra bản đang dùng ở cả hai địa điểm, giữ bản trước phục vụ đối chiếu và thu hồi bản sao có thể gây nhầm lẫn trong công việc hiện tại."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: KHO; KTDV; KT; Chi nhánh Đà Nẵng; Lưu KHO.",
+            "TRƯỞNG KHO HCM",
+            "Võ Thành Nhân"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D07",
+      "file_name": "hop_dong_bao_tri_mau.pdf",
+      "format": "pdf",
+      "title": "HỢP ĐỒNG DỊCH VỤ BẢO TRÌ — BẢN MẪU",
+      "doc_number": "18/2026/HD-TL",
+      "issue_line": "TP.HCM, ngày 20 tháng 01 năm 2026",
+      "effective_date": "2026-02-01",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương I. Chủ thể và cấu trúc hợp đồng"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 1. Các bên và mục đích ký kết"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Hợp đồng mẫu được sử dụng cho dịch vụ bảo trì thiết bị văn phòng do Công ty Cổ phần Thiết bị Văn phòng Thiên Lam cung cấp. Bên A là đơn vị sử dụng thiết bị, thông tin khách hàng giả lập được hoàn thiện tại phụ lục ký kết; Bên B là Thiên Lam, do người có thẩm quyền đại diện theo hồ sơ ký. Bản mẫu mô tả cách xác định phạm vi, phối hợp và nghiệm thu dịch vụ, không thể hiện đã có một giao dịch thật hoặc một khách hàng thật được công ty phục vụ."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Các bên thống nhất sử dụng danh mục thiết bị và phạm vi công việc được xác nhận làm căn cứ thực hiện. Thiết bị có cùng tên model nhưng không nằm trong danh mục không tự được đưa vào dịch vụ. Người điều phối của mỗi bên kiểm tra phần thông tin còn trống trước khi chuyển ký; không hiểu một ô chưa điền là nội dung mặc nhiên được áp dụng theo mong muốn của riêng một bên."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 2. Tài liệu cấu thành và cách dẫn chiếu"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Hồ sơ gồm phần điều khoản chung, danh mục thiết bị, nội dung gói dịch vụ và các xác nhận thay đổi đã được chấp thuận. Biên bản kiểm tra ban đầu làm rõ tình trạng tại thời điểm tiếp nhận, không tự sửa điều kiện gói. Khi một tài liệu dẫn đến tài liệu khác, người lập ghi tên và phiên bản để người đọc tìm được đúng căn cứ; bản dự thảo hoặc thư hỏi phương án không có giá trị thay thế phần đã ký."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Trước khi thực hiện một nội dung chưa thống nhất, đầu mối hai bên đối chiếu điều khoản và phần phụ lục liên quan. Nếu vẫn còn cách hiểu khác nhau, ghi rõ nội dung đang chờ xác nhận và bố trí phần việc có thể tiếp tục an toàn. Không lựa chọn riêng một đoạn thư thuận lợi rồi bỏ phần điều kiện kèm theo để kết luận bên còn lại đã đồng ý thay đổi toàn bộ hợp đồng."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 3. Hiệu lực bản mẫu"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Bản mẫu số 18/2026/HD-TL được ban hành để sử dụng từ ngày 01/02/2026. Thời điểm bắt đầu và kết thúc của một hợp đồng cụ thể được ghi trong phụ lục ký kết, gắn với danh mục và địa điểm đã thống nhất. Ban hành mẫu không đồng nghĩa mọi thiết bị đang do Thiên Lam hỗ trợ đều được chuyển sang hợp đồng bảo trì hoặc được hưởng điều kiện của cùng một gói."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Trưởng phòng KTDV Đặng Minh Tuấn hướng dẫn việc hoàn thiện thông tin kỹ thuật; bộ phận phụ trách khách hàng kiểm tra đầu mối và nội dung thương mại. Người ký xác nhận theo phạm vi được giao. Bản dùng để tham khảo được nhận diện riêng với bản đã hoàn thiện cho một giao dịch, tránh dùng nhầm tài liệu chưa có đủ thông tin làm căn cứ lập lịch hoặc nghiệm thu."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương II. Định nghĩa và ranh giới dịch vụ"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 4. Thuật ngữ sử dụng"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Thiết bị được bảo trì là máy in, máy photocopy, máy chiếu hoặc thiết bị văn phòng khác được hai bên đưa vào danh mục. Điểm sử dụng là nơi lắp đặt đã xác nhận, có người phối hợp cho kỹ thuật viên tiếp cận. Yêu cầu dịch vụ là thông tin về tình trạng thiết bị hoặc nhu cầu thực hiện công việc trong phạm vi gói; một tin nhắn chưa nhận diện được máy được tiếp nhận để làm rõ, chưa tự trở thành kết luận về nguyên nhân lỗi."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Phản hồi là việc đầu mối Thiên Lam tiếp nhận và trao đổi bước xử lý ban đầu với khách hàng, giúp xác định người đang theo dõi và thông tin cần bổ sung. Có mặt là việc kỹ thuật viên đến địa điểm nội thành đã xác nhận để bắt đầu phối hợp kiểm tra. Hoàn tất sửa chữa là kết quả thực hiện và kiểm tra phù hợp, có căn cứ nghiệm thu. Các khái niệm này không thay thế nhau; xác nhận đã tiếp nhận không được ghi như máy đã hoạt động bình thường."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 5. Phân biệt bảo trì và bảo hành"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Bảo trì theo hợp đồng bao gồm phần công việc được mô tả tại gói và phụ lục. Bảo hành hoặc đổi trả thiết bị được xem xét theo chính sách bảo hành áp dụng cho hàng tương ứng và hồ sơ mua, thay thế. Việc có hợp đồng bảo trì không tự thay đổi thời hạn bảo hành của máy hoặc làm mọi linh kiện đều được cung cấp miễn phí. Khi công việc liên quan cả hai loại hồ sơ, người phụ trách giữ liên kết để tránh xử lý trùng chi phí hoặc bỏ sót trách nhiệm."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Trước khi đề nghị khách hàng chấp thuận một phần việc phát sinh, Thiên Lam làm rõ phần nào thuộc gói và phần nào cần phương án riêng. Khách hàng có thể yêu cầu giải thích căn cứ phân loại. Việc đã cho kỹ thuật viên vào địa điểm làm việc không tự đồng nghĩa khách hàng chấp thuận mọi chi phí sửa chữa được đề nghị sau kiểm tra; nội dung cần đồng ý phải được nêu rõ và lưu cùng yêu cầu."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 6. Công việc không tự mở rộng phạm vi"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Dịch vụ không mặc nhiên bao gồm quản trị hệ thống mạng của khách hàng, khôi phục dữ liệu nghiệp vụ hoặc thực hiện thay đổi ứng dụng không liên quan phạm vi đã ký. Nếu dấu hiệu lỗi có thể bắt nguồn từ môi trường sử dụng, hai bên phối hợp kiểm tra theo quyền được cấp. Kỹ thuật viên không tự thay cấu hình toàn hệ thống chỉ vì thao tác đó có thể làm một máy in kết nối lại trong thời điểm thử."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Thiết bị được chuyển địa điểm hoặc thay cụm có ảnh hưởng điều kiện bảo trì cần được báo để cập nhật hồ sơ. Người điều phối kiểm tra khả năng thực hiện trước khi xác nhận lịch. Một lần hỗ trợ theo phương án riêng không tạo ra cam kết mở rộng vĩnh viễn cho mọi địa điểm khác; thay đổi chung được ghi trong nội dung được hai bên chấp thuận."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương III. Khảo sát và thiết lập danh mục"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 7. Kiểm tra đầu vào"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Trước khi lập lịch bảo trì, Thiên Lam phối hợp khách hàng kiểm tra danh mục máy, địa điểm đặt và đầu mối cho phép tiếp cận. Mỗi thiết bị cần thông tin nhận diện giúp phân biệt với máy cùng model, cùng tình trạng nhìn thấy khi tiếp nhận. Kết quả ghi rõ phần đã thử và phần chưa thể thử do điều kiện tại hiện trường, không mô tả mọi thiết bị là hoạt động tốt chỉ vì khách hàng cung cấp danh sách đang sử dụng."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Những dấu hiệu sẵn có được lưu cùng ảnh hoặc bản kiểm tra nếu phù hợp, nhằm phân biệt tình trạng đầu vào với sự việc phát sinh sau đó. Việc ghi nhận không tự xác định bên chịu chi phí; nội dung đó được đối chiếu với phạm vi gói và căn cứ kỹ thuật. Nếu một máy không thể nhận diện chắc chắn, đầu mối hai bên làm rõ trước khi đưa vào lịch thay vì gắn một serial suy đoán để danh mục không còn ô trống."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 8. Xác lập danh sách sử dụng"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Danh mục thể hiện thiết bị, địa điểm, gói được chọn và phần điều kiện riêng đã xác nhận. Phụ kiện gắn liền cần được nhận diện khi có ảnh hưởng công việc. Nếu khách hàng sử dụng máy dự phòng, hai bên chỉ rõ máy nào đang thuộc phạm vi và máy nào được hỗ trợ theo yêu cầu khác. Không dùng tổng số lượng chung để suy ra mọi máy bất kỳ tại địa điểm đều có thể thay thế trong gói mà không cập nhật hồ sơ."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Khách hàng xác nhận thông tin người điều phối, điều kiện ra vào và nơi đặt công cụ trong thời gian làm việc. Thiên Lam kiểm tra khả năng bố trí nhân sự và nhu cầu vật tư thông thường trước khi đề xuất lịch. Những điều kiện chưa thống nhất được ghi là đang chờ, tránh để người lập kế hoạch hiểu một nội dung ghi chú đã trở thành điều kiện hoàn tất mà không cần khách hàng phản hồi."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 9. Cập nhật khi danh mục thay đổi"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Khi thêm, bớt hoặc di chuyển thiết bị, đầu mối yêu cầu nêu thông tin cũ, thông tin mới và thời điểm dự kiến. Người tiếp nhận kiểm tra tác động tới phạm vi, lịch và điều kiện thực hiện, sau đó xác nhận nội dung được hai bên chấp thuận. Thiết bị rút khỏi danh mục vẫn giữ hồ sơ công việc đã thực hiện; không xóa lịch sử để làm số máy trên báo cáo cũ khớp danh sách mới."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Nếu thay một máy bằng máy khác cùng chức năng, các bên đối chiếu điều kiện kỹ thuật và ghi lại quan hệ thay thế. Việc khách hàng đã dán nhãn nội bộ giống nhãn máy trước không đủ để xác định đó là thiết bị đã được tiếp nhận theo hợp đồng. Các yêu cầu phát sinh trong lúc chờ hoàn thiện thay đổi được phân loại rõ, người tiếp nhận không tự áp dụng một gói khi chưa có căn cứ."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Bản danh mục dùng lập lịch có dấu vết phiên bản để kỹ thuật viên biết thiết bị nào đang được phân công. Nếu bản in tại hiện trường khác bản lưu, người thực hiện hỏi lại đầu mối trước khi thao tác. Kết quả xác minh được gắn với yêu cầu đang xử lý để người sau không lặp lại cùng một việc đối chiếu chỉ vì thông tin chỉ trao đổi bằng miệng."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương IV. Lập kế hoạch và bảo trì định kỳ"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 10. Chuẩn bị lịch làm việc"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Lịch bảo trì được xác định theo danh mục, tình trạng sử dụng và nội dung gói đã ký; tần suất cụ thể ghi tại phụ lục. Thiên Lam đề xuất lịch có tính đến khả năng tiếp cận máy và hoạt động của khách hàng. Khách hàng phản hồi những thời điểm không thể dừng thiết bị hoặc điều kiện đặc biệt tại địa điểm. Một lịch đề xuất chưa được thống nhất không được chuyển thành xác nhận khách hàng đã bỏ buổi làm việc."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người điều phối cung cấp cho kỹ thuật viên thông tin thiết bị, dấu hiệu cần lưu ý và phần công việc đã được chấp thuận. Các vật tư dự kiến được kiểm tra tương thích trước khi mang đi. Nếu cần di chuyển máy để thao tác, phương án được trao đổi với khách hàng, tránh đưa máy khỏi vị trí rồi mới yêu cầu người sử dụng chấp nhận điều kiện làm việc thay đổi."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 11. Thực hiện nội dung bảo trì"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Kỹ thuật viên kiểm tra tình trạng trước thao tác, đối chiếu với hồ sơ lần trước và xác định phần công việc có thể thực hiện an toàn. Việc vệ sinh, kiểm tra bộ phận và hiệu chỉnh được thực hiện theo tình trạng thiết bị, không ghi một danh sách chuẩn như đã làm đủ khi một cụm không thể tiếp cận. Các dấu hiệu bất thường được ghi lại để đề xuất bước kiểm tra hoặc xử lý tiếp theo, kèm phần máy chưa được xác nhận hoạt động ổn định."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Khi phát hiện hạng mục ngoài phạm vi, kỹ thuật viên thông báo cho người điều phối để làm rõ phương án và phần cần khách hàng chấp thuận. Không tự tháo thay một bộ phận có chi phí phát sinh rồi coi việc khách hàng ký đã có mặt là đồng ý thanh toán. Phần việc trong gói có thể tiếp tục được tách rõ với phần đang chờ, giúp hai bên không phải hủy toàn bộ buổi làm việc vì một nội dung chưa thống nhất."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 12. Kết thúc buổi bảo trì"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Sau thao tác, kỹ thuật viên kiểm tra hoạt động liên quan và trao đổi với người sử dụng về kết quả quan sát. Biên bản nêu công việc đã thực hiện, kết quả kiểm tra, dấu hiệu còn tồn tại và hướng theo dõi. Nếu chỉ có thể thử trong điều kiện hạn chế, ghi điều kiện đó thay vì kết luận máy đã đạt mọi chế độ vận hành. Người sử dụng xác nhận phần mình chứng kiến, không bị hiểu là đã thẩm định nguyên nhân kỹ thuật của mọi dấu hiệu."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Công cụ được thu hồi, khu vực được sắp xếp lại và vật tư tháo khỏi máy được bàn giao theo phương án đã thống nhất. Kỹ thuật viên chuyển hồ sơ về đầu mối để cập nhật danh mục và lịch tiếp theo. Hạng mục chưa hoàn tất có người chịu trách nhiệm theo dõi; không đánh dấu xong buổi bảo trì rồi bỏ những phần chờ khách hàng hoặc linh kiện ra khỏi báo cáo."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Nếu khách hàng yêu cầu đổi lịch, người điều phối xác nhận lại điều kiện tiếp cận và lưu nội dung thay thế. Việc dời lịch không tự thay đổi các điều kiện dịch vụ khác của hợp đồng. Báo cáo phân biệt buổi đã thực hiện, buổi chưa thể thực hiện và lý do có thể đối chiếu, tránh cộng một lịch hẹn chưa diễn ra vào số lần bảo trì hoàn tất."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương V. Tiếp nhận sự cố và phối hợp tại hiện trường"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 13. Thông tin cần khi báo sự cố"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Khách hàng báo thiết bị, địa điểm, dấu hiệu lỗi và người có thể phối hợp. Ảnh thông báo trên máy hoặc bản in kiểm tra được gửi khi thuận tiện và không chứa dữ liệu không cần thiết. Nếu chưa đủ thông tin nhận diện, đầu mối Thiên Lam hỏi lại phần còn thiếu và ghi quá trình làm rõ, không để yêu cầu mất dấu vì người gửi dùng tên gọi nội bộ khác tên model trên danh mục."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người tiếp nhận tạo hồ sơ liên hệ với danh mục, ghi thời điểm nhận yêu cầu và nội dung phản hồi. Một sự cố có nhiều người báo được liên kết để tránh bố trí các nhóm xử lý không biết nhau; các thông tin khác biệt vẫn được giữ để kiểm tra. Không xóa một lần báo trước chỉ vì khách hàng gửi lại đủ thông tin trong lần sau. Thời điểm và căn cứ phục vụ đối chiếu chất lượng được lưu theo diễn biến thực tế."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 14. Hỗ trợ bước đầu và điều phối"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Hướng dẫn từ xa giới hạn ở thao tác phù hợp khả năng người sử dụng và điều kiện an toàn. Kỹ thuật viên nêu rõ bước cần thực hiện và dấu hiệu phải dừng, không yêu cầu mở cụm điện hoặc vô hiệu hóa bảo vệ để thử nhanh. Khách hàng có thể thông báo không đủ điều kiện thực hiện; đầu mối chuyển sang phương án kiểm tra phù hợp thay vì ghi khách từ chối hợp tác một cách chung chung."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Khi cần đến địa điểm, người điều phối xác nhận vị trí, đầu mối ra vào và thông tin giúp tìm đúng máy. Nếu môi trường khách hàng có quy trình tiếp nhận người ngoài, hai bên chuẩn bị nội dung cần thiết trước chuyến đi. Việc thông báo lịch dự kiến không được ghi như kỹ thuật viên đã có mặt; kết quả đến nơi được ghi riêng cùng phần có thể bắt đầu làm việc và những trở ngại thực tế."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 15. Kiểm tra và theo dõi sự cố"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Kỹ thuật viên đối chiếu dấu hiệu được báo với tình trạng tại thời điểm kiểm tra, ghi các phép thử và kết quả liên quan. Nếu lỗi không tái hiện, hồ sơ nêu điều kiện đã kiểm và đề nghị cách theo dõi, không kết luận khách hàng báo sai. Khi nguyên nhân có thể ở nguồn giấy, vật tư hoặc kết nối, cần có căn cứ trước khi chuyển trách nhiệm sang môi trường khách hàng."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Phương án xử lý xác định công việc thực hiện tại chỗ, phần cần mang về kiểm tra và phần cần vật tư. Thiết bị rời địa điểm có biên bản bàn giao nhận diện máy, phụ kiện và tình trạng, người điều phối theo dõi cho đến lúc giao lại. Không dùng một lịch hẹn linh kiện để kết luận đã hoàn tất sự cố; phần đang chờ vẫn thể hiện trong trạng thái hồ sơ và được cập nhật khi có thông tin mới."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Khách hàng được thông báo nội dung đã làm và bước tiếp theo. Nếu thay người theo dõi, Thiên Lam bàn giao thông tin trong cùng hồ sơ để khách không phải mô tả lại từ đầu. Những điều chỉnh có ảnh hưởng phạm vi hoặc chi phí được chuyển xác nhận theo hợp đồng, không giấu trong ghi chú kỹ thuật khó nhận biết trên biên bản."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương VI. Vật tư, nghiệm thu và hồ sơ dịch vụ"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 16. Kiểm tra linh kiện và công việc phát sinh"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Linh kiện dự kiến thay được kiểm tra khả năng tương thích và điều kiện cung cấp. Hồ sơ đề xuất nêu dấu hiệu cần xử lý, bộ phận liên quan và phần công việc đi kèm. Nếu có nhiều phương án, người phụ trách giải thích điều kiện sử dụng của từng phương án thay vì chỉ gửi một tên hàng và tổng tiền. Khách hàng xác nhận nội dung thuộc thẩm quyền; kỹ thuật viên không tự chọn phương án khác chỉ vì linh kiện sẵn mang theo tiện hơn."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Khi sử dụng vật tư thuộc phạm vi gói, Thiên Lam ghi phần thực dùng và thiết bị liên quan để có thể đối chiếu. Phần mang đi nhưng chưa dùng không được ghi như đã lắp. Linh kiện tháo ra được quản lý theo thỏa thuận và tình trạng; nếu giữ để kiểm tra tiếp, biên bản nêu nơi lưu và người tiếp tục theo dõi. Không tự đưa linh kiện khách vào luồng hàng sẵn dùng của kho."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 17. Nội dung biên bản dịch vụ"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Biên bản xác định thiết bị, địa điểm, thời điểm có mặt, công việc thực hiện và kết quả kiểm tra. Người lập phân biệt yêu cầu ban đầu với phát hiện sau kiểm tra, phần đã hoàn tất với phần đang chờ. Các mốc phục vụ đánh giá thời gian dịch vụ được giữ đúng thực tế; không sửa giờ đến để phù hợp lịch điều phối đã gửi trước khi kỹ thuật viên di chuyển."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người xác nhận của khách hàng ghi phần được chứng kiến hoặc được bàn giao. Nếu người đó không có thẩm quyền chấp thuận chi phí, chữ ký xác nhận công việc không thay thế phần đồng ý phương án thương mại. Những nội dung chưa thống nhất được ghi cùng biên bản và chuyển đầu mối giải quyết. Một ý kiến bảo lưu không làm cho toàn bộ công việc thực tế đã làm biến mất khỏi hồ sơ."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 18. Nghiệm thu và xác định phần còn mở"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Nghiệm thu căn cứ công việc đã thống nhất và kết quả kiểm tra tương ứng. Nếu kết quả chỉ đáp ứng một phần, hai bên nhận diện phần đó và nêu bước hoàn thiện. Không ghi hoàn tất mọi chức năng khi chỉ kiểm bản in mà chưa thử phần quét hoặc nạp giấy đang được báo lỗi. Với thiết bị cần theo dõi khi vận hành thực tế, điều kiện xác nhận được ghi rõ để tránh hiểu một thời điểm máy chạy được là cam kết không thể phát sinh lỗi khác."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Đầu mối Thiên Lam lưu biên bản cùng yêu cầu, căn cứ vật tư và nội dung trao đổi có liên quan. Báo cáo tổng hợp giữ đường dẫn hoặc thông tin giúp tìm lại hồ sơ, không chỉ đưa số lượng vụ đã đóng. Khách hàng có thể đề nghị làm rõ số liệu theo hồ sơ tương ứng; phần thông tin khác khách hàng được giới hạn khi chia sẻ để bảo đảm bảo mật."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Hồ sơ lập sau buổi làm việc phải ghi thời điểm thực tế và căn cứ tổng hợp, không ghi lùi ngày tạo như thể văn bản đã được xác nhận ngay tại hiện trường. Nếu có bổ sung, phiên bản mới nêu nội dung sửa và người xác nhận, giữ được khả năng đối chiếu với bản đã gửi trước đó."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương VII. Mức dịch vụ theo gói và đối chiếu mốc thời gian"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 19. Gói Tiêu chuẩn"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Gói Tiêu chuẩn có thời hạn phản hồi trong 4 giờ làm việc; kỹ thuật viên có mặt trong 24 giờ đối với địa điểm nội thành. Đây là hai mốc dịch vụ khác nhau: phản hồi ban đầu không thay thế việc có mặt. Phạm vi nội thành được nhận diện theo địa điểm đã ghi trong phụ lục; không dùng tên trụ sở của khách hàng để tự áp dụng cho mọi địa điểm khác mà khách yêu cầu hỗ trợ.",
+          "facts": [
+            "F-DV-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Đầu mối hai bên đối chiếu thời điểm báo sự cố, phản hồi và có mặt từ hồ sơ tiếp nhận, trao đổi và biên bản hiện trường. Người lập báo cáo không biến mốc có mặt thành mốc hoàn tất sửa chữa. Thời gian khắc phục phụ thuộc tình trạng và phương án thực hiện đã được làm rõ; nếu chưa hoàn tất, hồ sơ tiếp tục nêu phần còn chờ thay vì dùng việc kỹ thuật viên đã đến để đóng sự cố.",
+          "facts": [
+            "F-DV-01"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 20. Gói Cao cấp"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Gói Cao cấp có thời hạn phản hồi 2 giờ và kỹ thuật viên có mặt trong 8 giờ. Gói áp dụng cho thiết bị, địa điểm được xác nhận trong phụ lục tương ứng. Khi một khách hàng có các nhóm máy sử dụng gói khác nhau, đầu mối tra danh mục trước khi phân công; không mặc định toàn bộ máy được hưởng gói Cao cấp chỉ vì khách từng ký gói này cho một máy khác.",
+          "facts": [
+            "F-DV-02"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Người điều phối nhận diện gói ngay khi làm rõ thiết bị và ghi căn cứ trong hồ sơ. Việc khách hàng yêu cầu ưu tiên không tự chuyển gói Tiêu chuẩn thành Cao cấp, cũng không tự giảm cam kết của gói đã chọn. Nếu đề nghị chuyển gói, bộ phận phụ trách làm rõ nội dung thay đổi và thời điểm áp dụng; không sửa tên gói của một sự cố đã diễn ra để kết quả báo cáo có vẻ đáp ứng hơn.",
+          "facts": [
+            "F-DV-01",
+            "F-DV-02"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 21. Đối chiếu chất lượng dịch vụ"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Phản hồi hợp lệ phải cho thấy đã có người tiếp nhận nội dung và trao đổi bước xử lý, không chỉ là thông báo tự động xác nhận hệ thống nhận thư. Mốc có mặt được đối chiếu với việc kỹ thuật viên đến đúng địa điểm và người phối hợp có thể xác nhận. Nếu thông tin từ các nguồn khác nhau, hai bên ghi nội dung khác biệt và căn cứ kiểm tra, không tự chọn nguồn cho kết quả thuận lợi hơn."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Nếu yêu cầu có thông tin bổ sung hoặc địa điểm bị thay đổi, lịch sử tiếp nhận vẫn được giữ cùng phần cập nhật. Những trở ngại trong việc tiếp cận được mô tả theo diễn biến thực tế, không tự xóa mốc trước đó hoặc đặt lại thời điểm báo chỉ vì hồ sơ chuyển người xử lý. Khi cần thống nhất cách đối chiếu một trường hợp chưa rõ, đầu mối lưu kết quả để áp dụng cho đúng hồ sơ đang xem xét."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Báo cáo phân biệt việc đáp ứng phản hồi, đáp ứng có mặt và kết quả khắc phục. Mỗi chỉ tiêu dẫn về căn cứ đã ghi, không dùng một tỷ lệ tổng hợp để che phần chưa đủ dữ liệu. Những mốc chưa thể kiểm chứng được nêu rõ cho hai bên làm rõ; không tự điền lịch dự kiến thành kết quả đo thực tế."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương VIII. Phí dịch vụ và xử lý chậm SLA"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 22. Căn cứ phí và hồ sơ đối chiếu"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Phí dịch vụ tháng và các nội dung đã bao gồm được ghi trong phụ lục thương mại. Hồ sơ đối chiếu xác định giai đoạn dịch vụ, danh mục và phần thay đổi đã được chấp thuận. Không lấy giá của một hợp đồng khác làm số áp dụng khi phụ lục chưa hoàn thiện. Các công việc phát sinh có căn cứ riêng, người tổng hợp phân biệt với phần phí định kỳ để khách hàng hiểu khoản nào đang được đề nghị xác nhận."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Trước khi chuyển hồ sơ thanh toán, Thiên Lam kiểm tra thông tin gói, công việc thực hiện và các nội dung cần điều chỉnh đã được thống nhất. Khách hàng phản hồi phần chưa khớp cùng căn cứ để đầu mối làm rõ. Việc một hồ sơ đã chuyển Kế toán không tự đồng nghĩa hai bên đã thống nhất mọi mốc thời gian hoặc mọi khoản dịch vụ; phần còn chờ được thể hiện riêng trong bảng theo dõi."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 23. Mức phạt chậm SLA"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Mức phạt chậm SLA là 0,5% phí dịch vụ tháng cho mỗi giờ trễ, tối đa 10% phí dịch vụ tháng. Căn cứ là phần phí tháng của dịch vụ được đối chiếu, không phải giá mua thiết bị hoặc tổng giá trị mua linh kiện. Người lập hồ sơ phải nêu mốc cam kết, mốc thực tế và phần trễ đã được làm rõ để các bên kiểm tra cách xác định khoản phạt.",
+          "facts": [
+            "F-DV-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Cách thể hiện trong bảng đối chiếu là: phí dịch vụ tháng nhân với mức nhỏ hơn giữa 0,5% nhân số giờ trễ được xác nhận và 10%. Công thức minh họa giới hạn mức phạt, không tự kết luận một hồ sơ đang tranh luận đã có số giờ trễ cuối cùng. Nếu căn cứ mốc thời gian chưa thống nhất, bảng nêu phần còn chờ xác minh và không trình một con số dự kiến như kết quả hai bên đã chấp thuận.",
+          "facts": [
+            "F-DV-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Người phụ trách không bù trừ bằng một khoản giảm giá tùy ý rồi xóa dấu vết chậm dịch vụ. Phần phạt và các điều chỉnh khác được phân biệt theo căn cứ. Việc kỹ thuật viên đã hoàn tất sửa chữa sau đó không làm thay đổi mốc đến thực tế đã ghi; ngược lại, một sự cố chưa khắc phục xong không được tự chuyển toàn bộ thời gian đang chờ thành thời gian chậm mốc có mặt."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 24. Xác nhận và lưu hồ sơ tháng"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Bảng đối chiếu tháng dẫn đến các yêu cầu có liên quan và phần xác nhận thay đổi phí, nếu có. Đầu mối hai bên kiểm tra phần đã thống nhất và ý kiến còn khác biệt; người tổng hợp không xóa dòng chưa chốt chỉ để báo cáo mang trạng thái hoàn tất. Khi có kết quả bổ sung, bản cập nhật nêu rõ nội dung thay thế để Kế toán không dùng đồng thời hai bảng khác tổng số."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Chứng từ được lập theo nội dung thực tế và thông tin hai bên đã xác nhận. Không sửa một biên bản kỹ thuật thành xác nhận thương mại bằng cách thêm số tiền sau khi người tại hiện trường đã ký. Những tài liệu có nhiều phiên bản được giữ quan hệ với bản gửi trước, giúp giải thích được thay đổi khi khách hàng hoặc bộ phận kiểm tra đối chiếu lại."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương IX. Bảo mật, trách nhiệm và giải quyết vướng mắc"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 25. Thông tin khách hàng và quyền tiếp cận"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Trong quá trình thực hiện dịch vụ, các bên chỉ trao đổi thông tin cần cho việc nhận diện, kiểm tra và theo dõi thiết bị. Tệp in thử nên dùng nội dung không nhạy cảm; nếu phải kiểm tra một tài liệu phát sinh lỗi, khách hàng lựa chọn phần có thể cung cấp. Kỹ thuật viên không tự sao chép dữ liệu công việc ra thiết bị cá nhân để phân tích thuận tiện hơn, cũng không giữ thông tin đăng nhập của người sử dụng sau buổi làm việc."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Quyền truy cập phục vụ kiểm tra được giới hạn theo nhiệm vụ và do đầu mối khách hàng phối hợp. Nếu cần thay đổi một cấu hình có ảnh hưởng người dùng khác, kỹ thuật viên giải thích phạm vi và chờ người có trách nhiệm xác nhận. Việc khách cho vào khu vực đặt máy không được hiểu là đã cho phép truy cập mọi hệ thống liên quan. Kết thúc công việc, các bên kiểm tra phần quyền tạm hoặc phương tiện đã cấp để xử lý theo thỏa thuận."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 26. Trách nhiệm phối hợp và ngăn ảnh hưởng phát sinh"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Thiên Lam bố trí nhân sự phù hợp công việc, ghi nhận kết quả trung thực và báo sớm những phần chưa đủ điều kiện thực hiện. Khách hàng cung cấp thông tin nhận diện, người phối hợp và điều kiện tiếp cận thiết bị đã thống nhất. Khi điều kiện thay đổi, bên biết thông tin thông báo cho bên còn lại để hạn chế chuyến đi hoặc thao tác không cần thiết. Việc báo trở ngại không tự miễn toàn bộ trách nhiệm còn có thể tiếp tục thực hiện."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Nếu thao tác có dấu hiệu làm phát sinh rủi ro, người thực hiện dừng phần việc liên quan, bảo đảm thiết bị ở trạng thái phù hợp và thông báo đầu mối. Các bên giữ thông tin tình trạng, thao tác đã làm và phần ảnh hưởng quan sát được. Không tự tiếp tục thử nhiều cách chỉ để chứng minh thiết bị còn chạy được trước khi người có trách nhiệm xác định cách xử lý an toàn."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 27. Phản ánh và làm rõ bất đồng"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Bên có phản ánh nêu yêu cầu, hồ sơ và kết quả mong được làm rõ. Đầu mối tiếp nhận ghi phần đã có căn cứ, phần cần kiểm tra và người tiếp tục xử lý. Nếu một bên chưa đồng ý kết luận nguyên nhân, ý kiến đó được giữ cùng biên bản; không sửa thành đã nhất trí chỉ vì người phản ánh vẫn cho phép thực hiện một bước hỗ trợ tạm thời."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Các bên ưu tiên đối chiếu theo hợp đồng và chứng cứ thực hiện, trình người có thẩm quyền khi đầu mối không thể tự giải quyết. Nội dung vượt thẩm quyền kỹ thuật không được chốt bằng một câu trả lời tại hiện trường. Trong lúc làm rõ, những phần việc không có tranh luận được phối hợp theo khả năng và phạm vi đã thống nhất, tránh để một vấn đề riêng làm mất dấu các yêu cầu dịch vụ khác."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Kết quả giải quyết được ghi rõ áp dụng cho hồ sơ cụ thể hay là thay đổi điều kiện chung. Nếu là thay đổi chung, phải hoàn thiện nội dung xác nhận tương ứng. Một biện pháp hỗ trợ theo tình huống không tự được sao chép thành chính sách cho mọi khách hàng hoặc mọi thiết bị trong danh mục."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "Chương X. Chấm dứt, bàn giao và phụ lục triển khai"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 28. Kết thúc hoặc thay đổi phạm vi"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Khi hợp đồng kết thúc hoặc có đề nghị chấm dứt, đầu mối hai bên đối chiếu yêu cầu còn mở, thiết bị đang giữ và hồ sơ phí dịch vụ. Thời điểm dừng tiếp nhận theo hợp đồng được xác nhận cùng cách xử lý phần đã nhận trước đó. Không xóa toàn bộ lịch sử yêu cầu vì thiết bị không còn trong danh mục, cũng không tiếp tục ghi một yêu cầu mới là thuộc hợp đồng khi phạm vi đã kết thúc mà chưa có căn cứ khác."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Thiết bị hoặc linh kiện đang ở Thiên Lam được bàn giao theo nhận diện và tình trạng thực tế. Nếu còn kiểm tra chưa xong, biên bản chỉ rõ phần việc và hồ sơ liên quan; không ghi đã hoàn tất sửa chữa để việc bàn giao thuận tiện hơn. Khách hàng kiểm tra phần nhận lại và phản hồi khác biệt, đầu mối theo dõi cho đến khi làm rõ thay vì đóng hồ sơ chỉ dựa trên phiếu hàng rời kho."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 29. Phụ lục triển khai tại địa điểm"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Phụ lục danh mục được hoàn thiện với thông tin nhận diện thiết bị, nơi đặt, gói được chọn và người phối hợp. Người kiểm tra đối chiếu tên model với nhãn thực tế, chỉ rõ máy thay thế nếu có. Phần chưa đủ thông tin được đánh dấu chờ hoàn thiện; không dùng một danh mục minh họa để lập lịch thật hoặc để xác nhận máy cụ thể đã được nhận vào dịch vụ."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Phụ lục kế hoạch mô tả nội dung bảo trì, lịch phối hợp, yêu cầu ra vào và điều kiện chuẩn bị. Khách hàng chỉ định người có thể tiếp nhận kỹ thuật viên và người có thẩm quyền xác nhận thay đổi, hai vai trò có thể khác nhau. Thiên Lam kiểm tra danh sách đầu mối khi điều phối, tránh gửi thông tin công việc cho người đã chuyển vị trí mà không cập nhật."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Điều 30. Kiểm tra bộ hồ sơ trước khi ký"
+        },
+        {
+          "type": "paragraph",
+          "text": "1. Bộ phận KTDV rà soát thiết bị, phạm vi và khả năng thực hiện; người phụ trách thương mại rà soát gói, phí và điều kiện cần xác nhận; người đại diện kiểm tra thẩm quyền ký. Không bỏ trống phần thông tin có ảnh hưởng cách áp dụng rồi giải thích sau bằng lời nói. Bản ký được nhận diện với phiên bản và phụ lục đi kèm, các bên lưu cùng nội dung để tránh sử dụng hai danh mục khác nhau khi tiếp nhận yêu cầu."
+        },
+        {
+          "type": "paragraph",
+          "text": "2. Lịch sử bản mẫu ghi đây là bản ban hành đầu để sử dụng từ ngày 01/02/2026. Các thay đổi sau do người có thẩm quyền xác nhận, nêu phần thay thế và phạm vi áp dụng. Trưởng phòng KTDV Đặng Minh Tuấn tổng hợp vướng mắc trong quá trình dùng mẫu để trình xem xét; ghi chú của một hợp đồng riêng không tự sửa bản mẫu chung đang được lưu tại công ty."
+        },
+        {
+          "type": "paragraph",
+          "text": "3. Nơi lưu hồ sơ bảo đảm người điều phối tìm được bản áp dụng nhưng chỉ tiếp cận phần cần cho nhiệm vụ. Khi bàn giao người phụ trách, danh mục công việc còn mở đi cùng căn cứ đã xác nhận. Người tiếp nhận kiểm tra phần còn thiếu và tiếp tục theo dõi; việc đổi đầu mối không làm mất các mốc dịch vụ hoặc ý kiến bảo lưu đã được ghi trước đó."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: KTDV; KD; KT; Lưu bộ hồ sơ mẫu.",
+            "ĐẠI DIỆN BÊN A: KHÁCH HÀNG GIẢ LẬP — HOÀN THIỆN KHI KÝ",
+            "ĐẠI DIỆN BÊN B — TỔNG GIÁM ĐỐC",
+            "Lê Hoàng Phúc"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "D08",
+      "file_name": "chinh_sach_bao_hanh_doi_tra.md",
+      "format": "md",
+      "title": "CHÍNH SÁCH BẢO HÀNH VÀ ĐỔI TRẢ",
+      "doc_number": "21/2026/QC-TL",
+      "issue_line": "TP.HCM, ngày 22 tháng 01 năm 2026",
+      "effective_date": "2026-02-01",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "1. Mục đích và phạm vi"
+        },
+        {
+          "type": "paragraph",
+          "text": "Chính sách thống nhất cách tiếp nhận, kiểm tra và xử lý bảo hành đối với máy và linh kiện do Thiên Lam cung cấp. Áp dụng cho bộ phận Kinh doanh, Chăm sóc khách hàng, Kỹ thuật dịch vụ và Kho vận khi phối hợp với khách hàng. Người tiếp nhận xác định thiết bị và hồ sơ giao dịch trước khi tư vấn, không dùng một câu trả lời của trường hợp khác làm kết luận cho mọi sản phẩm cùng model."
+        },
+        {
+          "type": "paragraph",
+          "text": "Bảo hành là việc xem xét, khắc phục lỗi thuộc phạm vi chính sách theo hồ sơ thiết bị. Đổi máy mới là phương án riêng khi đáp ứng điều kiện tại mục 3. Trả hàng để kiểm tra không có nghĩa khách hàng đã được chấp thuận đổi, hoàn tiền hoặc chấm dứt giao dịch; đầu mối tiếp nhận cần nói rõ trạng thái đang xử lý để khách phân biệt từng bước."
+        },
+        {
+          "type": "paragraph",
+          "text": "Thiết bị thuộc hợp đồng bảo trì vẫn được đối chiếu chính sách bảo hành cho phần liên quan. Cam kết phản hồi hoặc có mặt của gói bảo trì không thay thời hạn bảo hành, và tiếp nhận bảo hành không tự tạo một gói dịch vụ mới. Khi hồ sơ có cả hai nội dung, người theo dõi liên kết chúng để tránh gửi hai kết luận khác nhau về cùng máy."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "2. Thời hạn và cách đối chiếu"
+        },
+        {
+          "type": "paragraph",
+          "text": "Máy mới được bảo hành 12 tháng; linh kiện thay thế được bảo hành 3 tháng. Người tiếp nhận đối chiếu thông tin giao nhận hoặc hồ sơ thay thế tương ứng với thiết bị, không lấy ngày khách gửi lại máy làm ngày bắt đầu một thời hạn mới. Nếu hồ sơ chưa rõ, ghi phần cần bổ sung và chuyển KTDV phối hợp làm rõ trước khi kết luận còn hay hết bảo hành.",
+          "facts": [
+            "F-BH-01"
+          ]
+        },
+        {
+          "type": "table",
+          "header": [
+            "Đối tượng",
+            "Thời hạn",
+            "Căn cứ đối chiếu"
+          ],
+          "rows": [
+            [
+              "Máy mới",
+              "12 tháng",
+              "Hồ sơ giao nhận máy tương ứng."
+            ],
+            [
+              "Linh kiện thay thế",
+              "3 tháng",
+              "Hồ sơ thay và nhận diện linh kiện đã lắp."
+            ]
+          ],
+          "facts": [
+            "F-BH-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Thời hạn của máy và thời hạn của linh kiện thay thế là hai căn cứ khác nhau. Việc thay một linh kiện không tự gia hạn toàn bộ máy theo cùng thời hạn của máy mới. Hồ sơ dịch vụ phải nhận diện linh kiện đã lắp, ngày và căn cứ giao nhận liên quan để người sau có thể kiểm tra đúng phần yêu cầu; không chỉ ghi đã sửa mà bỏ thông tin bộ phận được thay.",
+          "facts": [
+            "F-BH-01"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Khi khách chưa tìm được chứng từ, CSKH ghi lại thông tin có thể đối chiếu và nhờ bộ phận phụ trách kiểm tra bản lưu. Không yêu cầu khách tự suy đoán mốc ngày để điền đủ phiếu. Nếu thông tin giữa nhãn máy và hồ sơ không khớp, giữ cả hai nguồn và làm rõ; một tên model giống nhau không đủ chứng minh hai hồ sơ thuộc cùng thiết bị."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "3. Điều kiện đổi máy mới"
+        },
+        {
+          "type": "paragraph",
+          "text": "Máy được đổi mới trong 7 ngày nếu lỗi do nhà sản xuất. KTDV kiểm tra nguyên nhân theo dấu hiệu và kết quả thử phù hợp, ghi rõ căn cứ trong hồ sơ. CSKH không cam kết đổi chỉ dựa trên thời điểm khách gọi hoặc ảnh một thông báo lỗi; cần đối chiếu cả điều kiện thời gian và nguyên nhân. Trường hợp đáp ứng điều kiện được chuyển xử lý đổi theo hồ sơ đã xác nhận.",
+          "facts": [
+            "F-BH-02"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Khách hàng cung cấp thông tin nhận diện máy, diễn biến lỗi và tài liệu giao nhận đang có. Người tiếp nhận ghi phụ kiện đi cùng và tình trạng thực nhận để phục vụ bàn giao. Nếu chưa thể xác định nguyên nhân ngay, đầu mối nói rõ nội dung đang chờ kiểm tra, không ghi đã từ chối đổi khi KTDV mới chỉ yêu cầu bổ sung thông tin hoặc chưa thể tái hiện dấu hiệu."
+        },
+        {
+          "type": "paragraph",
+          "text": "Khi đổi được chấp thuận, Kho vận đối chiếu thiết bị nhận lại và thiết bị giao thay, lưu quan hệ giữa hai máy trong hồ sơ. Khách được thông báo phần đã xác nhận và nội dung bàn giao. Không chỉ sửa serial trên chứng từ cũ khiến lịch sử trông như máy ban đầu chưa từng giao; các yêu cầu còn mở được chuyển theo máy và phương án xử lý đã thống nhất."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "4. Trường hợp loại trừ"
+        },
+        {
+          "type": "paragraph",
+          "text": "Không bảo hành lỗi do sử dụng mực hoặc linh kiện không chính hãng. Kết luận cần nêu căn cứ liên hệ giữa vật tư, dấu hiệu và lỗi được kiểm tra. Việc khách đã dùng một vật tư khác không cho phép người tiếp nhận tự kết luận mọi hỏng hóc đều thuộc loại trừ; KTDV phải xác định phần lỗi đang được yêu cầu xử lý và thông tin chứng minh nguyên nhân liên quan.",
+          "facts": [
+            "F-BH-03"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Nếu thuộc trường hợp loại trừ, người phụ trách giải thích nội dung kiểm tra và đề xuất phương án dịch vụ riêng nếu khách có nhu cầu. Khách xác nhận trước phần công việc có chi phí ngoài phạm vi. Không tự thay linh kiện rồi yêu cầu khách thanh toán vì máy đã được gửi đến kiểm tra; việc đồng ý giao máy cho Thiên Lam không thay thế chấp thuận phương án sửa chữa."
+        },
+        {
+          "type": "paragraph",
+          "text": "Thiết bị có dấu hiệu mất an toàn được hướng dẫn ngừng sử dụng và chuyển kiểm tra phù hợp. Trong thời gian làm rõ, hồ sơ giữ tình trạng chờ, không chuyển thành đã đạt hoặc đã hết quyền yêu cầu chỉ vì chưa có đủ thông tin. Các kết luận khác nhau giữa bước tiếp nhận và kiểm tra phải được lưu với căn cứ, giúp người phụ trách giải thích được lý do thay đổi."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "5. Quy trình gửi và xử lý bảo hành"
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Bước 1. Gửi yêu cầu"
+        },
+        {
+          "type": "paragraph",
+          "text": "Khách liên hệ CSKH với thiết bị, dấu hiệu lỗi, địa điểm và người phối hợp. Có thể gửi ảnh nhãn hoặc bản in kiểm tra phù hợp, tránh gửi dữ liệu công việc không cần thiết. CSKH ghi hồ sơ, kiểm tra phần có thể đối chiếu từ bản lưu và phản hồi thông tin cần bổ sung; không để yêu cầu mất dấu vì khách gọi tên máy khác mã trong danh mục."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Bước 2. Bàn giao thiết bị"
+        },
+        {
+          "type": "paragraph",
+          "text": "Trước khi chuyển máy, hai bên thống nhất cách giao nhận phù hợp tình trạng. Người nhận ghi máy, phụ kiện, tình trạng bao bì và dấu hiệu đang được báo, phân biệt phần đã kiểm với phần chưa thể thử. Thiết bị khách gửi được nhận diện riêng trong kho, không xếp vào hàng sẵn bán. Phiếu nhận giúp theo dõi quá trình, chưa phải kết luận đã đủ điều kiện bảo hành hoặc đổi mới."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Bước 3. Kiểm tra và xác nhận phương án"
+        },
+        {
+          "type": "paragraph",
+          "text": "KTDV đối chiếu điều kiện áp dụng, kiểm tra dấu hiệu và ghi kết quả. Nếu cần thông tin thêm hoặc không tái hiện được lỗi, hồ sơ nêu rõ điều kiện đã thử và bước tiếp theo. CSKH chuyển kết quả tới khách; phần phát sinh ngoài phạm vi được nêu riêng để khách quyết định. Tránh dùng một câu máy đã nhận để thay thông tin về tiến độ và người đang theo dõi."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Bước 4. Thực hiện và trả kết quả"
+        },
+        {
+          "type": "paragraph",
+          "text": "Theo phương án đã xác nhận, KTDV thực hiện phần việc và kiểm tra lại chức năng liên quan. Biên bản nêu nội dung đã làm, linh kiện thay nếu có, tình trạng giao lại và phần cần theo dõi. Kho vận đối chiếu máy, phụ kiện thực giao; CSKH cập nhật hồ sơ sau khi có căn cứ bàn giao, không đánh dấu khách đã nhận chỉ vì máy đã rời khu kiểm tra."
+        },
+        {
+          "type": "page_break"
+        },
+        {
+          "type": "heading",
+          "level": 1,
+          "text": "6. Trách nhiệm và lịch sử phiên bản"
+        },
+        {
+          "type": "paragraph",
+          "text": "CSKH giữ đầu mối theo dõi và phản hồi, KTDV chịu trách nhiệm căn cứ kiểm tra, Kho vận chịu trách nhiệm nhận diện và bàn giao, Kinh doanh phối hợp hồ sơ giao dịch. Khi đổi người phụ trách, nội dung đang chờ được chuyển trong cùng hồ sơ để khách không phải mô tả lại. Trưởng phòng KTDV Đặng Minh Tuấn hướng dẫn nội dung kỹ thuật; các bộ phận không tự sửa thời hạn bằng ghi chú riêng."
+        },
+        {
+          "type": "paragraph",
+          "text": "Lịch sử phiên bản: bản ban hành đầu, số 21/2026/QC-TL, hiệu lực từ 01/02/2026. Vướng mắc được tổng hợp theo hồ sơ cụ thể để trình người có thẩm quyền xem xét. Khi có bản sửa đổi, chỉ rõ phần thay thế và thời điểm áp dụng; giữ bản cũ phục vụ đối chiếu, không tiếp tục gửi như chính sách hiện hành sau khi nội dung đã được thay."
+        },
+        {
+          "type": "signature",
+          "lines": [
+            "Nơi nhận: KD; CSKH; KTDV; KHO; Chi nhánh Đà Nẵng; Lưu KTDV.",
+            "TRƯỞNG PHÒNG KỸ THUẬT DỊCH VỤ",
+            "Đặng Minh Tuấn"
+          ]
+        }
+      ]
     }
   ]
 }

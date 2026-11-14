@@ -1,6 +1,6 @@
 {
   "corpus_version": "synthetic-sme-v2",
-  "corpus_seed_sha256": "3d48b53de45e1793e10ace0095445e9d8e74cf42d6a20991e7276d654823fae2",
+  "corpus_seed_sha256": "05df4452a5e67a59abad677eef7a39424a813583d4d1a816ef11e5d22c28407e",
   "libraries": {
     "python-docx": "1.2.0",
     "PyMuPDF": "1.28.2"
@@ -48,6 +48,54 @@
         "F-MH-01",
         "F-MH-03",
         "F-MH-04"
+      ]
+    },
+    {
+      "document_id": "D01",
+      "path": "corpus_v2/so_tay_nhan_su_2025.pdf",
+      "format": "pdf",
+      "sha256": "304c53e6e50723aa4fd5b974d69a0093ac4503d534d9d60cfb2071a687dbbf94",
+      "facts": [
+        "F-HR-01",
+        "F-HR-03",
+        "F-HR-04",
+        "F-HR-05",
+        "F-HR-06",
+        "F-HR-07"
+      ]
+    },
+    {
+      "document_id": "D06",
+      "path": "corpus_v2/sop_nhap_xuat_kho.pdf",
+      "format": "pdf",
+      "sha256": "8a1f461edf43b497e5218d1def7ea2ed92255be7a9159837416e020940335142",
+      "facts": [
+        "F-KHO-01",
+        "F-KHO-02",
+        "F-KHO-03",
+        "F-MH-04"
+      ]
+    },
+    {
+      "document_id": "D07",
+      "path": "corpus_v2/hop_dong_bao_tri_mau.pdf",
+      "format": "pdf",
+      "sha256": "b9ee44e2f073098d2e12b2ff69181d08dc250570866cd263c6263d7d3a53f114",
+      "facts": [
+        "F-DV-01",
+        "F-DV-02",
+        "F-DV-03"
+      ]
+    },
+    {
+      "document_id": "D08",
+      "path": "corpus_v2/chinh_sach_bao_hanh_doi_tra.md",
+      "format": "md",
+      "sha256": "0720f8929496b4517a240d0647d15a63c76846e4900ffaa9e1a102a0c633ff68",
+      "facts": [
+        "F-BH-01",
+        "F-BH-02",
+        "F-BH-03"
       ]
     }
   ]

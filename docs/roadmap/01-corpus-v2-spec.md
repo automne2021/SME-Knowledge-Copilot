@@ -78,6 +78,7 @@ Mọi tài liệu thuộc **cùng một công ty** và nhất quán với nhau v
 | F-MH-04 | `BM-MH-01`: Bảng tổng hợp báo giá và phương án lựa chọn; `BM-MH-02`: Phiếu đề nghị mua và trình duyệt; `BM-MH-03`: Biên bản giao nhận, nghiệm thu; `BM-MH-04`: Phiếu chuyển hồ sơ thanh toán | D05 | Bổ sung 01-T2a; cố định ý nghĩa mã cho slice identifier |
 | F-KHO-01 | Hàng lỗi phải chuyển vào khu `KQ-01` trong 24 giờ kể từ khi phát hiện | D06 | Slice mã định danh |
 | F-KHO-02 | Kiểm kê định kỳ cuối mỗi quý; chênh lệch trên 2% phải lập biên bản `BM-KHO-07` | D06 | |
+| F-KHO-03 | `KHO-HCM-01`: kho TP.HCM; `KHO-DN-01`: kho Đà Nẵng; `K1-A03-T2`: kho 1, dãy A, kệ 03, tầng 2; `E-FD-12`: lỗi kéo giấy; `E-PR-08`: bản in có vệt; `E-PW-03`: không lên nguồn; `E-CN-05`: mất kết nối | D06 | Bổ sung 01-T2b, cố định bảng mã cho slice identifier; mã là dấu hiệu tiếp nhận, không phải kết luận nguyên nhân |
 | F-DV-01 | Hợp đồng bảo trì gói **Tiêu chuẩn**: phản hồi trong 4 giờ làm việc, kỹ thuật viên có mặt trong 24 giờ (nội thành) | D07 | Nằm sâu trong văn bản dài |
 | F-DV-02 | Gói **Cao cấp**: phản hồi 2 giờ, có mặt trong 8 giờ | D07 | |
 | F-DV-03 | Phạt chậm SLA: 0,5% phí dịch vụ tháng cho mỗi giờ trễ, tối đa 10% | D07 | |
@@ -186,14 +187,14 @@ Trạng thái gồm: `chưa viết` → `đã viết` → `người dùng đã d
 
 | # | Trạng thái | Commit | Ghi chú duyệt |
 |---|---|---|---|
-| D01 | chưa viết | — | — |
+| D01 | đã viết | xem commit 01-T2b | 10 trang PDF text; 25.154 ký tự parser; chưa human review |
 | D02 | đã viết | xem commit 01-T2a | 2 trang DOCX; chưa human review |
 | D03 | người dùng đã duyệt | xem commit 01-T2a | Chuẩn văn phong: người dùng xác nhận “D03 đạt” ngày 15/11/2026; 5 trang, 2 bảng |
 | D04 | đã viết | xem commit 01-T2a | 2 trang PDF text, bảng kẻ khung; chưa human review |
 | D05 | đã viết | xem commit 01-T2a | 4 trang DOCX; chưa human review |
-| D06 | chưa viết | — | — |
-| D07 | chưa viết | — | — |
-| D08 | chưa viết | — | — |
+| D06 | đã viết | xem commit 01-T2b | 7 trang PDF text; 1 bảng mã lỗi kẻ khung; chưa human review |
+| D07 | đã viết | xem commit 01-T2b | 10 trang PDF text; SLA ở trang 7, phạt ở trang 8; chưa human review |
+| D08 | đã viết | xem commit 01-T2b | Markdown 7.143 ký tự parser, có bảng; chưa human review |
 | D09 | chưa viết | — | — |
 | D10 | chưa viết | — | — |
 | D11 | chưa viết | — | — |
