@@ -293,6 +293,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 - **Audit trước khi code (K-012):** đừng tin tên bảng hay thư mục; đối chiếu contract với source thật.
 - **Ưu tiên bằng chứng chất lượng trước mở rộng tính năng (K-086).**
 - **README cho người ngoài nhóm (K-103):** bài toán, tính năng, ảnh, cách hoạt động, kết quả có mẫu số; nhật ký nội bộ để ở PLAN và report.
+- **GIF demo có thể tái tạo (K-108):** Edge headless qua CDP và WebSocket của Node 24 quay UI thật; `gifenc@1.0.3` cài riêng trong `.cache/tools/gif/`. Chỉ rút đoạn chờ model và ghi chú ngay dưới GIF. Lưu khung PNG để ghép lại mà không gọi Gemini; nén phần pixel không đổi bằng transparency với disposal 1 để giữ đủ 10 fps. Xem [script](scripts/record_demo_gif.mjs) và [report 00-T4](docs/housekeeping-20261115.md).
 - **Sau M1:** việc mới theo [roadmap](docs/roadmap/README.md), mỗi task một đợt xác nhận.
 - **Giữ ngữ cảnh giữa các phiên AI bằng file, không bằng trí nhớ (K-107):** spec, fact registry, bảng trạng thái và report cuối task là "bộ nhớ"; phiên mới đọc lại chúng thay vì kéo dài một phiên đến khi context bị tóm tắt.
 
@@ -399,3 +400,11 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - **Fact registry** là nguồn sự thật duy nhất: tài liệu chỉ lệch registry ở chỗ cố ý cài bẫy, và T3 lấy gold từ đó. Phương án để Codex tự viết tự do rồi mới trích gold bị loại vì dễ sinh mâu thuẫn ngoài ý muốn.
 - v1 và v2 ingest vào workspace riêng khi eval, vì chủ đề trùng nhưng số khác.
 - Chia T2 thành 3 phiên Codex, phiên đầu dừng ở 1 tài liệu mẫu để người dùng duyệt văn phong; ngữ cảnh giữa các phiên giữ bằng spec và bảng trạng thái. GIF demo thành task 00-T4, công cụ ghép GIF cài tạm ngoài dependency.
+
+### K-108 — Quay demo từ UI thật, tách quay và ghép GIF
+
+15/11/2026 · công cụ demo, quy trình · đã triển khai và kiểm chứng.
+- Chọn Edge CDP + Node 24 và `gifenc@1.0.3` cài trong cache; không thêm Puppeteer/Playwright hoặc dependency vào app. PNG gốc giúp sửa phần ghép ảnh mà không tiêu thêm lượt hỏi model.
+- GIF dùng bảng màu và transparency/disposal 1 cho pixel không đổi, giữ thời lượng khung 100 ms; encode toàn ảnh lặp lại vượt giới hạn 5 MB. Video giữ màu tốt hơn nhưng README cần ảnh động xem ngay; cân nhắc video khi cần demo dài hoặc âm thanh.
+- Lượt quay đầu gặp `session_busy` khi auto-send trong development StrictMode; backend vẫn hoàn tất. Script chuẩn bị phiên trống trước khi quay và từ chối khung có lỗi; không sửa app trong task này. Xem [script](scripts/record_demo_gif.mjs), [report](docs/housekeeping-20261115.md).
+- Bản cuối: 15 s, 960×600, 150 khung/10 fps, 484.047 bytes; giải mã kiểm tra đủ 150 khung. Hai lượt hỏi dùng 2 generation, countTokens suy ra 14; backend lần cuối 316/316 đạt sau hai lỗi setup Qdrant tạm thời đã ghi trong report.

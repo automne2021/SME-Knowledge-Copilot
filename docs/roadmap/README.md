@@ -160,7 +160,7 @@ Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính
 
 | # | Tính năng | Task xong / tổng | Trạng thái | Nhánh | Report |
 |---|---|---|---|---|---|
-| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 0/4 | Chưa bắt đầu | — | — |
+| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 1/4 | T4 xong; T1–T3 chưa bắt đầu | `feat/00-housekeeping` | [00-T4 — GIF demo](../housekeeping-20261115.md) |
 | 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 0/7 | Chưa bắt đầu | — | — |
 | 02 | [Hybrid search](02-hybrid-search-reranker.md) | 0/5 | Chưa bắt đầu | — | — |
 | 03 | [Thư mục](03-folders-scoped-qa.md) | 0/4 | Chưa bắt đầu | — | — |
