@@ -214,6 +214,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
   - Gold bám **nguồn canonical** (block, vị trí, quote), không bám chunk UUID, vì chunk đổi khi đổi cấu hình.
   - Chia dev/test theo *họ câu hỏi* để paraphrase không rò sang test.
   - Hai người duyệt độc lập; publish snapshot bất biến `reviewed-v1` có hash.
+  - **Corpus v2 (kế hoạch, K-107):** 14 tài liệu của một công ty hư cấu, viết như văn bản thật (dài, có bảng, phiên bản mâu thuẫn, mã định danh, email không dấu, PDF scan). Mọi con số quan trọng nằm trong *fact registry* làm nguồn sự thật cho cả tài liệu lẫn gold. Spec: [01-corpus-v2-spec.md](docs/roadmap/01-corpus-v2-spec.md).
 - **Chấm khớp bằng chứng (K-058):** các quote thay thế trong một nhóm là OR, các span dựng một quote là AND, các nhóm cần cho câu trả lời là AND; span hợp trên cùng block, phủ ≥ 80% là đạt; lệch mapping thì fail, không loại câu khỏi mẫu số. Remap gold không fuzzy match (K-047).
 - **Kỷ luật chạy model thật (K-086 → K-097):**
   - **Ledger trước khi gọi:** SQLite `BEGIN IMMEDIATE` giữ chỗ trước mỗi request, không hoàn lại khi mất response (fail-closed).
@@ -293,6 +294,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 - **Ưu tiên bằng chứng chất lượng trước mở rộng tính năng (K-086).**
 - **README cho người ngoài nhóm (K-103):** bài toán, tính năng, ảnh, cách hoạt động, kết quả có mẫu số; nhật ký nội bộ để ở PLAN và report.
 - **Sau M1:** việc mới theo [roadmap](docs/roadmap/README.md), mỗi task một đợt xác nhận.
+- **Giữ ngữ cảnh giữa các phiên AI bằng file, không bằng trí nhớ (K-107):** spec, fact registry, bảng trạng thái và report cuối task là "bộ nhớ"; phiên mới đọc lại chúng thay vì kéo dài một phiên đến khi context bị tóm tắt.
 
 ---
 
@@ -389,3 +391,11 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - KNOWLEDGE cũ (1.558 dòng, 105 mục theo thời gian) khó dùng để học. Chuyển nguyên bản vào `docs/history/`, viết bản này theo chủ đề với câu tự kiểm tra.
 - Từ nay ghi mục mới ở đây và cập nhật chủ đề liên quan.
 - Roadmap sau M1 ở [docs/roadmap/](docs/roadmap/README.md): mỗi tính năng một file dạng ticket, mỗi task một đợt xác nhận, tiến độ roadmap tính riêng với % của M1.
+
+### K-107 — Corpus v2 giống văn bản thật, có fact registry
+
+15/11/2026 · đánh giá, quy trình · kế hoạch (chưa triển khai).
+- Corpus v1 mỗi file chỉ khoảng 500 ký tự và lặp cụm "trong bộ dữ liệu mẫu", nên Recall@5 = 1,0 nói được ít. Corpus v2 là 14 tài liệu của công ty hư cấu "Thiên Lam": văn bản hành chính có Điều/Khoản, 2 tài liệu dài 10–12 trang, bảng kẻ khung, thông báo 2026 mâu thuẫn sổ tay 2025, biên bản chỉ có *đề xuất*, email không dấu, 2 PDF scan.
+- **Fact registry** là nguồn sự thật duy nhất: tài liệu chỉ lệch registry ở chỗ cố ý cài bẫy, và T3 lấy gold từ đó. Phương án để Codex tự viết tự do rồi mới trích gold bị loại vì dễ sinh mâu thuẫn ngoài ý muốn.
+- v1 và v2 ingest vào workspace riêng khi eval, vì chủ đề trùng nhưng số khác.
+- Chia T2 thành 3 phiên Codex, phiên đầu dừng ở 1 tài liệu mẫu để người dùng duyệt văn phong; ngữ cảnh giữa các phiên giữ bằng spec và bảng trạng thái. GIF demo thành task 00-T4, công cụ ghép GIF cài tạm ngoài dependency.

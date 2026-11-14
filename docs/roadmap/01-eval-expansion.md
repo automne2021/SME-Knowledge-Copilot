@@ -2,6 +2,8 @@
 
 **Mốc:** M2 · **Công sức:** M · **Phụ thuộc:** 00-T1 · **Nhánh:** `feat/01-eval-v2`
 
+> **Spec nội dung corpus:** [01-corpus-v2-spec.md](01-corpus-v2-spec.md). Bắt buộc đọc khi làm T2a, T2b, T2c và T3.
+
 ## Mục tiêu
 
 Có bộ eval **v2** đủ lớn và đủ đa dạng để so sánh các thay đổi retrieval và model ở 02, 04, 06, 08, 10. Kèm một lệnh chạy hồi quy retrieval **không tốn quota LLM**, chạy được sau mỗi thay đổi.
@@ -30,14 +32,17 @@ Có bộ eval **v2** đủ lớn và đủ đa dạng để so sánh các thay �
 
 ### Corpus v2
 
-- Giữ nguyên 10 tài liệu v1. Thêm **12–15 tài liệu giả lập**, ghi rõ "TÀI LIỆU GIẢ LẬP" như v1:
+> Chi tiết nội dung, công ty hư cấu, fact registry, văn phong và cách sinh file nằm ở [01-corpus-v2-spec.md](01-corpus-v2-spec.md). Nếu đoạn dưới đây khác spec, **theo spec**.
+
+- Giữ nguyên 10 tài liệu v1. Thêm **14 tài liệu giả lập** của một công ty hư cấu, ghi "TÀI LIỆU GIẢ LẬP" một lần mỗi file:
   - 3–4 tài liệu có **bảng**: bảng giá, định mức công tác phí, ma trận phê duyệt. Gồm cả DOCX table và PDF có bảng kẻ khung.
-  - 2 tài liệu **dài** (15–30 trang PDF có text) để kiểm tra nhiễu.
+  - 2 tài liệu **dài** (10–12 trang PDF có text) để kiểm tra nhiễu.
   - 2 tài liệu **gần trùng** (phiên bản cũ và mới của cùng quy định) để kiểm tra mâu thuẫn.
   - 2 tài liệu chứa nhiều **mã định danh** (mã biểu mẫu, mã phòng ban) cho câu `exact_identifier`. Đây là nơi BM25 thường thắng dense.
   - 1–2 tài liệu **viết không dấu** hoặc lẫn tiếng Anh, giống email nội bộ thật.
   - 2 tài liệu **scan** (PDF ảnh), chỉ dùng cho 08-OCR; hiện tại phải ra `needs_ocr`.
-- Thêm vào `eval/seeds/corpus.json`, sinh file bằng script có sẵn hoặc script mới trong `eval/`. Mọi file phải tái tạo được từ seed.
+- Seed riêng `eval/seeds/corpus_v2.json`, builder mới `eval/build_corpus_v2.py`, output `eval/datasets/corpus_v2/`. Mọi file phải tái tạo được từ seed.
+- v1 và v2 ingest vào **workspace riêng** khi chạy eval, vì hai bộ có chủ đề trùng nhưng số liệu khác (spec mục 6).
 
 ### Câu hỏi v2
 
@@ -79,14 +84,28 @@ Có bộ eval **v2** đủ lớn và đủ đa dạng để so sánh các thay �
 - Thêm `slice`, `dataset_version`, `history` vào schema; validator hỗ trợ v1 và v2; thêm test cho câu v2 hợp lệ và không hợp lệ.
 - Không đổi snapshot `reviewed-v1`.
 
-### T2 — Corpus v2 (tài liệu)
+### T2 — Corpus v2 (tài liệu), chia 3 đợt
 
-- Seed và sinh 12–15 tài liệu như ở phần Thiết kế. Thêm test: parser đọc được mọi tài liệu không phải scan, tài liệu scan ra `needs_ocr`, bảng có `location.kind` là bảng.
-- Report liệt kê từng tài liệu: định dạng, số trang, số chunk, slice phục vụ.
+Mỗi đợt mở **phiên Codex mới** và đọc lại toàn bộ [spec corpus](01-corpus-v2-spec.md). Cuối mỗi đợt: cập nhật bảng trạng thái ở spec mục 8, report `docs/corpus-v2-<date>.md`, test theo spec mục 7. Không gọi Gemini.
+
+#### T2a — Builder, seed và 4 tài liệu đầu
+
+- Viết `eval/build_corpus_v2.py`, khung seed `eval/seeds/corpus_v2.json` và test.
+- **Viết D03 trước rồi DỪNG** (chưa commit thêm tài liệu khác): gửi người dùng đường dẫn file đã sinh, kèm 1 đoạn trích, để duyệt văn phong. Chỉ viết tiếp D02, D04, D05 sau khi người dùng duyệt hoặc góp ý xong; nếu góp ý, sửa D03 trước.
+- Ghi "Chuẩn văn phong đã duyệt: D03" vào spec mục 8.
+
+#### T2b — D01, D06, D07, D08
+
+- Trước khi viết, đọc **D03 đã duyệt** (seed) làm chuẩn văn phong. Hai tài liệu dài (D01, D07) viết theo từng chương, kiểm tra không lặp đoạn.
+
+#### T2c — D09 → D14, chốt corpus
+
+- Viết các tài liệu còn lại, gồm 2 PDF scan. Chạy test đầy đủ, hoàn tất report (bảng tổng hợp 14 tài liệu, tổng số chunk).
+- Kiểm tra chéo: mọi fact trong registry có mặt đúng tài liệu; chủ đề dành cho câu unanswerable không xuất hiện ở đâu.
 
 ### T3 — Draft câu hỏi v2 và gói review
 
-- Draft 60–80 câu kèm gold evidence (span) và dùng mapping tool hiện có để gắn chunk.
+- Draft 60–80 câu kèm gold evidence (span) và dùng mapping tool hiện có để gắn chunk. Lấy đáp án và vị trí từ **fact registry** (spec mục 3); mỗi câu ghi mã fact.
 - Xuất gói review (CSV hoặc markdown) cho người duyệt. **Dừng ở đây**, chờ người dùng duyệt.
 
 ### T4 — Publish snapshot v2 sau khi người duyệt xong

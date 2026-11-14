@@ -11,6 +11,8 @@ Người dùng chỉ cần gõ: **"Làm task NN-Tk"**. Khi đó assistant đọc
 1. **Bắt buộc (khoảng 300 dòng):**
    - File này: **mục 4** (quy tắc, định nghĩa xong, lệnh chuẩn) và **mục 6** (mẫu báo cáo).
    - Toàn bộ file tính năng `docs/roadmap/NN-*.md`.
+   - File spec phụ mà file tính năng ghi "bắt buộc đọc" (ví dụ [01-corpus-v2-spec.md](01-corpus-v2-spec.md) cho 01-T2a/b/c và T3).
+   - Từ task thứ hai của một tính năng, khi mở **phiên mới**: report gần nhất của **cùng tính năng** (`docs/<tên>-<date>.md`) và `git log --oneline` của nhánh, để biết phiên trước đã làm tới đâu.
 2. **Chỉ khi file tính năng trỏ tới hoặc task đụng phần đó:**
    - Mục "Bất biến nghiệp vụ" trong `CLAUDE.md`, khi task đụng retrieval, xóa, quyền hoặc chat.
    - Đúng mục spec được ghi (ví dụ "spec mục 8.8"), không đọc cả spec.
@@ -18,7 +20,7 @@ Người dùng chỉ cần gõ: **"Làm task NN-Tk"**. Khi đó assistant đọc
    - Các file code liệt kê ở mục "Hiện trạng" của file tính năng. Mở rộng sang file khác khi thật sự cần, và nêu lý do trong phần trình bày phạm vi.
 3. **Không đọc:**
    - `PLAN.md`, `HANDOFF_CLAUDE.md`, `docs/history/`.
-   - Các report cũ trong `docs/`, `eval/reports/`, `eval/snapshots/`, `.cache/`.
+   - Các report cũ trong `docs/` (trừ report gần nhất của cùng tính năng), `eval/reports/`, `eval/snapshots/`, `.cache/`.
    - Mục 1–3 và mục 7 của file này (bối cảnh cho người lập plan).
 4. **Task tiếp theo của cùng tính năng, trong cùng phiên:** không đọc lại các file trên; chỉ xem lại phần task mới trong file tính năng.
 
@@ -158,8 +160,8 @@ Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính
 
 | # | Tính năng | Task xong / tổng | Trạng thái | Nhánh | Report |
 |---|---|---|---|---|---|
-| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 0/3 | Chưa bắt đầu | — | — |
-| 01 | [Mở rộng eval](01-eval-expansion.md) | 0/5 | Chưa bắt đầu | — | — |
+| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 0/4 | Chưa bắt đầu | — | — |
+| 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 0/7 | Chưa bắt đầu | — | — |
 | 02 | [Hybrid search](02-hybrid-search-reranker.md) | 0/5 | Chưa bắt đầu | — | — |
 | 03 | [Thư mục](03-folders-scoped-qa.md) | 0/4 | Chưa bắt đầu | — | — |
 | 04 | [Retrieval nhận biết bảng](04-table-aware-retrieval.md) | 0/3 | Chưa bắt đầu | — | — |

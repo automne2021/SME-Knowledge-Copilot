@@ -36,7 +36,33 @@ Bộ test ổn định là điều kiện để tin các số đo trước và s
 - **Phạm vi:** không sửa code. Lập bảng mọi bảng, model, router và test còn thuộc hướng Operations, kèm: còn được import ở đâu, có dữ liệu không, rủi ro nếu xóa.
 - **Đầu ra:** `docs/legacy-inventory-<date>.md` với đề xuất (giữ / xóa bằng migration / để sau). Việc xóa là một đợt riêng do người dùng quyết.
 
+### T4 — GIF demo cho README
+
+- **Mục tiêu:** một GIF khoảng 15 giây cho người xem README thấy luồng chính: gõ câu hỏi → câu trả lời có trích dẫn → bấm trích dẫn → mở đúng đoạn gốc được tô sáng.
+- **Không phụ thuộc** T1–T3; làm được ngay. Không sửa UI, không sửa code app.
+- **Cách làm:**
+  - Chạy stack bằng `start-web.cmd`, dùng dữ liệu demo hiện có trong DB development. Không xóa hay upload lại tài liệu.
+  - Điều khiển Edge headless qua Chrome DevTools Protocol (CDP), dùng WebSocket có sẵn của Node 24, không cài Puppeteer/Playwright. Viewport khoảng 1280×800.
+  - Lấy khung hình bằng `Page.startScreencast` hoặc chụp `Page.captureScreenshot` định kỳ. Gõ câu hỏi từng ký tự cho tự nhiên.
+  - Đoạn chờ Gemini **cắt ngắn** còn khoảng 1 giây (bỏ bớt khung hình), không tua nhanh UI theo cách gây hiểu nhầm.
+  - Câu hỏi: dùng câu hỏi trong ảnh `docs/images/chat.png`. Ghi câu hỏi định dùng trong phần trình bày phạm vi để người dùng xác nhận.
+- **Công cụ ghép GIF:**
+  - Cài **tạm ngoài dependency của project**, trong `.cache/tools/gif/` (đã nằm trong `.gitignore`). Ví dụ `npm install --prefix .cache/tools/gif gifenc@<version cố định>`, hoặc venv riêng có Pillow ở cùng thư mục.
+  - **Không** sửa `package.json`, `package-lock.json` hay các file `requirements*.lock`.
+  - Nêu công cụ và version trong phần trình bày phạm vi.
+- **Script quay:** lưu ở `scripts/record_demo_gif.mjs` (commit) để tái tạo được. Ghi cách chạy ở đầu file. Script không chứa mật khẩu; đọc mật khẩu demo từ biến môi trường.
+- **Ngân sách:** tối đa **2 lần** hỏi Gemini (1 lần quay chính, 1 lần quay lại nếu hỏng). Nếu gặp lỗi quota hoặc quá tải, **dừng và báo**, không tự thử lại. Nên chạy sau khoảng 15:00 giờ Việt Nam.
+- **Đầu ra:**
+  - `docs/images/demo.gif`, dưới **5 MB**, rộng khoảng 960 px, 8–10 khung hình/giây, lặp vô hạn.
+  - Chèn vào `README.md` ngay dưới phần mở đầu, kèm alt text tiếng Việt. Giữ 2 ảnh tĩnh hiện có.
+- **Kiểm tra trước khi commit:**
+  - Mở GIF xem lại toàn bộ.
+  - Không lộ token, mật khẩu, đường dẫn máy, tab hay thanh địa chỉ có thông tin riêng.
+  - Câu trả lời có nhãn "AI-generated" như UI thật.
+- **Nghiệm thu:** report ngắn (có thể ghi trong report của tính năng 00): câu hỏi dùng, số lần gọi Gemini, kích thước GIF, lệnh tái tạo.
+
 ## Không làm
 
 - Không refactor worker hay đổi thông số lease, heartbeat.
 - Không xóa bảng cũ trong T3.
+- Không thêm dependency vào project cho T4.
