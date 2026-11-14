@@ -139,7 +139,7 @@ cd frontend; npm.cmd run lint; npm.cmd run test; npm.cmd run build; cd ..
 Lưu ý môi trường:
 - Dùng `127.0.0.1`, không dùng `localhost`, vì Docker chỉ mở cổng IPv4 ([KNOWLEDGE](../../KNOWLEDGE.md), mục Vận hành).
 - Launcher `start-web.cmd` từ chối chạy khi pytest đang chạy; dừng stack bằng `stop-web.cmd` trước khi chạy toàn bộ test.
-- `test_worker.py::test_heartbeat_runs_during_inference_without_document_lock` có thể chập chờn khi máy bận (task [00](00-housekeeping.md) sẽ sửa).
+- `test_worker.py::test_heartbeat_runs_during_inference_without_document_lock` đã đổi sang quan sát lease gia hạn ở 00-T1; kết quả và giới hạn kiểm chứng ở [report](../housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat).
 
 ### 4.6. Gọi model thật và ngân sách
 
@@ -160,7 +160,7 @@ Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính
 
 | # | Tính năng | Task xong / tổng | Trạng thái | Nhánh | Report |
 |---|---|---|---|---|---|
-| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 0/4 | Chưa bắt đầu | — | — |
+| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 2/4 | T1, T4 xong; T2–T3 chưa bắt đầu | `feat/00-housekeeping` | [00-T1 — Heartbeat](../housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat), [00-T4 — GIF demo](../housekeeping-20261115.md) |
 | 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 0/7 | Chưa bắt đầu | — | — |
 | 02 | [Hybrid search](02-hybrid-search-reranker.md) | 0/5 | Chưa bắt đầu | — | — |
 | 03 | [Thư mục](03-folders-scoped-qa.md) | 0/4 | Chưa bắt đầu | — | — |

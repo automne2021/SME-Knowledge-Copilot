@@ -2,6 +2,10 @@
 
 Trợ lý hỏi đáp tài liệu nội bộ tiếng Việt cho doanh nghiệp nhỏ, xây bằng **Retrieval-Augmented Generation (RAG)**. Mỗi câu trả lời kèm trích dẫn để mở ra đúng đoạn trong tài liệu gốc. Khi tài liệu không có thông tin, hệ thống trả lời **"chưa đủ bằng chứng"** thay vì tự bịa.
 
+![Demo gõ câu hỏi, xem câu trả lời có trích dẫn và mở đoạn nguồn được tô sáng](docs/images/demo.gif)
+
+*Demo dùng tài liệu giả lập. Đoạn chờ AI được cắt ngắn còn khoảng 1 giây; thời gian trả lời thực tế thường 30–45 giây.*
+
 ![Màn hình hỏi đáp](docs/images/chat.png)
 
 ## Tính năng
