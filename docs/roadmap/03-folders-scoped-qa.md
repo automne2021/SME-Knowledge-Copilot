@@ -13,7 +13,9 @@
 
 ## Hiện trạng
 
-- `documents` chưa có trường thư mục.
+- Sau 03-T1 (18/11/2026), `folders` và `documents.folder_id` đã có model/migration; CRUD thư mục đã có API. Migration mới chỉ kiểm chứng trên DB test, chưa áp dụng DB development. [Report](../folders-20261118.md).
+- T1 dùng FK đơn `SET NULL` và FK kép bảo vệ workspace; xóa API kiểm tra mọi document row còn tham chiếu, kể cả tombstone. Bộ đếm ready không quyết định thư mục rỗng.
+- API gán tài liệu/upload/lọc thư mục thuộc T2; search/chat scope thuộc T3; UI thuộc T4.
 - Chat đã có `filters.document_ids`, tối đa 50 ID, được kiểm tra trong `retrieval._snapshots`.
 - UI có bộ chọn tài liệu (`ChatPage.tsx`, phần `document-picker`) và chip phạm vi.
 
@@ -44,6 +46,8 @@
 ## Task
 
 ### T1 — Schema, migration và API thư mục
+
+**Hoàn tất 18/11/2026:** backend 351/351; Ruff và Alembic drift check đạt trên DB test. [Bằng chứng, đánh đổi và giới hạn](../folders-20261118.md). Chưa triển khai T2–T4.
 
 - Migration Alembic tạo bảng và FK, kiểm tra `alembic check` không có thay đổi lạ.
 - **Test:** CRUD; tên trùng 409; member ghi 403; workspace khác 404; xóa thư mục còn tài liệu 409.

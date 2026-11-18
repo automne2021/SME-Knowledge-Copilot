@@ -14,6 +14,7 @@ from app.models.knowledge import (
     Document,
     DocumentRevision,
     EvalRun,
+    Folder,
     QueryRun,
     SourceBlock,
 )
@@ -42,6 +43,7 @@ __all__ = [
     "Document",
     "DocumentRevision",
     "EvalRun",
+    "Folder",
     "QueryRun",
     "SourceBlock",
 ]

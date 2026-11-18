@@ -15,6 +15,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    func,
     text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
@@ -37,9 +38,34 @@ class AuthToken(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
+class Folder(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    __tablename__ = "folders"
+    __table_args__ = (
+        UniqueConstraint("id", "workspace_id", name="uq_folders_id_workspace"),
+        ForeignKeyConstraint(
+            ["created_by", "workspace_id"],
+            ["users.id", "users.workspace_id"],
+            name="fk_folders_creator_scope",
+        ),
+        CheckConstraint("length(btrim(name)) BETWEEN 1 AND 100", name="name_length"),
+        CheckConstraint("name = btrim(name)", name="name_trimmed"),
+    )
+    workspace_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workspaces.id"))
+    created_by: Mapped[uuid.UUID]
+    name: Mapped[str] = mapped_column(String(100))
+
+
+Index("uq_folders_workspace_name_ci", Folder.workspace_id, func.lower(Folder.name), unique=True)
+
+
 class Document(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     __tablename__ = "documents"
     __table_args__ = (
+        ForeignKeyConstraint(
+            ["folder_id", "workspace_id"],
+            ["folders.id", "folders.workspace_id"],
+            name="fk_documents_folder_scope",
+        ),
         ForeignKeyConstraint(
             ["created_by", "workspace_id"],
             ["users.id", "users.workspace_id"],
@@ -70,8 +96,12 @@ class Document(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         Index(
             "ix_documents_workspace_status_created", "workspace_id", "status", "created_at", "id"
         ),
+        Index("ix_documents_workspace_folder", "workspace_id", "folder_id"),
     )
     workspace_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("workspaces.id"))
+    folder_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("folders.id", ondelete="SET NULL")
+    )
     created_by: Mapped[uuid.UUID]
     filename: Mapped[str] = mapped_column(String(255))
     mime: Mapped[str] = mapped_column(String(100))

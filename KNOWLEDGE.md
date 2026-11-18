@@ -184,6 +184,8 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 - **Envelope:** `{data, request_id}` / `{error: {code, message, details}, request_id}`, header `X-Request-ID`, `Cache-Control: no-store`. Không echo input hay log traceback/tham số SQL.
 - **Seed (K-041):** ID cố định cho `demo.admin`/`demo.member`, mật khẩu đọc từ `.env` (12–128 ký tự, hai tài khoản phải khác nhau), một transaction, chạy lại không reset mật khẩu hay nâng quyền.
 - **Logout (K-105):** `POST /auth/logout` thu hồi **đúng token đang gửi**; tab/máy khác vẫn đăng nhập.
+- **Thư mục theo workspace (K-115, 18/11/2026):** trước 03-T1 chưa có phân loại; từ 03-T1, `folders` có unique index `(workspace_id, lower(name))` để chống tên trùng cả khi request đồng thời; FK kép creator/workspace và folder/workspace chặn dữ liệu chéo scope ngay tại PostgreSQL. FK đơn `ON DELETE SET NULL` chỉ đổi `folder_id`, tránh vô tình NULL cả `workspace_id` nếu đặt SET NULL trên FK kép. API member chỉ đọc, admin ghi; chỉ lỗi unique index tên được đổi thành 409, lỗi DB khác vẫn là lỗi kỹ thuật.
+- **Xóa thư mục khác xóa tài liệu (K-115):** API khóa folder `FOR UPDATE` rồi chặn xóa khi còn bất kỳ document row nào, kể cả tombstone. Số tài liệu ready chỉ phục vụ hiển thị, không dùng để quyết định thư mục rỗng. Cách này không xóa dây chuyền; FK SET NULL bảo vệ dữ liệu khi có thao tác trực tiếp ở DB. Đổi lại tombstone vẫn chặn xóa folder; nếu cần quy tắc chỉ tính tài liệu còn sống phải chốt contract/test riêng. [Service](backend/app/services/folders.py), [test](backend/tests/test_folders.py), [migration test](backend/tests/test_folder_migration.py).
 - **Phía client (K-078):** token theo tab trong `sessionStorage`; client kiểm token trước và sau khi đọc response để response 401 của token cũ không đăng xuất token mới.
 
 **Tự kiểm tra**
@@ -378,7 +380,7 @@ Mức học: **in đậm** = nên đọc chi tiết trong archive; thường = �
 | Context, sinh câu trả lời, trích dẫn | **K-006**, K-031, **K-035**, **K-062**, **K-063**, **K-065**, **K-099** |
 | Worker, đồng thời | **K-005**, **K-038**, **K-049**, **K-052**, **K-064**, **K-070**, **K-071** |
 | Xóa, quyền riêng tư | **K-008**, **K-068**, **K-069** |
-| Auth, phân quyền | **K-015**, **K-039**, **K-040**, K-041, **K-078** |
+| Auth, phân quyền | **K-015**, **K-039**, **K-040**, K-041, **K-078**, **K-115** |
 | Đánh giá | **K-007**, **K-022**, **K-023**, K-024, **K-025**, **K-027**, **K-047**, **K-058**, **K-066**, **K-067**, **K-086**, **K-087**, **K-088**, K-089, **K-090**, K-091, **K-092**, **K-093**, K-094, **K-095**, **K-096**, **K-097**, K-098, K-100 |
 | Frontend, UX | K-076, K-077, **K-079**, **K-080**, **K-081**, K-082, **K-083**, **K-105** |
 | Vận hành, môi trường | K-013, K-014, K-016, K-017 *(lịch sử)*, K-018, **K-019**, K-020, K-021, K-028, **K-037**, **K-061**, **K-074**, K-075, K-084, K-085, **K-101**, **K-102**, K-104 |
@@ -452,3 +454,10 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - Bổ sung F-BG-01..03/F-SCAN-01..06, không đổi fact đã khóa; D10 phân biệt đề xuất 15 triệu với quy định hiện hành. D10 tự phân trang, D12 ngắt Story có chủ ý để tránh dải nền bảng lặp; render lại đủ 6 trang mới cuối.
 - Hai build độc lập/canonical khớp, giữ 8 artifact cũ; đủ 14 file, 35 fact, 667 block, 177 chunk/max 349 từ 12 file text, hai scan 0 chunk. Đây chưa là nhãn human review hoặc metric AI; 0 Gemini, chưa triển khai T3.
 - Backend cuối 316/316, eval 443/443 (76 corpus), Ruff đạt. Full backend đầu có 1 lỗi barrier 15 s ở test upload đồng thời; chạy riêng và full sau đạt nhưng chưa chứng minh nguyên nhân thời gian đã được sửa. Giữ cả bằng chứng lỗi và lượt đạt trong report, không sửa backend ngoài phạm vi corpus.
+
+### K-115 — Thư mục dùng SQL scope và hai FK để giữ workspace
+
+18/11/2026 · schema, phân quyền · 03-T1 đã triển khai và kiểm chứng; K-114 đã dùng trên nhánh draft eval, giữ mã riêng để tránh trùng khi merge.
+- Chọn unique index `(workspace_id, lower(name))` và composite FK thay vì chỉ check ở service để chặn race/scope sai; chưa dùng `citext` vì thêm extension, chưa thêm Unicode normalization khi contract chưa yêu cầu. FK đơn SET NULL + FK kép scope giữ workspace NOT NULL, không cần SQL đặc thù `SET NULL (folder_id)` trong ORM. [Model](backend/app/models/knowledge.py), [migration](backend/alembic/versions/2026_11_18_1000-20261118_folders_folder_schema.py).
+- API xóa khóa folder rồi kiểm tra mọi document row; ready count chỉ hiển thị. Không cascade tài liệu, đổi lại tombstone vẫn chặn xóa; muốn chỉ tính tài liệu sống phải chốt lại contract/test. Downgrade có folder data bị từ chối để tránh mất phân loại.
+- Backend **351/351**, gồm **35** test mới; Ruff và Alembic drift check đạt; probe hai transaction xác nhận FK/row lock chặn nhau và dữ liệu probe đã dọn. Chỉ DB test, 0 Gemini/0 USD; chưa triển khai T2–T4, migrate DB development hoặc khởi động lại web. [Report](docs/folders-20261118.md).

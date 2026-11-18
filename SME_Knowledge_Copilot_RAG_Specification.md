@@ -721,7 +721,8 @@ erDiagram
 | `workspaces` | `id`, `name`, `created_at` | Phạm vi dữ liệu |
 | `users` | `id`, `workspace_id`, `username`, `role`, `display_name`, `password_hash`, `is_active` | Identity seed; username unique, không trả password hash qua API |
 | `auth_tokens` | `id`, `user_id`, `token_hash`, `expires_at`, `revoked_at`, `created_at` | Implementation P0: opaque bearer ngẫu nhiên, chỉ giữ digest và thời hạn |
-| `documents` | `id`, `workspace_id`, `created_by`, `filename`, `mime`, `size_bytes`, `sha256`, `status`, `active_revision_id`, `active_generation_id`, `lifecycle_version`, `warnings_json`, `created_at`, `deleted_at` | Identity, lifecycle và concurrency |
+| `folders` | `id`, `workspace_id`, `created_by`, `name`, `created_at`, `updated_at` | Phân loại phẳng theo workspace (03-T1, 18/11/2026) |
+| `documents` | `id`, `workspace_id`, `created_by`, `folder_id?`, `filename`, `mime`, `size_bytes`, `sha256`, `status`, `active_revision_id`, `active_generation_id`, `lifecycle_version`, `warnings_json`, `created_at`, `deleted_at` | Identity, lifecycle và concurrency; `folder_id=NULL` là chưa phân loại |
 | `document_revisions` | `id`, `document_id`, `version`, `status`, `storage_key`, `parser_version`, `chunking_config`, `embedding_fingerprint`, `index_version`, `collection_name`, `expected_chunk_count`, `created_at` | Config immutable trong một lần index; revision 1 ở P0 |
 | `source_blocks` | `id`, `revision_id`, `generation_id`, `block_index`, `raw_text`, `normalized_text`, `location_json` | Source spans tái lập được |
 | `chunks` | `id`, `revision_id`, `generation_id`, `chunk_index`, `text`, `text_sha256`, `location_json`, `source_spans_json`, `vector_point_id`, `token_count` | Mapping evidence với nội dung gốc |
@@ -775,6 +776,10 @@ IDs runtime dùng UUID; các giá trị `doc_123`, `demo-workspace`, `E1` trong 
 |---|---|
 | `UNIQUE(workspace_id, sha256) WHERE status <> 'deleted'` trên documents | Chặn upload trùng kể cả lúc deleting và upload đồng thời |
 | `UNIQUE(document_id, version)` trên revisions | Không trùng revision |
+| Unique index `(workspace_id, lower(name))` trên folders | Tên thư mục không phân biệt hoa thường trong cùng workspace |
+| CHECK tên folders đã trim, dài 1–100 ký tự; FK kép creator/workspace | DB cũng bảo vệ tên và người tạo đúng workspace |
+| FK đơn `documents.folder_id → folders.id ON DELETE SET NULL` và FK kép `(folder_id, workspace_id) → folders(id, workspace_id)` | Xóa ở DB chỉ đặt `folder_id` về NULL, giữ workspace; chặn gán chéo workspace |
+| Index documents `(workspace_id, folder_id)` | Đếm tài liệu và kiểm tra thư mục rỗng |
 | Composite FK cho active revision với document ID | Không gắn revision của document khác; service kiểm tra active generation thuộc revision đó |
 | `UNIQUE(revision_id, generation_id, block_index)` | Source block identity ổn định trong một attempt |
 | `UNIQUE(revision_id, generation_id, chunk_index)` và `UNIQUE(vector_point_id)` | Chặn chunk/vector mapping trùng |
@@ -825,6 +830,10 @@ Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa c
 | `DELETE` | `/documents/{id}` | P0 | Soft-disable retrieval + cleanup |
 | `GET` | `/documents/{id}/content` | P0 | Xem file nguồn có kiểm tra quyền |
 | `GET` | `/documents/{id}/chunks/{chunk_id}` | P0 | Source excerpt và location từ SQL có kiểm tra quyền |
+| `GET` | `/folders` | P1, 03-T1 | Thành viên đọc danh sách thư mục trong workspace, kèm số tài liệu ready |
+| `POST` | `/folders` | P1, 03-T1 | Admin tạo thư mục |
+| `PATCH` | `/folders/{id}` | P1, 03-T1 | Admin đổi tên thư mục |
+| `DELETE` | `/folders/{id}` | P1, 03-T1 | Admin xóa thư mục rỗng, không cascade tài liệu |
 | `GET` | `/jobs/{id}` | P0 | Trạng thái indexing |
 | `POST` | `/jobs/{id}/retry` | P0 | Admin retry lỗi tạm thời của ingestion/cleanup |
 | `POST` | `/search` | P0 | Retrieval only, top-k contexts |
@@ -942,6 +951,8 @@ Multipart field bắt buộc là `file`; filename hiển thị được sanitize
 | `unsupported_file_type` | Định dạng không hỗ trợ hoặc signature không khớp | 415, không tạo job |
 | `file_too_large` | Quá giới hạn | 413 |
 | `duplicate_document` | Tài liệu trùng cùng workspace | 409 + ID được phép xem |
+| `duplicate_folder` | Tạo/đổi tên trùng thư mục trong cùng workspace, không phân biệt hoa thường | 409; không trả metadata của thư mục khác |
+| `folder_not_empty` | Xóa thư mục còn bất kỳ document row nào tham chiếu, kể cả tombstone | 409; không thay đổi tài liệu |
 | `needs_ocr` | PDF scan không có text | GET job trả 200, job `failed`, document `needs_ocr` |
 | `no_extractable_text` | File trắng | GET job trả 200, job/document `failed` |
 | `parse_failed`, `encrypted_document`, `unsupported_encoding` | Parser từ chối tài liệu | Job `failed`, không auto-retry |
@@ -1020,6 +1031,14 @@ Abstention khi không có nguồn:
 Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_threshold`, `context_budget_excluded`, `insufficient_support`. Không suy ra từ code này rằng không có chính sách ngoài corpus.
 
 ---
+
+### 10.8. Thư mục tài liệu — 03-T1 (18/11/2026)
+
+- `POST /folders` và `PATCH /folders/{id}` nhận JSON `{name}`; trim whitespace, dài 1–100 ký tự Unicode; sai kiểu, thiếu tên hoặc field ngoài contract → 422. Workspace và creator lấy từ identity, không nhận từ client. Tên được so bằng `lower(name)` ở PostgreSQL, không bỏ dấu; cùng tên ở workspace khác được phép.
+- `POST` trả 201; `PATCH` trả 200. Dữ liệu thư mục gồm `{id,name,created_at,updated_at,ready_document_count}` trong envelope chuẩn. `GET /folders` trả 200 với `{items:[...]}`, gồm cả thư mục rỗng, sắp theo `(lower(name),id)`, trả toàn bộ thư mục trong workspace. Số đếm chỉ gồm document có `status=ready` trong chính thư mục/workspace đó.
+- Thành viên đọc được danh sách; chỉ `knowledge_admin` tạo/đổi tên/xóa. Thiếu identity → 401, member ghi → 403; admin thao tác ID không tồn tại/ngoài workspace → 404 `not_found`.
+- `DELETE /folders/{id}` khóa thư mục `FOR UPDATE`, kiểm tra **mọi document row** còn gắn với thư mục (kể cả `deleting`/`deleted`), còn tài liệu → 409 `folder_not_empty`; thư mục rỗng → 200 `{id,deleted:true}`. Khóa này xung đột với FK key-share của thao tác gán đồng thời. FK `SET NULL` là bảo vệ ở tầng DB, không phải quyền xóa thư mục còn tài liệu qua API.
+- Migration `20261118_folders` nối sau `20261103_rag04`: dữ liệu cũ giữ nguyên, `folder_id` ban đầu NULL. Downgrade từ chối nếu còn folder row để tránh mất phân loại âm thầm. API gán/upload/lọc tài liệu thuộc 03-T2; search/chat scope thuộc 03-T3; UI thuộc 03-T4, chưa triển khai ở 03-T1. [Report](docs/folders-20261118.md).
 
 ## 11. UI/UX Specification
 
