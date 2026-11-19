@@ -8,6 +8,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from alembic.config import Config
+from alembic.script import ScriptDirectory
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
 
@@ -282,10 +284,15 @@ def fixture_run(tmp_path, monkeypatch):
     if hasattr(env, "scope"):
         # Independently check the orchestration cleaned its own scope after success/failure.
         engine = create_engine(url, connect_args={"connect_timeout": 5})
+        cfg = Config(str(Path(__file__).resolve().parents[2] / "backend/alembic.ini"))
+        cfg.set_main_option(
+            "script_location", str(Path(__file__).resolve().parents[2] / "backend/alembic")
+        )
         try:
             with engine.connect() as db:
                 assert (
-                    db.scalar(text("select version_num from alembic_version")) == "20261118_folders"
+                    db.scalar(text("select version_num from alembic_version"))
+                    == ScriptDirectory.from_config(cfg).get_current_head()
                 )
                 for table in (
                     "workspaces",

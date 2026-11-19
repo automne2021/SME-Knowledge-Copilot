@@ -69,6 +69,7 @@ def capture_db():
     """Create/migrate only a derived local *_capture_test database, never dev."""
     from alembic import command
     from alembic.config import Config
+    from alembic.script import ScriptDirectory
     from psycopg import sql
 
     settings = get_settings()
@@ -114,7 +115,7 @@ def capture_db():
         with engine.connect() as connection:
             assert (
                 connection.scalar(text("select version_num from alembic_version"))
-                == "20261118_folders"
+                == ScriptDirectory.from_config(cfg).get_current_head()
             )
             assert (
                 connection.scalar(

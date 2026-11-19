@@ -273,18 +273,21 @@ def test_upload_folder_keeps_authorization_and_stream_limits(
     assert not list(storage.rglob("*.*"))
 
 
-def test_register_upload_checks_scope_for_non_api_callers(db_session, people, storage):
-    foreign = folder(db_session, people["other"])
+@pytest.mark.parametrize("target", ["foreign", "missing"])
+def test_register_upload_checks_scope_for_non_api_callers(db_session, people, storage, target):
+    target_id = folder(db_session, people["other"]).id if target == "foreign" else uuid.uuid4()
     path = storage / "test.txt"
     path.write_bytes(b"Policy")
     stored = StoredUpload(
         path, path.name, hashlib.sha256(b"Policy").hexdigest(), 6, uuid.uuid4(), uuid.uuid4()
     )
     with pytest.raises(AppError) as error:
-        register_upload(db_session, people["admin"], path.name, "txt", stored, foreign.id)
+        register_upload(db_session, people["admin"], path.name, "txt", stored, target_id)
     assert error.value.status_code == 404
     assert not path.exists()
     assert db_session.get(Document, stored.document_id) is None
+    assert db_session.get(DocumentRevision, stored.revision_id) is None
+    assert db_session.scalar(select(func.count()).select_from(ProcessingJob)) == 0
 
 
 @pytest.fixture

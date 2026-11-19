@@ -8,12 +8,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_v
 class SearchFilters(BaseModel):
     model_config = ConfigDict(extra="forbid")
     document_ids: list[uuid.UUID] = Field(default_factory=list, max_length=50)
+    folder_ids: list[uuid.UUID] = Field(default_factory=list, max_length=20)
 
-    @field_validator("document_ids")
+    @field_validator("document_ids", "folder_ids")
     @classmethod
     def unique_ids(cls, value):
         if len(value) != len(set(value)):
-            raise ValueError("Document IDs must be distinct")
+            raise ValueError("Filter IDs must be distinct")
         return value
 
 

@@ -34,6 +34,12 @@ from app.services.retrieval import search
 
 
 def input_hash(payload):
+    # Preserve hashes of pre-folder runs when the new filter is absent/empty.
+    folder_scope = (
+        {"folder_ids": sorted(str(key) for key in payload.filters.folder_ids)}
+        if payload.filters.folder_ids
+        else {}
+    )
     return content_hash(
         {
             "session_id": str(payload.session_id),
@@ -41,6 +47,7 @@ def input_hash(payload):
             "mode": payload.retrieval_mode,
             "top_k": payload.top_k,
             "document_ids": sorted(str(key) for key in payload.filters.document_ids),
+            **folder_scope,
         }
     )
 
@@ -259,6 +266,7 @@ def start_run(db, user, payload, settings):
             "candidate_k": settings.retrieval_candidate_k,
             "score_threshold": settings.retrieval_score_threshold,
             "filters": sorted(str(key) for key in payload.filters.document_ids),
+            "folder_ids": sorted(str(key) for key in payload.filters.folder_ids),
         },
     )
     db.add(row)
@@ -394,6 +402,10 @@ def query(
             deadline=deadline,
         )
         remaining(deadline)
+        if "resolved_document_ids" in result["trace"]:
+            run.config_json = run.config_json | {
+                "resolved_document_ids": result["trace"]["resolved_document_ids"]
+            }
         hits = source_state(db, user, result["hits"])
         trace = result["trace"] | {"retrieved_ids": [row["chunk_id"] for row in hits]}
         db.commit()

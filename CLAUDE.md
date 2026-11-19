@@ -110,7 +110,7 @@ docker compose ps --all
 Lưu ý:
 - `backend/alembic.ini` chỉ được chứa ký tự ASCII (Alembic đọc file theo encoding của hệ điều hành trên Windows).
 - Dependency (`DbSession`) dùng `Annotated`, không dùng `Depends()` làm default argument (ruff B008).
-- Migration head trong source là `20261103_rag04`, sau `27b126c3c0bc` (Operations). Kiểm tra head DB thực tế rồi migrate; không sửa revision đã áp dụng, drop dữ liệu legacy hoặc tự chấp nhận autogenerate DROP TABLE. Đọc mapping trong audit.
+- Migration head trong source là `20261118_folders`, sau `20261103_rag04` (RAG), trước đó là `27b126c3c0bc` (Operations). Kiểm tra head DB thực tế rồi migrate; không sửa revision đã áp dụng, drop dữ liệu legacy hoặc tự chấp nhận autogenerate DROP TABLE. Đọc mapping trong audit.
 - Backend dev dùng requirements-dev.lock (include runtime lock); API/worker local E5 cần thêm requirements-worker-cpu.lock trên Windows x64/Python 3.12. Frontend dùng package-lock.json và npm ci. Không install [stt]; tải weights hoặc gọi LLM phải thuộc đợt đã được duyệt.
 
 ## Bảo mật và dữ liệu

@@ -689,6 +689,7 @@ Backend dùng Pydantic với `extra=forbid`, kiểm tra enum, độ dài, eviden
 - Tối đa một query `running` trong một session; request khác trả `409 session_busy`. Hai session khác nhau có thể chạy độc lập. Request timeout/process chết được đánh dấu failed khi quá deadline; không treo busy vô hạn.
 - `client_request_id` do client tạo và giữ khi retry mạng. Cùng ID + cùng input trả run/result đã có; khác input → `409 idempotency_conflict`. Run đang chạy → `409 query_in_progress` + run ID. Muốn thử lại run đã failed phải dùng ID mới.
 - Input hash tính từ question đã trim, session ID, filters chuẩn hóa, retrieval mode và top-k. Resolve idempotency sau auth và trước tạo run mới; fingerprint cấu hình thực thi được pin từ lần đầu. Replay và `GET /chat/runs/{id}` vẫn phải kiểm tra quyền/nguồn hiện tại, áp dụng che answer khi nguồn không còn khả dụng, không trả cached text đã bị xóa.
+- **03-T3 (19/11/2026):** hash thêm `folder_ids` đã sắp xếp khi danh sách không rỗng; bỏ qua/`[]` giữ hash tương thích run cũ. Đổi thứ tự ID không đổi input; thay tập folder với cùng `client_request_id` → 409 `idempotency_conflict`. `config_json` giữ `filters` (document IDs được yêu cầu, tương thích format cũ), `folder_ids` chuẩn hóa và `resolved_document_ids` từ SQL snapshot của lần retrieval thành công (có thể rỗng). Replay không resolve lại folder; run mới resolve lại. Di chuyển folder không phải đổi quyền đọc, nên lịch sử/replay vẫn kiểm tra nguồn theo bất biến hiện hữu, không tự che chỉ vì nguồn chuyển folder.
 - Lưu final message, citations, query status `completed` trong một transaction sau source revalidation. DB commit lỗi → lỗi request; không trả câu trả lời chưa lưu như đã thành công.
 - **Đổi tên/xóa phiên (13/11/2026):** chỉ chủ phiên; admin hoặc người ngoài nhận `404` như phiên không tồn tại. Cả hai lấy cùng khóa `NOWAIT` trên session như query start/publish; khóa đang bị giữ → `409 session_busy`. Xóa trước hết expire run quá deadline; còn run `running` → `409 session_busy` kèm `run_id`. Nếu không, xóa hẳn citations → messages → query runs → session trong một transaction (không soft delete: đây là dữ liệu riêng của người dùng, không cần giữ cho bất biến nào). Tài liệu nguồn không bị ảnh hưởng.
 - P1 mới được rewrite standalone query từ history có giới hạn, lưu query gốc + rewritten query, retrieve lại và kiểm tra quyền hiện tại. Assistant messages cũ không trở thành nguồn tri thức.
@@ -877,7 +878,7 @@ Multipart field bắt buộc là `file`; từ 03-T2 nhận thêm `folder_id` tù
   "query": "Quy trình phê duyệt chiết khấu là gì?",
   "top_k": 5,
   "mode": "dense",
-  "filters": { "document_ids": ["doc_123"] }
+  "filters": { "document_ids": ["doc_123"], "folder_ids": ["folder_123"] }
 }
 ```
 
@@ -915,7 +916,7 @@ Multipart field bắt buộc là `file`; từ 03-T2 nhận thêm `folder_id` tù
   "question": "Hợp đồng trên 100 triệu có được giảm 10% không?",
   "retrieval_mode": "dense",
   "top_k": 5,
-  "filters": { "document_ids": [] }
+  "filters": { "document_ids": [], "folder_ids": [] }
 }
 ```
 
@@ -976,7 +977,8 @@ Multipart field bắt buộc là `file`; từ 03-T2 nhận thêm `folder_id` tù
 ### 10.6. Validation, pagination và status code chi tiết
 
 - Query/question sau trim phải có 1–4.000 ký tự Unicode; vượt token budget vẫn bị chặn theo mục 8.6. Unknown fields bị từ chối (`extra=forbid`), không âm thầm bỏ filter.
-- `filters.document_ids` bỏ qua hoặc `[]` nghĩa là toàn bộ documents `ready` trong workspace. Danh sách có tối đa 50 UUID khác nhau; có ID ngoài quyền → fail toàn request với `404`, không trả phần hợp lệ và vô tình lộ sự tồn tại nguồn khác.
+- `filters.document_ids` bỏ qua hoặc `[]` không giới hạn theo document ID; danh sách có tối đa 50 UUID khác nhau. Có ID ngoài quyền/không tồn tại → fail toàn request với `404`, không trả phần hợp lệ và vô tình lộ sự tồn tại nguồn khác. Với document ID tường minh trong workspace, giữ kiểm tra lifecycle hiện hữu (chưa ready → 409, deleting/deleted → 410), kể cả khi giao với thư mục rỗng.
+- **03-T3:** `filters.folder_ids` bỏ qua hoặc `[]` không giới hạn theo thư mục; tối đa 20 UUID khác nhau. Sai kiểu/UUID, trùng ID hoặc vượt giới hạn → 422. Mọi folder ID phải tồn tại trong workspace, nếu không trả 404 cho cả request trước inference. Sau kiểm tra scope, SQL chọn document ready trong hợp các thư mục tại lúc truy vấn, giao với `document_ids` nếu danh sách này không rỗng. Không có filter nào thì dùng mọi document ready của workspace. Giao rỗng/thư mục không có nguồn ready trả `no_ready_documents`, chat abstain không gọi provider. Không reindex hoặc dùng folder trong vector payload; SQL snapshot quyết định tập generation được gửi sang Qdrant. `trace.resolved_document_ids` ghi tập document trong snapshot, trước kiểm fingerprint/ranking/top-k; đây không phải danh sách hit cuối.
 - Chỉ định document đang queued/processing/failed/needs_ocr → `409 document_not_ready`; deleting/deleted → `410 source_unavailable`. Chỉ search toàn workspace thì tự loại nguồn chưa ready và trả `hits=[]` khi không có nguồn.
 - `mode/retrieval_mode='dense'` là duy nhất trong P0. Backend kiểm tra các tính năng đang bật, client không được tự chọn model/provider URL, collection name hay workspace.
 - List documents/sessions/messages dùng cursor opaque, `limit` mặc định 20, tối đa 100; thứ tự ổn định `(created_at,id)`. Response `{data:{items,next_cursor},request_id}`; cursor sai trả `422`. Messages được hiển thị theo thời gian tăng dần.
@@ -1033,7 +1035,7 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 
 ---
 
-### 10.8. Thư mục tài liệu — 03-T1/T2 (18–19/11/2026)
+### 10.8. Thư mục tài liệu — 03-T1/T2/T3 (18–19/11/2026)
 
 - `POST /folders` và `PATCH /folders/{id}` nhận JSON `{name}`; trim whitespace, dài 1–100 ký tự Unicode; sai kiểu, thiếu tên hoặc field ngoài contract → 422. Workspace và creator lấy từ identity, không nhận từ client. Tên được so bằng `lower(name)` ở PostgreSQL, không bỏ dấu; cùng tên ở workspace khác được phép.
 - `POST` trả 201; `PATCH` trả 200. Dữ liệu thư mục gồm `{id,name,created_at,updated_at,ready_document_count}` trong envelope chuẩn. `GET /folders` trả 200 với `{items:[...]}`, gồm cả thư mục rỗng, sắp theo `(lower(name),id)`, trả toàn bộ thư mục trong workspace. Số đếm chỉ gồm document có `status=ready` trong chính thư mục/workspace đó.
@@ -1042,6 +1044,7 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 - Migration `20261118_folders` nối sau `20261103_rag04`: dữ liệu cũ giữ nguyên, `folder_id` ban đầu NULL. Downgrade từ chối nếu còn folder row để tránh mất phân loại âm thầm. API gán/upload/lọc tài liệu thuộc 03-T2; search/chat scope thuộc 03-T3; UI thuộc 03-T4, chưa triển khai ở 03-T1. [Report](docs/folders-20261118.md).
 - **03-T2:** `PATCH /documents/{id}` chỉ cho admin, nhận đúng JSON `{folder_id: UUID | null}` (bắt buộc có key); null bỏ phân loại, UUID gán/chuyển thư mục, gán lại cùng thư mục được phép. Trả 200 với metadata tài liệu; thiếu/sai field → 422, chưa đăng nhập → 401, member ghi → 403. Document hoặc folder không tồn tại/ngoài workspace → 404 `not_found`; document trong workspace đang `deleting`/`deleted` → 410 `source_unavailable` khi folder đích hợp lệ. Gán thư mục không tạo revision/job, không đổi lifecycle/generation và không reindex.
 - **Upload theo thư mục:** folder được kiểm tra scope và khóa `FOR KEY SHARE` trong transaction đăng ký document/revision/job; khóa giữ tới commit, phối hợp với khóa xóa folder của T1. ID không tồn tại/ngoài workspace → 404; lỗi đăng ký trước commit dọn file và không để lại metadata/job. Dedup vẫn theo hash/workspace, không theo folder: upload trùng sang thư mục khác trả 409 và không tự chuyển tài liệu cũ.
+- **03-T3 — Search/chat:** `POST /search` và `POST /chat/query` dùng chung `filters.folder_ids` theo mục 10.6; idempotency/config snapshot theo mục 8.8. Folder chỉ là nhóm tài liệu, chưa có quyền riêng. Request mới phản ánh phân loại mới nhất tại SQL snapshot; replay giữ tập nguồn lịch sử và tiếp tục kiểm tra nguồn hiện tại. UI chọn thư mục thuộc 03-T4, chưa triển khai trong T3.
 - **Danh sách theo thư mục:** mọi thành viên dùng `GET /documents?folder_id=<UUID>`; lọc bằng SQL trước sắp xếp/limit, trả cả trạng thái chưa ready và `deleting` như danh sách hiện hữu, loại `deleted`. Không gửi filter thì giữ danh sách toàn workspace; thư mục hợp lệ rỗng trả `{items:[]}`, không tồn tại/ngoài workspace → 404, UUID sai/rỗng → 422. Tham số này chỉ lọc danh sách quản lý; search/chat folder scope thuộc T3. T2 dùng schema T1, không có migration mới. [Report T2](docs/folders-20261119.md).
 
 ## 11. UI/UX Specification

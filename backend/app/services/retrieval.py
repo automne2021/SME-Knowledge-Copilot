@@ -10,7 +10,7 @@ import uuid
 from sqlalchemy import select
 
 from app.core.errors import AppError
-from app.models import Chunk, Document, DocumentRevision
+from app.models import Chunk, Document, DocumentRevision, Folder
 from app.services.chunking import E5TokenCounter
 from app.services.embeddings import LocalEmbedder, content_hash, frozen_profile, validate_vectors
 from app.services.vectors import QdrantIndex
@@ -37,7 +37,17 @@ class RetrievalRuntime:
         self.vector.close()
 
 
-def _snapshots(db, workspace_id, ids):
+def _snapshots(db, workspace_id, ids, folder_ids=()):
+    if folder_ids:
+        found = set(
+            db.scalars(
+                select(Folder.id).where(
+                    Folder.workspace_id == workspace_id, Folder.id.in_(folder_ids)
+                )
+            )
+        )
+        if found != set(folder_ids):
+            raise AppError(404, "not_found", "Không tìm thấy tài nguyên.")
     if ids:
         documents = db.execute(
             select(Document.id, Document.status).where(
@@ -71,6 +81,8 @@ def _snapshots(db, workspace_id, ids):
     )
     if ids:
         statement = statement.where(Document.id.in_(ids))
+    if folder_ids:
+        statement = statement.where(Document.folder_id.in_(folder_ids))
     return [dict(row) for row in db.execute(statement).mappings()]
 
 
@@ -79,7 +91,9 @@ def search(db, user, payload, settings, runtime_factory, deadline=None):
     workspace_id = user.workspace_id
     if payload.mode != "dense":
         raise AppError(422, "unsupported_retrieval_mode", "P0 chỉ hỗ trợ dense retrieval.")
-    snapshots = _snapshots(db, workspace_id, payload.filters.document_ids)
+    snapshots = _snapshots(
+        db, workspace_id, payload.filters.document_ids, payload.filters.folder_ids
+    )
     # End the read/auth transaction before model/native/network work. The service owns
     # this boundary; callers must commit their own run setup before invoking retrieval.
     db.commit()
@@ -94,6 +108,7 @@ def search(db, user, payload, settings, runtime_factory, deadline=None):
         "below_threshold_count": 0,
         "eligible_document_count": 0,
         "score_threshold": settings.retrieval_score_threshold,
+        "resolved_document_ids": sorted(str(row["id"]) for row in snapshots),
     }
 
     def response(hits, reason, embedding=0.0, retrieval=0.0, sql=0.0):

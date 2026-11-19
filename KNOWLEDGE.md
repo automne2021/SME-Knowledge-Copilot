@@ -96,6 +96,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 - **Model (K-029, K-050):** `intfloat/multilingual-e5-small`, 384 chiều, revision `614241f6…`, fingerprint SHA-256 của 6 file, `trust_remote_code=False`, chỉ đọc cache local (thiếu cache là lỗi, không tự tải). Mean pooling theo attention mask rồi chuẩn hóa L2. `truncation=False`: input > 512 token bị từ chối (để không âm thầm cắt mất điều kiện). Chạy trong một child process lâu dài; timeout 120 s mỗi batch thì kill. Vector NaN, toàn 0 hoặc sai chiều bị từ chối trước khi vào Qdrant. Fingerprint gồm cả pooling/prefix/dtype: hai model cùng 384 chiều vẫn là hai không gian khác nhau.
 - **PostgreSQL là nguồn sự thật, Qdrant chỉ tìm ứng viên (K-004):** payload Qdrant chỉ chứa ID; text, tên file, vị trí lấy từ SQL.
 - **Hai lớp lọc (K-055):** Qdrant lọc workspace + generation + index version; sau đó SQL đọc lại ứng viên để kiểm `ready`/active/lifecycle hiện tại. Nếu chỉ lọc sau retrieval, vector cũ hoặc ngoài quyền có thể chiếm hết suất ứng viên.
+- **Phạm vi thư mục (K-117, 03-T3):** SQL xác minh toàn bộ folder thuộc workspace rồi resolve document ready trong hợp các folder, giao với document IDs tường minh. Giữ validation lifecycle của document IDs trước khi lấy giao; scope sai không bị che bởi kết quả rỗng. Gửi generation đã resolve vào bộ lọc Qdrant, không nhân bản folder payload hoặc reindex khi chuyển thư mục. Query mới đọc lại SQL; snapshot không phải quyền truy cập theo folder. [Retrieval](backend/app/services/retrieval.py), [test tích hợp](backend/tests/test_folder_scope.py).
 - **Tham số:** candidate 20, top 5, cosine, **không có ngưỡng score**. Transaction đọc/auth kết thúc trước khi gọi model hay Qdrant. Model nạp lazy khi có tài liệu hợp lệ; đang bận thì trả 429 thay vì xếp hàng vô hạn.
 - **Mã lỗi theo scope:** ID ngoài quyền hoặc không tồn tại → 404; tài liệu của mình chưa ready → 409; đang xóa → 410; lỗi kỹ thuật → 503 `retrieval_unavailable`.
 - **Mở nguồn an toàn (K-057):** kiểm workspace/status trước khi đọc file; chỉ phục vụ revision active; PDF trả bytes gốc, TXT/MD trả `text/plain` + `nosniff`, DOCX trả text đã trích; `no-store`, CSP sandbox, tên file được làm sạch, path phải nằm trong storage root; checksum sai hay file mất → 410.
@@ -124,6 +125,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 - **Repair tối đa 1 lần** trên cùng context; sai lần hai → 502. **Không** xóa citation sai rồi giữ kết luận (kết luận khi đó mất chứng cứ).
 - **Deadline và lỗi (K-065, K-105):** HTTPX timeout theo phase không chặn tổng thời gian, nên bọc `asyncio.timeout`. Mỗi lời gọi tối đa **60 s** (trước 13/11 là 120 s), cả câu hỏi tối đa 150 s. Lỗi kỹ thuật → 503/504, chỉ thiếu bằng chứng thật mới là `insufficient_evidence` (200). Lỗi provider giữ mã `model_unavailable` kèm `details.reason`: `quota` (429), `overloaded` (5xx), `rejected` (4xx khác), `network`. Không tự retry.
 - **Idempotency và đồng thời (K-064):** hash gồm câu hỏi đã trim + session + filter + mode + top-k; unique `(session, client_request_id)`; partial unique cho run đang chạy → mỗi session tối đa 1 câu đang chạy. Không giữ lock khi gọi model. Lúc publish: khóa tài liệu theo thứ tự UUID, kiểm tra lại, ghi message + citations + completed trong 1 transaction. Mất xác nhận commit thì replay tìm thấy kết quả đã lưu, không gọi model lần hai.
+- **Folder snapshot/replay (K-117):** hash thêm tập folder đã sắp xếp; chỉ thêm khi không rỗng để request cũ vẫn replay sau cập nhật. Config giữ `filters` cũ, thêm `folder_ids` và `resolved_document_ids` từ retrieval thành công, kể cả scope rỗng; ID đã resolve không phải final hits. Replay không resolve lại folder vì di chuyển là metadata, chưa phải đổi quyền; nguồn vẫn được revalidate theo ready/revision/generation/deletion như trước. Thay hash của cả request không chọn folder sẽ phá retry run cũ; lưu folder ở Qdrant sẽ tạo bài toán đồng bộ chưa cần. [Chat](backend/app/services/chat.py), [contract](SME_Knowledge_Copilot_RAG_Specification.md#88-session-query-run-và-câu-hỏi-nối-tiếp).
 - **Prompt injection (K-099):** tài liệu được bao bằng delimiter, model không có công cụ. Khi test, phải **chứng minh nội dung tấn công thực sự nằm trong context gửi đi** trước khi kết luận model "đã bỏ qua" nó.
 
 **Tự kiểm tra**
@@ -287,6 +289,7 @@ POST /chat/query ─► kiểm tra chủ phiên, idempotency (client_request_id)
 - **Line ending (K-028, K-101):** `core.autocrlf=true` làm hash theo bytes khác sau commit dù nội dung không đổi; `.gitattributes` đặt `-text` cho dữ liệu đã hash. Release phải nói rõ hash theo bytes hay theo nội dung.
 - **DB test an toàn (K-015):** guard fail-closed: driver đúng, host loopback hoặc `db`, tên kết thúc `_test` và khác DB dev, URL không có query string.
 - **Migration (K-037):** chỉ bổ sung, không xóa dữ liệu legacy; autogenerate không tự viết backfill/CHECK nên phải review; downgrade có guard từ chối khi đã có dữ liệu RAG.
+- **Assertion migration head (K-117):** test eval dùng `ScriptDirectory.from_config(...).get_current_head()` so với `alembic_version`, giữ phát hiện drift nhưng không sửa literal mỗi lần thêm migration. `get_current_head()` cũng báo lỗi nếu có nhiều head; chưa hỗ trợ nhiều nhánh migration. `CLAUDE.md` ghi head source `20261118_folders`, không suy ra DB development đã migrate. [Capture test](eval/tests/test_runtime_capture_sql.py), [runner test](eval/tests/test_final_runner_sql.py).
 - **Git (K-061):** quét secret trên **bytes đã stage**; quét theo giá trị thật trong `.env` bắt được mật khẩu tự đặt mà regex bỏ sót (K-104); không force-push.
 - **Ngân sách model (K-031 → K-034, K-095):** 0 USD, free tier, không fallback trả phí. Key ≠ billing tier ≠ quota; quota tính theo project (tạo key mới không tăng quota). Quota ngày làm mới lúc 0 giờ giờ Thái Bình Dương (khoảng 15:00 giờ Việt Nam). Chi phí chưa đối soát hóa đơn ghi `null`, không ghi 0.
 
@@ -380,14 +383,14 @@ Mức học: **in đậm** = nên đọc chi tiết trong archive; thường = �
 |---|---|
 | Tổng quan, kiến trúc | **K-001**, **K-004**, K-009 |
 | Ingestion | **K-003**, **K-043**, **K-044**, **K-045**, **K-046**, **K-051**, **K-116** |
-| Embedding, retrieval, mở nguồn | **K-002**, **K-029**, **K-030**, **K-050**, **K-055**, **K-056**, **K-057**, **K-059** |
-| Context, sinh câu trả lời, trích dẫn | **K-006**, K-031, **K-035**, **K-062**, **K-063**, **K-065**, **K-099** |
+| Embedding, retrieval, mở nguồn | **K-002**, **K-029**, **K-030**, **K-050**, **K-055**, **K-056**, **K-057**, **K-059**, **K-117** |
+| Context, sinh câu trả lời, trích dẫn | **K-006**, K-031, **K-035**, **K-062**, **K-063**, **K-065**, **K-099**, **K-117** |
 | Worker, đồng thời | **K-005**, **K-038**, **K-049**, **K-052**, **K-064**, **K-070**, **K-071**, **K-116** |
 | Xóa, quyền riêng tư | **K-008**, **K-068**, **K-069** |
 | Auth, phân quyền | **K-015**, **K-039**, **K-040**, K-041, **K-078**, **K-115**, **K-116** |
 | Đánh giá | **K-007**, **K-022**, **K-023**, K-024, **K-025**, **K-027**, **K-047**, **K-058**, **K-066**, **K-067**, **K-086**, **K-087**, **K-088**, K-089, **K-090**, K-091, **K-092**, **K-093**, K-094, **K-095**, **K-096**, **K-097**, K-098, K-100 |
 | Frontend, UX | K-076, K-077, **K-079**, **K-080**, **K-081**, K-082, **K-083**, **K-105** |
-| Vận hành, môi trường | K-013, K-014, K-016, K-017 *(lịch sử)*, K-018, **K-019**, K-020, K-021, K-028, **K-037**, **K-061**, **K-074**, K-075, K-084, K-085, **K-101**, **K-102**, K-104 |
+| Vận hành, môi trường | K-013, K-014, K-016, K-017 *(lịch sử)*, K-018, **K-019**, K-020, K-021, K-028, **K-037**, **K-061**, **K-074**, K-075, K-084, K-085, **K-101**, **K-102**, K-104, **K-117** |
 | Model và chi phí | K-031, K-033, K-034, **K-095** |
 | Quy trình, tiến độ | K-010, K-011, K-012, K-026, K-032 *(lịch sử)*, K-036, K-042 *(lịch sử)*, K-048 *(lịch sử)*, K-053, K-054, K-060 *(lịch sử)*, K-072 *(lịch sử)*, K-073 *(lịch sử)*, K-103 |
 
@@ -472,3 +475,11 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - Gán/bỏ folder qua admin PATCH, upload tùy chọn và list filter trước limit; metadata trả `folder_id`. Dùng key-share folder rồi khóa/read lại document thay vì check-then-update hoặc khóa độc quyền mọi lần gán; không đổi lifecycle/revision/vector, không reindex. [Service](backend/app/services/documents.py).
 - Upload giữ transaction document/revision/job, cleanup file khi scope sai và dedup theo workspace/hash. Hai assertion eval đổi sang revision T1, giữ kiểm tra schema/cleanup; bổ sung được duyệt đồng bộ test late-upsert bằng tín hiệu `LeaseLost` sau nhả SQL lock, không đổi production hoặc metric/inference.
 - Backend cuối **385/385**, targeted **86/86** (34 test T2), cleanup chạy lặp **5/5**, eval **443/443**, Ruff backend/eval đạt. Giữ lịch sử lỗi cleanup trước sửa và Qdrant setup timeout trong report, không tuyên bố loại bỏ mọi lỗi timing. 0 Gemini/0 USD; chưa T3/UI/migrate development. [Bằng chứng và giới hạn](docs/folders-20261119.md).
+
+### K-117 — Resolve folder scope bằng SQL và giữ replay tương thích
+
+19/11/2026 · Retrieval, idempotency, kiểm thử · 03-T3 đã triển khai và kiểm chứng.
+- Resolve hợp folder rồi giao document IDs trước Qdrant; kiểm tra toàn bộ scope/lifecycle trước khi lấy giao để không che lỗi bằng scope rỗng. Không đồng bộ folder payload hoặc reindex vì SQL đã là nguồn phân loại; cân nhắc lại khi có quyền riêng theo folder. [Code](backend/app/services/retrieval.py).
+- Hash folder đã sort, bỏ key mới khi không chọn folder để giữ hash run cũ; config lưu folder và document snapshot sau retrieval thành công. Replay giữ phạm vi lịch sử, nguồn vẫn revalidate; query mới resolve lại. Không hash danh sách document đã resolve vì dữ liệu chuyển folder không được biến retry cùng input thành conflict. [Chat](backend/app/services/chat.py).
+- Cleanup upload missing/foreign đã có ở T2; mở rộng test service trực tiếp và kiểm tra cả revision/job, không sửa production khi chưa có lỗi tái hiện. Hai test eval đọc Alembic head qua `ScriptDirectory`, vẫn đối chiếu revision SQL; tránh literal drift khi có migration tiếp theo.
+- Backend cuối **418/418** (32 ca scope mới, 1 upload service bổ sung), eval **443/443**, Ruff đạt. Targeted đầu 107/107 trước bốn ca biên bổ sung; full kiểm chứng bản cuối. 0 Gemini/0 USD, chưa UI hoặc migrate development. [Report](docs/folders-20261119.md#03-t3--lọc-theo-thư-mục-khi-search-và-chat).
