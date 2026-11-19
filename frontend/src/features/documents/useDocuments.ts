@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../api";
 import { isAbort } from "../../api/client";
 import type { Job, KnowledgeDocument } from "../../api/types";
-export function useDocuments() {
+export function useDocuments(folderId?: string) {
   const [items, setItems] = useState<KnowledgeDocument[]>([]),
     [jobs, setJobs] = useState<Record<string, Job>>({});
   const [error, setError] = useState<unknown>(null),
@@ -16,7 +16,7 @@ export function useDocuments() {
     const next = new AbortController();
     controller.current = next;
     try {
-      const docs = await api.documents(next.signal);
+      const docs = await api.documents(next.signal, folderId);
       const results = await Promise.allSettled(
         docs.items
           .filter((d) => d.latest_job_id)
@@ -36,8 +36,9 @@ export function useDocuments() {
     } finally {
       if (!next.signal.aborted) setLoading(false);
     }
-  }, []);
+  }, [folderId]);
   useEffect(() => {
+    setLoading(true);
     void load();
     // "focus" and "visibilitychange" both fire on tab return; load once, in the background.
     let timer: ReturnType<typeof setTimeout> | undefined;

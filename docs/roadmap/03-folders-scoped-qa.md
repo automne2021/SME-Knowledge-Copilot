@@ -17,6 +17,7 @@
 - T1 dùng FK đơn `SET NULL` và FK kép bảo vệ workspace; xóa API kiểm tra mọi document row còn tham chiếu, kể cả tombstone. Bộ đếm ready không quyết định thư mục rỗng.
 - Sau 03-T2 (19/11/2026), PATCH gán/bỏ thư mục, upload tùy chọn và list filter đã triển khai/kiểm chứng: backend 385/385, eval tooling 443/443, Ruff đạt. Bổ sung đồng bộ test cleanup được người dùng duyệt riêng, test chạy lặp 5/5 đạt. Search/chat scope thuộc T3; UI thuộc T4. [Report T2](../folders-20261119.md).
 - Sau 03-T3 (19/11/2026), search/chat nhận `filters.folder_ids`, SQL resolve scope, giao document IDs, hash folder chuẩn hóa và config lưu tập document đã resolve; backend 418/418, eval 443/443, Ruff đạt. Ba mục review đã kiểm chứng/đồng bộ: cleanup upload missing folder, head trong CLAUDE, assertion eval đọc Alembic head. UI T4 và migrate DB development chưa thực hiện. [Report T3](../folders-20261119.md#03-t3--lọc-theo-thư-mục-khi-search-và-chat).
+- Sau 03-T4 (19/11/2026), UI quản lý/lọc/gán/upload thư mục và chọn scope hỏi đáp đã triển khai; frontend 74/74, backend 418/418, lint/build/format/Ruff đạt. Kiểm tra trực quan bị Computer Use chặn URL policy; chưa kiểm chứng layout/E2E thật, chưa migrate DB development. [Report T4](../folders-20261119.md#03-t4--ui-thư-mục-tài-liệu-và-phạm-vi-hỏi-đáp).
 - Chat đã có `filters.document_ids`, tối đa 50 ID, được kiểm tra trong `retrieval._snapshots`.
 - UI có bộ chọn tài liệu (`ChatPage.tsx`, phần `document-picker`) và chip phạm vi.
 
@@ -71,6 +72,8 @@
   - Replay cùng `client_request_id` nhưng khác `folder_ids` trả 409 `idempotency_conflict`.
 
 ### T4 — UI
+
+**Hoàn tất phần triển khai và kiểm chứng tự động 19/11/2026:** frontend 74/74 (+25 test), targeted cuối 21/21, backend 418/418; lint/build/format/Ruff đạt. Có xác nhận đổi tên/xóa, phân quyền UI, API scope/pending và ca lỗi; không gọi Gemini. Kiểm tra trình duyệt thật bị công cụ chặn, không coi jsdom là nghiệm thu layout/human review. DB development chưa migrate. [Bằng chứng và giới hạn](../folders-20261119.md#03-t4--ui-thư-mục-tài-liệu-và-phạm-vi-hỏi-đáp).
 
 - Trang Tài liệu và bộ chọn phạm vi như ở phần Thiết kế.
 - **Test frontend:** chọn thư mục thì request gửi đúng `folder_ids`; đổi tên hoặc xóa thư mục có xác nhận.

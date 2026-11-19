@@ -11,8 +11,10 @@ import { AnswerView } from "../features/chat/AnswerView";
 import { useChat } from "../features/chat/useChat";
 import { savePending } from "../features/chat/pending";
 import { SOURCE_UNAVAILABLE } from "../features/sources/SourcePanel";
+import { useFolders } from "../features/folders/useFolders";
+import { ScopePicker } from "../features/folders/ScopePicker";
 import { SUGGESTED_QUESTIONS } from "../features/chat/suggestions";
-import { ArrowUp, BookOpenCheck, Clock, Files, Funnel, LoaderCircle, X } from "lucide-react";
+import { ArrowUp, BookOpenCheck, Clock, Files, LoaderCircle } from "lucide-react";
 import { clock, useElapsed } from "../hooks/useElapsed";
 import { failureCopy, QUERY_DEADLINE_SECONDS, SLOW_AFTER_SECONDS } from "../features/chat/failure";
 export default function ChatPage() {
@@ -26,7 +28,13 @@ function Conversation({ sessionId }: { sessionId?: string }) {
     location = useLocation();
   const chat = useChat(user!.id, sessionId);
   const [draft, setDraft] = useState(""),
-    [selected, setSelected] = useState<string[]>([]);
+    [selected, setSelected] = useState<string[]>(
+      () => chat.pending?.payload.filters.document_ids ?? [],
+    );
+  const [selectedFolders, setSelectedFolders] = useState<string[]>(
+    () => chat.pending?.payload.filters.folder_ids ?? [],
+  );
+  const folders = useFolders();
   const [documents, setDocuments] = useState<KnowledgeDocument[]>([]),
     [docError, setDocError] = useState<unknown>(null);
   const [creating, setCreating] = useState(false),
@@ -72,7 +80,12 @@ function Conversation({ sessionId }: { sessionId?: string }) {
     if (chat.failedQuestion && !chat.pending && !chat.busy) setDraft(chat.failedQuestion);
   }, [chat.failedQuestion, chat.pending, chat.busy]);
   const ready = documents.filter((d) => d.status === "ready");
-  const unavailable = selected.some((id) => !ready.some((d) => d.id === id));
+  const unavailableFolders =
+    selectedFolders.length > 0 &&
+    (folders.loading ||
+      Boolean(folders.error) ||
+      selectedFolders.some((id) => !folders.items.some((f) => f.id === id)));
+  const unavailable = selected.some((id) => !ready.some((d) => d.id === id)) || unavailableFolders;
   const capped = chat.messages.length >= 98;
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -105,7 +118,7 @@ function Conversation({ sessionId }: { sessionId?: string }) {
           client_request_id: crypto.randomUUID(),
           question,
           retrieval_mode: "dense" as const,
-          filters: { document_ids: [...selected] },
+          filters: { document_ids: [...selected], folder_ids: [...selectedFolders] },
         };
         savePending(user!.id, session.id, { payload, startedAt: Date.now() });
         workspace.refreshSessions();
@@ -124,7 +137,7 @@ function Conversation({ sessionId }: { sessionId?: string }) {
           client_request_id: crypto.randomUUID(),
           question,
           retrieval_mode: "dense",
-          filters: { document_ids: [...selected] },
+          filters: { document_ids: [...selected], folder_ids: [...selectedFolders] },
         });
       } finally {
         submitLock.current = false;
@@ -140,7 +153,6 @@ function Conversation({ sessionId }: { sessionId?: string }) {
     });
   const busy = chat.busy || creating;
   const elapsed = useElapsed(busy ? (chat.pending?.startedAt ?? null) : null);
-  const chosen = selected.map((id) => documents.find((d) => d.id === id));
   // The question is saved server-side as soon as the run starts, before the answer exists and
   // before the client knows the run ID. Once history contains it, stop drawing the local bubble.
   const pendingSaved =
@@ -335,8 +347,17 @@ function Conversation({ sessionId }: { sessionId?: string }) {
             Danh sách nguồn có thể chưa cập nhật.
           </Feedback>
         )}
+        {folders.loading && <Loading label="Đang tải thư mục…" />}
+        {folders.error !== null && <ErrorFeedback error={folders.error} retry={folders.refresh} />}
         {unavailable && (
-          <Feedback title="Một số tài liệu đã chọn không còn sẵn sàng" kind="warning">
+          <Feedback
+            title={
+              unavailableFolders
+                ? "Chưa xác minh được thư mục đã chọn"
+                : "Một số tài liệu đã chọn không còn sẵn sàng"
+            }
+            kind="warning"
+          >
             Hãy chọn lại phạm vi tài liệu trước khi gửi câu hỏi.
           </Feedback>
         )}
@@ -355,67 +376,16 @@ function Conversation({ sessionId }: { sessionId?: string }) {
           </Feedback>
         )}
         <form onSubmit={submit} aria-busy={busy}>
-          <details className="document-picker">
-            <summary>
-              <Funnel size={14} aria-hidden="true" />
-              Phạm vi:{" "}
-              {selected.length ? `${selected.length} tài liệu đã chọn` : "Tất cả tài liệu sẵn sàng"}
-            </summary>
-            <div className="document-options">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={selected.length === 0}
-                  onChange={() => setSelected([])}
-                  disabled={busy || Boolean(chat.pending)}
-                />
-                Tất cả tài liệu sẵn sàng
-              </label>
-              {ready.map((doc) => (
-                <label key={doc.id}>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(doc.id)}
-                    disabled={busy || Boolean(chat.pending)}
-                    onChange={(e) =>
-                      setSelected((current) =>
-                        e.target.checked
-                          ? [...current, doc.id]
-                          : current.filter((id) => id !== doc.id),
-                      )
-                    }
-                  />
-                  <span>{doc.filename}</span>
-                </label>
-              ))}
-              {ready.length === 0 && <p className="hint">Chưa có tài liệu sẵn sàng.</p>}
-              {documents.length === 100 && (
-                <p className="hint">
-                  Bộ chọn hiện hiển thị trong 100 tài liệu đã tải. “Tất cả” vẫn tìm trên toàn bộ tài
-                  liệu sẵn sàng của workspace.
-                </p>
-              )}
-            </div>
-          </details>
-          {selected.length > 0 && (
-            <ul className="scope-chips" aria-label="Tài liệu đang hỏi">
-              {chosen.map((doc, i) => (
-                <li key={selected[i]}>
-                  <span>{doc?.filename ?? "Tài liệu không còn trong danh sách"}</span>
-                  <button
-                    type="button"
-                    aria-label={`Bỏ ${doc?.filename ?? "tài liệu"} khỏi phạm vi`}
-                    disabled={busy || Boolean(chat.pending)}
-                    onClick={() =>
-                      setSelected((current) => current.filter((id) => id !== selected[i]))
-                    }
-                  >
-                    <X size={14} aria-hidden="true" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ScopePicker
+            documents={ready}
+            documentCount={documents.length}
+            folders={folders.items}
+            selected={selected}
+            selectedFolders={selectedFolders}
+            setSelected={setSelected}
+            setSelectedFolders={setSelectedFolders}
+            disabled={busy || Boolean(chat.pending)}
+          />
           <div className="composer-box">
             <label htmlFor="question" className="sr-only">
               Câu hỏi của bạn

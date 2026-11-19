@@ -1051,8 +1051,8 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 
 ### 11.1. Main screens
 
-1. **Documents:** upload, drag-and-drop, list, filter by status, xem lỗi index, xóa.
-2. **Knowledge Chat:** hỏi đáp, lịch sử trong phiên, loading states, citations nằm cạnh đoạn trả lời.
+1. **Documents:** upload, drag-and-drop, list, filter by status, xem lỗi index, xóa; từ 03-T4 có cột thư mục/“Chưa phân loại”, lọc thư mục qua API, admin tạo/đổi tên/xóa thư mục và chuyển/bỏ phân loại tài liệu. Upload chọn thư mục tùy chọn, mặc định theo bộ lọc hiện tại.
+2. **Knowledge Chat:** hỏi đáp, lịch sử trong phiên, loading states, citations nằm cạnh đoạn trả lời; từ 03-T4 bộ chọn phạm vi có hai lựa chọn Tài liệu/Thư mục và chip tên nguồn đã chọn.
 3. **Source Preview:** modal/panel xem text snippet hoặc PDF tại trang có nguồn.
 4. **Search / Retrieval Inspector:** hiển thị chunks, scores, source metadata, stage timings (đặt P0 ở API, P1 cho UI nâng cao).
 5. **Evaluation (P1 UI):** xem báo cáo thí nghiệm; P0 có thể xuất markdown/CSV qua CLI.
@@ -1065,6 +1065,8 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 - Khi tài liệu chưa index xong, báo trạng thái và không trộn vào search.
 - Khi lỗi upload/model/retrieval, hiển thị error state rõ ràng và đường thử lại.
 - Không hiển thị “confidence 90%” khi chỉ có cosine similarity score.
+- **03-T4 — Phạm vi thư mục:** gửi `filters.folder_ids` tối đa 20 ID, đồng thời giữ `document_ids` tối đa 50 ID; các folder được hợp, sau đó giao với tài liệu tường minh theo backend. “Tất cả” xóa cả hai lựa chọn. Chọn folder không có nguồn ready vẫn gửi folder ID, không tự chuyển về toàn workspace. Folder bị mất hoặc chưa xác minh được sau lỗi tải danh sách giữ chip và chặn câu hỏi mới đến khi người dùng chọn lại; retry pending giữ nguyên payload và `client_request_id`, không resolve lại bằng danh sách UI.
+- **03-T4 — Vòng đời UI:** tải lại thư mục khi quay về tab, thay đổi thư mục hoặc tài liệu trong tab; đổi tên cập nhật tên chip theo ID. Pending cũ không có `folder_ids` vẫn phục hồi được; pending mới lưu nguyên tập folder và document đã chọn. UI không tự resolve folder từ tối đa 100 document đã tải.
 
 ### 11.3. Screen states và thao tác bắt buộc
 
@@ -1077,6 +1079,8 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 | Ready có warning | Cho phép hỏi, kèm cảnh báo trang scan bị bỏ qua | Không gọi tài liệu là đã đọc đầy đủ |
 | Failed/needs_ocr | Lỗi tiếng Việt, nút retry chỉ khi hợp lệ | Scan hướng dẫn dùng bản có text |
 | Deleting/deleted | Ẩn khỏi bộ chọn nguồn; hiện cleanup state cho admin | Delete cần xác nhận tên tài liệu, không báo xóa vật lý xong ngay |
+| Folder management (03-T4) | Member chỉ đọc/lọc; admin tạo, đổi tên và xóa có hộp thoại xác nhận; chuyển hoặc bỏ phân loại tài liệu khi chưa deleting/deleted | Lỗi 409 `duplicate_folder`/`folder_not_empty` hiển thị tiếng Việt và giữ dialog; số ready không dùng để suy thư mục rỗng |
+| Folder list (03-T4) | Lọc server trước limit 100, giữ bộ lọc khi kết quả rỗng; đổi filter hủy request cũ và bỏ response đến trễ | Upload chưa phân loại bỏ field multipart `folder_id`; bỏ phân loại qua PATCH gửi JSON null |
 | Chat loading | “Đang tìm tài liệu và soạn câu trả lời”, đồng hồ đếm giây từ lúc gửi và khoảng thời gian thường gặp; giữ câu hỏi nếu lỗi | Không giả các bước con vì `/chat/query` trả một lần; không hiển thị draft trước citation validation |
 | History | Phiên của người dùng nhóm theo ngày (Asia/Ho_Chi_Minh), tìm theo tên, đổi tên, xóa có hộp xác nhận | Xóa phiên đang mở thì quay về màn hình hỏi mới |
 | Chat partial | Tách phần có nguồn và thông tin còn thiếu | Cảnh báo mâu thuẫn khi có, không tự chọn bên đúng |

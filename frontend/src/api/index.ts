@@ -5,6 +5,7 @@ import type {
   ChatQuery,
   ChatSession,
   DocumentOperation,
+  Folder,
   Job,
   KnowledgeDocument,
   SourceChunk,
@@ -22,14 +23,35 @@ export const api = {
     }),
   me: (signal?: AbortSignal) => apiFetch<User>("/auth/me", { signal }),
   logout: () => apiFetch<{ revoked: boolean }>("/auth/logout", { method: "POST", timeout: 5000 }),
-  documents: (signal?: AbortSignal) =>
-    apiFetch<{ items: KnowledgeDocument[] }>("/documents?limit=100", { signal }),
+  folders: (signal?: AbortSignal) => apiFetch<{ items: Folder[] }>("/folders", { signal }),
+  createFolder: (name: string, signal?: AbortSignal) =>
+    apiFetch<Folder>("/folders", { method: "POST", body: JSON.stringify({ name }), signal }),
+  renameFolder: (key: string, name: string, signal?: AbortSignal) =>
+    apiFetch<Folder>(`/folders/${id(key)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ name }),
+      signal,
+    }),
+  deleteFolder: (key: string, signal?: AbortSignal) =>
+    apiFetch<{ id: string; deleted: boolean }>(`/folders/${id(key)}`, { method: "DELETE", signal }),
+  moveDocument: (key: string, folderId: string | null, signal?: AbortSignal) =>
+    apiFetch<KnowledgeDocument>(`/documents/${id(key)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ folder_id: folderId }),
+      signal,
+    }),
+  documents: (signal?: AbortSignal, folderId?: string) =>
+    apiFetch<{ items: KnowledgeDocument[] }>(
+      `/documents?limit=100${folderId ? `&folder_id=${id(folderId)}` : ""}`,
+      { signal },
+    ),
   document: (key: string, signal?: AbortSignal) =>
     apiFetch<KnowledgeDocument>(`/documents/${id(key)}`, { signal }),
   job: (key: string, signal?: AbortSignal) => apiFetch<Job>(`/jobs/${id(key)}`, { signal }),
-  upload: (file: File, signal?: AbortSignal) => {
+  upload: (file: File, signal?: AbortSignal, folderId?: string) => {
     const data = new FormData();
     data.append("file", file);
+    if (folderId) data.append("folder_id", folderId);
     return apiFetch<DocumentOperation>("/documents", {
       method: "POST",
       body: data,

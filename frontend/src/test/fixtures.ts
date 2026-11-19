@@ -10,6 +10,7 @@ export const user = {
 };
 export const doc: KnowledgeDocument = {
   id: "doc-1",
+  folder_id: null,
   filename: "policy.pdf",
   mime: "application/pdf",
   size_bytes: 1234,

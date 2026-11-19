@@ -31,6 +31,12 @@ export function readPending(user: string, session: string): PendingQuery | null 
       value.payload.question.length <= 4000 &&
       Array.isArray(value.payload.filters.document_ids) &&
       value.payload.filters.document_ids.every((id) => typeof id === "string") &&
+      (value.payload.filters.folder_ids === undefined ||
+        (Array.isArray(value.payload.filters.folder_ids) &&
+          value.payload.filters.folder_ids.length <= 20 &&
+          value.payload.filters.folder_ids.every((id) => typeof id === "string") &&
+          new Set(value.payload.filters.folder_ids).size ===
+            value.payload.filters.folder_ids.length)) &&
       Date.now() - value.startedAt < 10 * 60 * 1000
     )
       return value;

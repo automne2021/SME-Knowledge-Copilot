@@ -39,6 +39,7 @@ function transport(
     if (sessions && path.includes("/chat/sessions?")) return ok({ items: sessions });
     if (path.endsWith("/auth/me")) return ok({ ...user, role: options.role ?? "knowledge_admin" });
     if (path.endsWith("/auth/login")) return ok({ access_token: token, expires_in: 3600 });
+    if (path.endsWith("/folders")) return ok({ items: [] });
     if (path.includes("/documents?")) return ok({ items: options.noSources ? [] : [doc] });
     if (path.endsWith("/chat/sessions") && init?.method === "POST")
       return ok({ id: "session-1", title: "A question", created_at: doc.created_at });

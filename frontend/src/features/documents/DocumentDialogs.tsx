@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Upload } from "lucide-react";
 import { api } from "../../api";
 import { ApiError, isAbort } from "../../api/client";
-import type { KnowledgeDocument } from "../../api/types";
+import type { Folder, KnowledgeDocument } from "../../api/types";
 import { documentChanged } from "../../auth/session";
 import { Dialog } from "../../components/ui/Dialog";
 import { ErrorFeedback, Feedback } from "../../components/ui/Feedback";
@@ -10,10 +10,16 @@ import { fileSize } from "../../lib/format";
 export function UploadDialog({
   onClose,
   onDone,
+  folders = [],
+  initialFolderId = "",
 }: {
   onClose: () => void;
   onDone: (notice: string) => void;
+  folders?: Folder[];
+  initialFolderId?: string;
 }) {
+  const [folderId, setFolderId] = useState(initialFolderId);
+  const missingFolder = Boolean(folderId && !folders.some((f) => f.id === folderId));
   const [file, setFile] = useState<File | null>(null),
     [error, setError] = useState<unknown>(null),
     [validation, setValidation] = useState("");
@@ -37,15 +43,17 @@ export function UploadDialog({
   };
   const upload = async (e: FormEvent) => {
     e.preventDefault();
-    if (!file || busy) return;
+    if (!file || busy || missingFolder) return;
     setBusy(true);
     setError(null);
     const next = new AbortController();
     controller.current = next;
     try {
-      await api.upload(file, next.signal);
-      if (!next.signal.aborted)
+      const result = await api.upload(file, next.signal, folderId);
+      if (!next.signal.aborted) {
+        documentChanged(result.document_id);
         onDone("Đã nhận tài liệu. Nội dung sẽ được dùng khi xử lý hoàn tất.");
+      }
     } catch (e) {
       if (!isAbort(e)) setError(e);
     } finally {
@@ -61,6 +69,18 @@ export function UploadDialog({
   return (
     <Dialog title="Tải tài liệu" onClose={onClose} busy={busy}>
       <form onSubmit={upload}>
+        <label className="field">
+          Thư mục (tùy chọn)
+          <select value={folderId} disabled={busy} onChange={(e) => setFolderId(e.target.value)}>
+            <option value="">Chưa phân loại</option>
+            {missingFolder && <option value={folderId}>Thư mục không còn trong danh sách</option>}
+            {folders.map((f) => (
+              <option value={f.id} key={f.id}>
+                {f.name}
+              </option>
+            ))}
+          </select>
+        </label>
         <div
           className={`drop-zone ${busy ? "disabled" : ""}`}
           onDragOver={(e) => e.preventDefault()}
@@ -106,7 +126,7 @@ export function UploadDialog({
           <button className="button" type="button" onClick={onClose} disabled={busy}>
             Hủy
           </button>
-          <button className="button button-primary" disabled={!file || busy}>
+          <button className="button button-primary" disabled={!file || busy || missingFolder}>
             {busy ? "Đang tải tài liệu…" : "Tải tài liệu"}
           </button>
         </div>

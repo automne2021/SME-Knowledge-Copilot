@@ -10,6 +10,7 @@ export type DocumentStatus =
   "queued" | "processing" | "ready" | "failed" | "needs_ocr" | "deleting" | "deleted";
 export interface KnowledgeDocument {
   id: string;
+  folder_id: string | null;
   filename: string;
   mime: string;
   size_bytes: number;
@@ -93,7 +94,14 @@ export interface ChatQuery {
   client_request_id: string;
   question: string;
   retrieval_mode: "dense";
-  filters: { document_ids: string[] };
+  filters: { document_ids: string[]; folder_ids?: string[] };
+}
+export interface Folder {
+  id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  ready_document_count: number;
 }
 export interface SourceTarget {
   documentId: string;

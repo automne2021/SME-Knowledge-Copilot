@@ -103,5 +103,9 @@ export function apiBlob(path: string, signal?: AbortSignal): Promise<Blob> {
 export const isAbort = (error: unknown) =>
   error instanceof DOMException && error.name === "AbortError";
 export function errorMessage(error: unknown) {
+  if (error instanceof ApiError && error.code === "duplicate_folder")
+    return "Tên thư mục đã tồn tại. Hãy chọn tên khác.";
+  if (error instanceof ApiError && error.code === "folder_not_empty")
+    return "Thư mục còn tài liệu tham chiếu nên chưa thể xóa, kể cả tài liệu đang hoặc đã xóa. Hãy chuyển tài liệu sang thư mục khác khi có thể.";
   return error instanceof ApiError ? error.message : "Có lỗi xảy ra. Vui lòng thử lại.";
 }

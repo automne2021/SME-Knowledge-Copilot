@@ -52,3 +52,19 @@ it("shows duplicate-document recovery instead of a fake success", async () => {
   ).toBeTruthy();
   expect(done).not.toHaveBeenCalled();
 });
+it("omits folder_id for an unclassified upload", async () => {
+  storeSession(token, 3600);
+  const fetcher = vi.fn<(path: string, init?: RequestInit) => Promise<Response>>(async () =>
+    ok({ document_id: "new", job_id: "job", status: "queued" }),
+  );
+  vi.stubGlobal("fetch", fetcher);
+  const done = vi.fn();
+  render(<UploadDialog onClose={vi.fn()} onDone={done} />);
+  await userEvent.upload(
+    screen.getByLabelText("Chọn hoặc thả một tài liệu"),
+    new File(["synthetic"], "file.txt", { type: "text/plain" }),
+  );
+  await userEvent.click(screen.getByRole("button", { name: "Tải tài liệu" }));
+  await waitFor(() => expect(done).toHaveBeenCalledOnce());
+  expect((fetcher.mock.calls[0][1]!.body as FormData).has("folder_id")).toBe(false);
+});

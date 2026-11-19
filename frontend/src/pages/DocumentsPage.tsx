@@ -8,6 +8,12 @@ import { useWorkspace } from "../workspace/WorkspaceProvider";
 import { ErrorFeedback, Feedback, Loading } from "../components/ui/Feedback";
 import { DeleteDialog, UploadDialog } from "../features/documents/DocumentDialogs";
 import { useDocuments } from "../features/documents/useDocuments";
+import { useFolders } from "../features/folders/useFolders";
+import {
+  FolderDialog,
+  MoveDocumentDialog,
+  type FolderAction,
+} from "../features/folders/FolderDialogs";
 import { clock, useNow } from "../hooks/useElapsed";
 import {
   fileKind,
@@ -53,7 +59,11 @@ export function progressText(job: Job) {
 export default function DocumentsPage() {
   const { user } = useAuth();
   const { openSource } = useWorkspace();
-  const documents = useDocuments();
+  const [folderId, setFolderId] = useState("");
+  const documents = useDocuments(folderId || undefined);
+  const folders = useFolders();
+  const [folderAction, setFolderAction] = useState<FolderAction | null>(null);
+  const [move, setMove] = useState<KnowledgeDocument | null>(null);
   const admin = user?.role === "knowledge_admin";
   const [upload, setUpload] = useState(false),
     [remove, setRemove] = useState<KnowledgeDocument | null>(null);
@@ -112,6 +122,69 @@ export default function DocumentsPage() {
       </div>
       {notice && <Feedback title={notice} />}
       {actionError !== null && <ErrorFeedback error={actionError} />}
+      <section className="folder-section" aria-label="Thư mục tài liệu">
+        <div className="folder-heading">
+          <h2>Thư mục</h2>
+          {admin && (
+            <button className="button" onClick={() => setFolderAction({ kind: "create" })}>
+              Tạo thư mục
+            </button>
+          )}
+        </div>
+        {folders.loading ? (
+          <Loading label="Đang tải thư mục…" />
+        ) : folders.error ? (
+          <ErrorFeedback error={folders.error} retry={folders.refresh} />
+        ) : (
+          <>
+            <label className="field folder-filter">
+              Lọc theo thư mục
+              <select value={folderId} onChange={(e) => setFolderId(e.target.value)}>
+                <option value="">Tất cả thư mục</option>
+                {folderId && !folders.items.some((f) => f.id === folderId) && (
+                  <option value={folderId}>Thư mục không còn trong danh sách</option>
+                )}
+                {folders.items.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {folders.items.length === 0 && (
+              <p className="hint">Chưa có thư mục. Tài liệu vẫn có thể để chưa phân loại.</p>
+            )}
+            <ul className="folder-list">
+              {folders.items.map((f) => (
+                <li key={f.id}>
+                  <div>
+                    <strong>{f.name}</strong>
+                    <small>{f.ready_document_count} tài liệu sẵn sàng</small>
+                  </div>
+                  {admin && (
+                    <div className="row-actions">
+                      <button
+                        className="text-button"
+                        aria-label={`Đổi tên thư mục “${f.name}”`}
+                        onClick={() => setFolderAction({ kind: "rename", folder: f })}
+                      >
+                        Đổi tên
+                      </button>
+                      <button
+                        className="text-button destructive"
+                        aria-label={`Xóa thư mục “${f.name}”`}
+                        onClick={() => setFolderAction({ kind: "delete", folder: f })}
+                      >
+                        Xóa
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
       {documents.paused && (
         <Feedback
           title="Tác vụ vẫn có thể đang xử lý"
@@ -143,7 +216,7 @@ export default function DocumentsPage() {
         <ErrorFeedback error={documents.error} retry={documents.refresh} />
       ) : documents.items.length === 0 ? (
         <div className="empty-state">
-          <h2>Chưa có tài liệu</h2>
+          <h2>{folderId ? "Thư mục chưa có tài liệu" : "Chưa có tài liệu"}</h2>
           <p>
             {admin
               ? "Tải tài liệu đầu tiên để bắt đầu tìm kiếm và hỏi đáp."
@@ -184,7 +257,13 @@ export default function DocumentsPage() {
                 </button>
               ))}
             </div>
-            <button className="text-button" onClick={documents.refresh}>
+            <button
+              className="text-button"
+              onClick={() => {
+                documents.refresh();
+                folders.refresh();
+              }}
+            >
               <RotateCw size={14} aria-hidden="true" />
               Làm mới
             </button>
@@ -199,6 +278,7 @@ export default function DocumentsPage() {
             <thead>
               <tr>
                 <th scope="col">Tên tài liệu</th>
+                <th scope="col">Thư mục</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Tải lên</th>
                 <th scope="col">Thao tác</th>
@@ -228,6 +308,12 @@ export default function DocumentsPage() {
                           <small>{fileSize(doc.size_bytes)}</small>
                         </div>
                       </div>
+                    </td>
+                    <td data-label="Thư mục">
+                      {doc.folder_id
+                        ? (folders.items.find((f) => f.id === doc.folder_id)?.name ??
+                          "Chưa tải được tên thư mục")
+                        : "Chưa phân loại"}
                     </td>
                     <td data-label="Trạng thái">
                       <span className={`status status-${cleanupFailed ? "failed" : doc.status}`}>
@@ -281,6 +367,15 @@ export default function DocumentsPage() {
                     </td>
                     <td>
                       <div className="row-actions">
+                        {admin && !["deleting", "deleted"].includes(doc.status) && (
+                          <button
+                            className="text-button"
+                            disabled={folders.loading || Boolean(folders.error)}
+                            onClick={() => setMove(doc)}
+                          >
+                            Chuyển thư mục
+                          </button>
+                        )}
                         {doc.status === "ready" && (
                           <button
                             className="text-button"
@@ -330,10 +425,37 @@ export default function DocumentsPage() {
       )}
       {upload && (
         <UploadDialog
+          folders={folders.items}
+          initialFolderId={folderId}
           onClose={() => setUpload(false)}
           onDone={(text) => {
             setUpload(false);
             setNotice(text);
+            documents.refresh();
+          }}
+        />
+      )}
+      {folderAction && (
+        <FolderDialog
+          action={folderAction}
+          onClose={() => setFolderAction(null)}
+          onDone={() => {
+            if (folderAction.kind === "delete" && folderAction.folder.id === folderId)
+              setFolderId("");
+            setFolderAction(null);
+            setNotice("Đã cập nhật thư mục.");
+            documents.refresh();
+          }}
+        />
+      )}
+      {move && (
+        <MoveDocumentDialog
+          document={move}
+          folders={folders.items}
+          onClose={() => setMove(null)}
+          onDone={() => {
+            setMove(null);
+            setNotice("Đã cập nhật thư mục của tài liệu.");
             documents.refresh();
           }}
         />
