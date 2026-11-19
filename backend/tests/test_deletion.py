@@ -237,7 +237,17 @@ def test_late_upsert_after_delete_is_not_published_and_is_reconciled(worker_env,
     env = worker_env
     doc_id = env.upload()["document_id"]
     entered, release = threading.Event(), threading.Event()
+    lease_revoked = threading.Event()
     original = env.vector.upsert
+    original_touch = env.queue.touch
+
+    def observe_revocation(*args, **kwargs):
+        try:
+            return original_touch(*args, **kwargs)
+        except LeaseLost:
+            # touch has closed its SQL session before this exception reaches us.
+            lease_revoked.set()
+            raise
 
     def blocked(points):
         entered.set()
@@ -245,11 +255,15 @@ def test_late_upsert_after_delete_is_not_published_and_is_reconciled(worker_env,
         return original(points)
 
     monkeypatch.setattr(env.vector, "upsert", blocked)
+    monkeypatch.setattr(env.queue, "touch", observe_revocation)
     with ThreadPoolExecutor(1) as pool:
         future = pool.submit(env.worker().run_once)
         try:
             assert entered.wait(15)
             remove(env, doc_id)
+            # A revoking heartbeat can briefly hold the document lock. Wait for
+            # its transaction to exit so cleanup's SKIP LOCKED may claim the row.
+            assert lease_revoked.wait(5), "Heartbeat did not observe the revoked lease"
             assert cleanup(env).run_once()["status"] == "completed"
         finally:
             release.set()

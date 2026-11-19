@@ -15,7 +15,7 @@
 
 - Sau 03-T1 (18/11/2026), `folders` và `documents.folder_id` đã có model/migration; CRUD thư mục đã có API. Migration mới chỉ kiểm chứng trên DB test, chưa áp dụng DB development. [Report](../folders-20261118.md).
 - T1 dùng FK đơn `SET NULL` và FK kép bảo vệ workspace; xóa API kiểm tra mọi document row còn tham chiếu, kể cả tombstone. Bộ đếm ready không quyết định thư mục rỗng.
-- API gán tài liệu/upload/lọc thư mục thuộc T2; search/chat scope thuộc T3; UI thuộc T4.
+- Sau 03-T2 (19/11/2026), PATCH gán/bỏ thư mục, upload tùy chọn và list filter đã triển khai/kiểm chứng: backend 385/385, eval tooling 443/443, Ruff đạt. Bổ sung đồng bộ test cleanup được người dùng duyệt riêng, test chạy lặp 5/5 đạt. Search/chat scope thuộc T3; UI thuộc T4. [Report T2](../folders-20261119.md).
 - Chat đã có `filters.document_ids`, tối đa 50 ID, được kiểm tra trong `retrieval._snapshots`.
 - UI có bộ chọn tài liệu (`ChatPage.tsx`, phần `document-picker`) và chip phạm vi.
 
@@ -53,6 +53,8 @@
 - **Test:** CRUD; tên trùng 409; member ghi 403; workspace khác 404; xóa thư mục còn tài liệu 409.
 
 ### T2 — Gán tài liệu vào thư mục
+
+**Hoàn tất 19/11/2026:** đã triển khai API và 34 test mới; targeted 86/86, full backend 385/385, eval 443/443, Ruff đạt. Test cleanup hiện hữu được đồng bộ theo phần bổ sung duyệt riêng, chạy lặp 5/5 đạt; không đổi production cleanup/worker. Chưa triển khai T3/T4 hoặc migrate DB development. [Bằng chứng và giới hạn](../folders-20261119.md).
 
 - `PATCH /documents/{id}`, upload kèm `folder_id`, `GET /documents?folder_id=`.
 - **Test:** chuyển thư mục; gán thư mục của workspace khác bị từ chối ở tầng DB và API; tài liệu `deleting` trả 410.

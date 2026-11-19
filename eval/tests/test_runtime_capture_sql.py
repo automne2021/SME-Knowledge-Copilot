@@ -114,7 +114,7 @@ def capture_db():
         with engine.connect() as connection:
             assert (
                 connection.scalar(text("select version_num from alembic_version"))
-                == "20261103_rag04"
+                == "20261118_folders"
             )
             assert (
                 connection.scalar(

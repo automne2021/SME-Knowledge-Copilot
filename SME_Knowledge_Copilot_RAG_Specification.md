@@ -827,6 +827,7 @@ Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa c
 | `POST` | `/documents` | P0 | Upload tài liệu |
 | `GET` | `/documents` | P0 | Danh sách, trạng thái, filter |
 | `GET` | `/documents/{id}` | P0 | Detail và metadata |
+| `PATCH` | `/documents/{id}` | Roadmap 03-T2 | Admin gán hoặc bỏ thư mục tài liệu |
 | `DELETE` | `/documents/{id}` | P0 | Soft-disable retrieval + cleanup |
 | `GET` | `/documents/{id}/content` | P0 | Xem file nguồn có kiểm tra quyền |
 | `GET` | `/documents/{id}/chunks/{chunk_id}` | P0 | Source excerpt và location từ SQL có kiểm tra quyền |
@@ -867,7 +868,7 @@ Tombstone không giữ text/raw path không cần thiết. Cleanup phải xóa c
 
 HTTP `202 Accepted` có nghĩa request đã được nhận, không đồng nghĩa ingestion thành công.
 
-Multipart field bắt buộc là `file`; filename hiển thị được sanitize, `workspace_id` không phải field được phép gửi. Các lỗi phát hiện trước commit trả 4xx và không có job. Những lỗi cần parser mới biết được ghi vào job sau `202`. Response document detail gồm `id`, `filename`, `mime`, `size_bytes`, `status`, `active_revision_id`, `warnings`, `latest_job_id`, `created_at`; không trả `storage_key` hoặc path nội bộ.
+Multipart field bắt buộc là `file`; từ 03-T2 nhận thêm `folder_id` tùy chọn là chuỗi UUID của thư mục trong workspace. Bỏ field này để upload chưa phân loại; chuỗi rỗng, `null` dạng text, field lặp/ngoài contract hoặc folder ID sai định dạng → 422. Filename hiển thị được sanitize, `workspace_id` không phải field được phép gửi. Các lỗi phát hiện trước commit trả 4xx và không có job. Những lỗi cần parser mới biết được ghi vào job sau `202`. Response document detail/list/PATCH gồm `id`, `folder_id` (UUID hoặc null), `filename`, `mime`, `size_bytes`, `status`, `active_revision_id`, `warnings`, `latest_job_id`, `created_at`; không trả `storage_key` hoặc path nội bộ. Upload vẫn trả đúng ba trường `document_id`, `job_id`, `status` như trên.
 
 ### 10.3. Search request/response
 
@@ -1032,13 +1033,16 @@ Reason code gồm `no_ready_documents`, `no_retrieval_hits`, `below_calibrated_t
 
 ---
 
-### 10.8. Thư mục tài liệu — 03-T1 (18/11/2026)
+### 10.8. Thư mục tài liệu — 03-T1/T2 (18–19/11/2026)
 
 - `POST /folders` và `PATCH /folders/{id}` nhận JSON `{name}`; trim whitespace, dài 1–100 ký tự Unicode; sai kiểu, thiếu tên hoặc field ngoài contract → 422. Workspace và creator lấy từ identity, không nhận từ client. Tên được so bằng `lower(name)` ở PostgreSQL, không bỏ dấu; cùng tên ở workspace khác được phép.
 - `POST` trả 201; `PATCH` trả 200. Dữ liệu thư mục gồm `{id,name,created_at,updated_at,ready_document_count}` trong envelope chuẩn. `GET /folders` trả 200 với `{items:[...]}`, gồm cả thư mục rỗng, sắp theo `(lower(name),id)`, trả toàn bộ thư mục trong workspace. Số đếm chỉ gồm document có `status=ready` trong chính thư mục/workspace đó.
 - Thành viên đọc được danh sách; chỉ `knowledge_admin` tạo/đổi tên/xóa. Thiếu identity → 401, member ghi → 403; admin thao tác ID không tồn tại/ngoài workspace → 404 `not_found`.
 - `DELETE /folders/{id}` khóa thư mục `FOR UPDATE`, kiểm tra **mọi document row** còn gắn với thư mục (kể cả `deleting`/`deleted`), còn tài liệu → 409 `folder_not_empty`; thư mục rỗng → 200 `{id,deleted:true}`. Khóa này xung đột với FK key-share của thao tác gán đồng thời. FK `SET NULL` là bảo vệ ở tầng DB, không phải quyền xóa thư mục còn tài liệu qua API.
 - Migration `20261118_folders` nối sau `20261103_rag04`: dữ liệu cũ giữ nguyên, `folder_id` ban đầu NULL. Downgrade từ chối nếu còn folder row để tránh mất phân loại âm thầm. API gán/upload/lọc tài liệu thuộc 03-T2; search/chat scope thuộc 03-T3; UI thuộc 03-T4, chưa triển khai ở 03-T1. [Report](docs/folders-20261118.md).
+- **03-T2:** `PATCH /documents/{id}` chỉ cho admin, nhận đúng JSON `{folder_id: UUID | null}` (bắt buộc có key); null bỏ phân loại, UUID gán/chuyển thư mục, gán lại cùng thư mục được phép. Trả 200 với metadata tài liệu; thiếu/sai field → 422, chưa đăng nhập → 401, member ghi → 403. Document hoặc folder không tồn tại/ngoài workspace → 404 `not_found`; document trong workspace đang `deleting`/`deleted` → 410 `source_unavailable` khi folder đích hợp lệ. Gán thư mục không tạo revision/job, không đổi lifecycle/generation và không reindex.
+- **Upload theo thư mục:** folder được kiểm tra scope và khóa `FOR KEY SHARE` trong transaction đăng ký document/revision/job; khóa giữ tới commit, phối hợp với khóa xóa folder của T1. ID không tồn tại/ngoài workspace → 404; lỗi đăng ký trước commit dọn file và không để lại metadata/job. Dedup vẫn theo hash/workspace, không theo folder: upload trùng sang thư mục khác trả 409 và không tự chuyển tài liệu cũ.
+- **Danh sách theo thư mục:** mọi thành viên dùng `GET /documents?folder_id=<UUID>`; lọc bằng SQL trước sắp xếp/limit, trả cả trạng thái chưa ready và `deleting` như danh sách hiện hữu, loại `deleted`. Không gửi filter thì giữ danh sách toàn workspace; thư mục hợp lệ rỗng trả `{items:[]}`, không tồn tại/ngoài workspace → 404, UUID sai/rỗng → 422. Tham số này chỉ lọc danh sách quản lý; search/chat folder scope thuộc T3. T2 dùng schema T1, không có migration mới. [Report T2](docs/folders-20261119.md).
 
 ## 11. UI/UX Specification
 

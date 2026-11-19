@@ -34,7 +34,10 @@ def retry_ingestion(document_id: uuid.UUID, request: Request, db: DbSession, use
                         "type": "object",
                         "required": ["file"],
                         "additionalProperties": False,
-                        "properties": {"file": {"type": "string", "format": "binary"}},
+                        "properties": {
+                            "file": {"type": "string", "format": "binary"},
+                            "folder_id": {"type": "string", "format": "uuid"},
+                        },
                     }
                 }
             },
@@ -70,18 +73,32 @@ async def upload_document(request: Request, db: DbSession, user: AdminUser) -> d
 
     bounded_request = Request(request.scope, receive=receive)
     try:
-        async with bounded_request.form(max_files=1, max_fields=0) as form:
+        async with bounded_request.form(max_files=1, max_fields=1) as form:
             items = list(form.multi_items())
-            if len(items) != 1 or items[0][0] != "file" or not isinstance(items[0][1], UploadFile):
-                raise AppError(422, "invalid_upload", "Chỉ chấp nhận một trường file.")
-            file = items[0][1]
+            keys = [key for key, _ in items]
+            if (
+                keys.count("file") != 1
+                or keys.count("folder_id") > 1
+                or set(keys) - {"file", "folder_id"}
+                or not isinstance(form["file"], UploadFile)
+            ):
+                raise AppError(422, "invalid_upload", "Chỉ chấp nhận file và folder_id tùy chọn.")
+            folder_id = None
+            if "folder_id" in form:
+                try:
+                    folder_id = uuid.UUID(form["folder_id"])
+                except (ValueError, TypeError, AttributeError):
+                    raise AppError(422, "invalid_upload", "folder_id phải là UUID.") from None
+            file = form["file"]
             filename, extension = file_metadata(
                 file.filename, file.content_type, file.headers.get("content-disposition", "")
             )
             stored = await store_stream(
                 file, settings.storage_dir, user.workspace_id, extension, maximum
             )
-            return success(request, register_upload(db, user, filename, extension, stored))
+            return success(
+                request, register_upload(db, user, filename, extension, stored, folder_id)
+            )
     except HTTPException:
         if exceeded:
             raise AppError(413, "file_too_large", "Request vượt giới hạn dung lượng.") from None

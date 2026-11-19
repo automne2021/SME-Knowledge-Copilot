@@ -15,6 +15,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.core.errors import AppError
 from app.models import Document, DocumentRevision, ProcessingJob
+from app.services.documents import folder_for_user
 from app.services.parsing import PARSER_VERSION
 
 logger = logging.getLogger(__name__)
@@ -104,11 +105,19 @@ async def store_stream(
     return StoredUpload(path, key, digest.hexdigest(), size, document_id, revision_id)
 
 
-def register_upload(db, user, filename: str, extension: str, stored: StoredUpload) -> dict:
+def register_upload(
+    db,
+    user,
+    filename: str,
+    extension: str,
+    stored: StoredUpload,
+    folder_id: uuid.UUID | None = None,
+) -> dict:
     document = Document(
         id=stored.document_id,
         workspace_id=user.workspace_id,
         created_by=user.id,
+        folder_id=folder_id,
         filename=filename,
         mime=MIMES[extension],
         size_bytes=stored.size_bytes,
@@ -131,6 +140,8 @@ def register_upload(db, user, filename: str, extension: str, stored: StoredUploa
     )
     try:
         with db.begin_nested():
+            if folder_id is not None:
+                folder_for_user(db, folder_id, user, lock=True)
             db.add(document)
             db.flush()
             db.add(revision)

@@ -285,7 +285,7 @@ def fixture_run(tmp_path, monkeypatch):
         try:
             with engine.connect() as db:
                 assert (
-                    db.scalar(text("select version_num from alembic_version")) == "20261103_rag04"
+                    db.scalar(text("select version_num from alembic_version")) == "20261118_folders"
                 )
                 for table in (
                     "workspaces",

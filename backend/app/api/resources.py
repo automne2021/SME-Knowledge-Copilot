@@ -8,7 +8,7 @@ from sqlalchemy import case, func, select
 
 from app.core.db import DbSession
 from app.core.errors import success
-from app.core.security import CurrentUser
+from app.core.security import AdminUser, CurrentUser
 from app.models import (
     AnswerCitation,
     ChatMessage,
@@ -19,9 +19,11 @@ from app.models import (
     ProcessingJob,
     QueryRun,
 )
+from app.schemas.documents import DocumentFolderUpdate
 from app.schemas.identity import SessionCreate, SessionRename
 from app.services.access import document_for_user, job_for_user, session_for_user
 from app.services.chat import read_run, run_data
+from app.services.documents import folder_for_user, move_document
 from app.services.sessions import delete_session, rename_session
 
 router = APIRouter(tags=["resources"])
@@ -33,6 +35,7 @@ def document_data(document: Document, latest_job_id=None) -> dict:
         key: getattr(document, key)
         for key in (
             "id",
+            "folder_id",
             "filename",
             "mime",
             "size_bytes",
@@ -69,12 +72,22 @@ def latest_jobs(db, ids):
 
 
 @router.get("/documents")
-def documents(db: DbSession, user: CurrentUser, request: Request, limit: PageLimit = 50) -> dict:
+def documents(
+    db: DbSession,
+    user: CurrentUser,
+    request: Request,
+    limit: PageLimit = 50,
+    folder_id: uuid.UUID | None = None,
+) -> dict:
+    if folder_id is not None:
+        folder_for_user(db, folder_id, user)
+    statement = select(Document).where(
+        Document.workspace_id == user.workspace_id, Document.status != "deleted"
+    )
+    if folder_id is not None:
+        statement = statement.where(Document.folder_id == folder_id)
     rows = db.scalars(
-        select(Document)
-        .where(Document.workspace_id == user.workspace_id, Document.status != "deleted")
-        .order_by(Document.created_at.desc(), Document.id)
-        .limit(limit)
+        statement.order_by(Document.created_at.desc(), Document.id).limit(limit)
     ).all()
     jobs = latest_jobs(db, [row.id for row in rows])
     return success(request, {"items": [document_data(row, jobs.get(row.id)) for row in rows]})
@@ -83,6 +96,18 @@ def documents(db: DbSession, user: CurrentUser, request: Request, limit: PageLim
 @router.get("/documents/{document_id}")
 def document(document_id: uuid.UUID, db: DbSession, user: CurrentUser, request: Request) -> dict:
     row = document_for_user(db, document_id, user)
+    return success(request, document_data(row, latest_jobs(db, [row.id]).get(row.id)))
+
+
+@router.patch("/documents/{document_id}")
+def update_document(
+    document_id: uuid.UUID,
+    payload: DocumentFolderUpdate,
+    db: DbSession,
+    user: AdminUser,
+    request: Request,
+) -> dict:
+    row = move_document(db, document_id, user, payload.folder_id)
     return success(request, document_data(row, latest_jobs(db, [row.id]).get(row.id)))
 
 

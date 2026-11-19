@@ -163,7 +163,7 @@ Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính
 | 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 2/4 | T1, T4 xong; T2–T3 chưa bắt đầu | `feat/00-housekeeping` | [00-T1 — Heartbeat](../housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat), [00-T4 — GIF demo](../housekeeping-20261115.md) |
 | 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 4/7 | T1, T2a, T2b, T2c xong; T3–T5 chưa bắt đầu | `feat/01-eval-v2` | [01-T1 — Schema v2](../eval-v2-20261115.md), [01-T2a — Corpus](../corpus-v2-20261115.md), [01-T2b — Văn bản dài và Markdown](../corpus-v2-20261115.md#01-t2b--d01-d06-d07-d08), [01-T2c — Chốt 14 tài liệu](../corpus-v2-20261115.md#01-t2c--d09d14-chốt-corpus) |
 | 02 | [Hybrid search](02-hybrid-search-reranker.md) | 0/5 | Chưa bắt đầu | — | — |
-| 03 | [Thư mục](03-folders-scoped-qa.md) | 1/4 | T1 xong; T2–T4 chưa bắt đầu | `feat/03-folders` | [03-T1 — Schema và API](../folders-20261118.md) |
+| 03 | [Thư mục](03-folders-scoped-qa.md) | 2/4 | T1–T2 xong; T3–T4 chưa bắt đầu | `feat/03-folders` | [03-T1 — Schema và API](../folders-20261118.md), [03-T2 — Gán tài liệu](../folders-20261119.md) |
 | 04 | [Retrieval nhận biết bảng](04-table-aware-retrieval.md) | 0/3 | Chưa bắt đầu | — | — |
 | 05 | [Stream tiến độ](05-streaming-progress.md) | 0/3 | Chưa bắt đầu | — | — |
 | 06 | [Hỏi nối tiếp](06-follow-up-questions.md) | 0/4 | Chưa bắt đầu | — | — |
