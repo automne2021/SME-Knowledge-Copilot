@@ -498,3 +498,16 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 20/11/2026 · vận hành, quy trình · đã triển khai.
 - DB development migrate `20261103_rag04 → 20261118_folders` (không seed, không xóa dữ liệu); smoke API: `/folders` trả rỗng, 10 tài liệu `ready` có `folder_id`. Người dùng kiểm tra UI thư mục trên trình duyệt, đánh giá tạm ổn; `feat/03-folders` merge vào `main`.
 - `test_late_upsert_after_delete_is_not_published_and_is_reconciled` fail 2/3 lượt full backend ở 03-T2, chạy riêng đạt. Giả thuyết: `claim` dùng `SKIP LOCKED` trả `None` khi heartbeat đang khóa document. Ghi thành roadmap 00-T5, chỉ sửa test; chạy lại riêng trước khi kết luận lỗi thật.
+
+### K-120 — Test cleanup sau late upsert: poll claim thay vì gọi một lần
+
+20/11/2026 · test, đồng thời · đã triển khai (00-T5).
+- **Vấn đề:** `JobQueue.claim` dùng `FOR UPDATE ... SKIP LOCKED`. Khi dòng document đang bị một transaction ngắn khác khóa (ví dụ heartbeat), claim trả `None`. Đây là hành vi đúng: worker thật chỉ việc poll lại. Test cũ coi lần claim đầu tiên trả `None` là lỗi, nên thỉnh thoảng fail khi chạy full suite.
+- **Chọn:** helper test `run_cleanup_until_claimed`, poll mỗi 50 ms, tối đa 10 s, giữ nguyên bước chờ event heartbeat của 03-T2.
+  - **Phương án khác chưa chọn:** sleep cố định (chậm và vẫn đoán mò); tắt heartbeat trong test (mất đúng race cần kiểm tra); đổi claim sang chờ khóa (sai thiết kế worker, ngoài phạm vi).
+- **Đánh đổi:** test chịu được khóa ngắn nhưng vẫn fail nếu job không bao giờ claim được (sau 10 s), nên không che lỗi thật.
+- **Kiểm chứng:**
+  - Chạy riêng 20/20 đạt.
+  - Full backend 2 lượt đều 418/418.
+  - Nguyên nhân gốc vẫn là suy luận từ code, chưa có probe khóa.
+- **Xem lại khi:** test này fail lại với thông báo "Cleanup job was never claimed". Khi đó cần probe `pg_locks` lúc fail, vì đó có thể là lỗi production.

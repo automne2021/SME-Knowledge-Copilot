@@ -67,6 +67,15 @@ Bộ test ổn định là điều kiện để tin các số đo trước và s
 - **Giả thuyết (chưa chứng minh):** heartbeat `JobQueue.touch` đang khóa document, còn `JobQueue.claim` dùng `SKIP LOCKED` nên được phép trả `None`; test giả định lần claim đầu luôn có job.
 - **Phạm vi:** chỉ sửa test (và helper test nếu cần), không đổi logic worker hay cleanup. Ví dụ: poll `run_once()` có timeout cho tới khi claim được job, hoặc chờ heartbeat nhả khóa trước khi claim.
 - **Test bắt buộc:** chạy test này 20 lần liên tiếp đều đạt; full backend 2 lần đều đạt. Nếu tìm thấy lỗi thật ở production code, dừng và đề xuất thay vì sửa trong task này.
+- **Kết quả (20/11/2026, xong):**
+  - Thêm helper `run_cleanup_until_claimed` trong test: gọi `cleanup.run_once()` lặp lại, mỗi 50 ms, tối đa 10 s, cho tới khi claim được job. Cách này giống vòng lặp worker thật.
+  - Giữ nguyên bước chờ heartbeat thấy lease bị thu hồi (thêm ở 03-T2) và mọi assertion cũ.
+  - Không đổi production code.
+  - Kiểm chứng:
+    - Chạy riêng 20/20 đạt.
+    - Full backend 2 lượt: 418/418 (402 s) và 418/418 (398 s).
+    - Ruff check và format sạch.
+  - **Giới hạn:** chưa có probe ghi lại transaction nào giữ khóa lúc fail, nên giả thuyết `SKIP LOCKED` vẫn là suy luận từ code. Test chỉ chịu được khóa ngắn, không che lỗi claim vĩnh viễn: hết 10 s vẫn `None` thì fail với thông báo rõ.
 
 ## Không làm
 

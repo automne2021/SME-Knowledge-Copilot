@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import threading
+import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
@@ -37,6 +38,17 @@ from tests.chat_support import ready
 
 def cleanup(env):
     return CleanupWorker(CleanupQueue(env.sessions, env.settings), env.vector)
+
+
+def run_cleanup_until_claimed(env, timeout=10.0):
+    # claim() uses SKIP LOCKED, so None only means "row busy right now"; the
+    # real worker loop simply polls again. Mirror that instead of failing.
+    deadline = time.monotonic() + timeout
+    while True:
+        result = cleanup(env).run_once()
+        if result is not None or time.monotonic() >= deadline:
+            return result
+        time.sleep(0.05)
 
 
 def remove(env, document_id):
@@ -264,7 +276,9 @@ def test_late_upsert_after_delete_is_not_published_and_is_reconciled(worker_env,
             # A revoking heartbeat can briefly hold the document lock. Wait for
             # its transaction to exit so cleanup's SKIP LOCKED may claim the row.
             assert lease_revoked.wait(5), "Heartbeat did not observe the revoked lease"
-            assert cleanup(env).run_once()["status"] == "completed"
+            result = run_cleanup_until_claimed(env)
+            assert result is not None, "Cleanup job was never claimed"
+            assert result["status"] == "completed"
         finally:
             release.set()
         assert future.result(timeout=15)["status"] == "lease_lost"
