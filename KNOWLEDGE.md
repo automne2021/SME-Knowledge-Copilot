@@ -492,3 +492,9 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
 - Lọc danh sách qua API trước limit; hỏi đáp gửi folder ID thay vì resolve từ 100 document UI. Giữ lựa chọn khi folder mất/lỗi, chặn câu hỏi mới thay vì tự mở rộng scope; pending giữ payload/ID gốc và tương thích bản cũ. [Chủ đề và đánh đổi](#9-frontend-và-trải-nghiệm-người-dùng).
 - Native dialog xác nhận đổi tên/xóa, admin ghi/member đọc; ready count không quyết định được xóa. Chưa thêm cache toàn cục/realtime nhiều tab; giữ hook và events theo stack hiện có. [UI và test](frontend/src/features/folders/FolderUI.test.tsx).
 - Frontend **74/74** (+25), targeted cuối **21/21**, lint/build/format đạt; backend **418/418**, Ruff đạt. Browser bị công cụ chặn URL policy, chưa kiểm chứng layout/E2E thật; chưa migrate development, không chạy lại eval tooling, 0 Gemini/0 USD. [Bằng chứng và giới hạn](docs/folders-20261119.md#03-t4--ui-thư-mục-tài-liệu-và-phạm-vi-hỏi-đáp).
+
+### K-119 — Migrate development, merge thư mục và ghi nhận test cleanup chập chờn
+
+20/11/2026 · vận hành, quy trình · đã triển khai.
+- DB development migrate `20261103_rag04 → 20261118_folders` (không seed, không xóa dữ liệu); smoke API: `/folders` trả rỗng, 10 tài liệu `ready` có `folder_id`. Người dùng kiểm tra UI thư mục trên trình duyệt, đánh giá tạm ổn; `feat/03-folders` merge vào `main`.
+- `test_late_upsert_after_delete_is_not_published_and_is_reconciled` fail 2/3 lượt full backend ở 03-T2, chạy riêng đạt. Giả thuyết: `claim` dùng `SKIP LOCKED` trả `None` khi heartbeat đang khóa document. Ghi thành roadmap 00-T5, chỉ sửa test; chạy lại riêng trước khi kết luận lỗi thật.

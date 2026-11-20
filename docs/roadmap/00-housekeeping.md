@@ -61,6 +61,13 @@ Bộ test ổn định là điều kiện để tin các số đo trước và s
   - Câu trả lời có nhãn "AI-generated" như UI thật.
 - **Nghiệm thu:** report ngắn (có thể ghi trong report của tính năng 00): câu hỏi dùng, số lần gọi Gemini, kích thước GIF, lệnh tái tạo.
 
+### T5 — Ổn định test cleanup sau late upsert
+
+- **Hiện trạng (ghi 20/11/2026):** `backend/tests/test_deletion.py::test_late_upsert_after_delete_is_not_published_and_is_reconciled` fail 2/3 lượt full backend trong 03-T2 (cleanup `run_once()` trả `None` ở bước kỳ vọng claim job cleanup); chạy riêng thì đạt; ở 03-T3 và 03-T4 full backend đạt 418/418. Chi tiết: [report 03-T2](../folders-20261119.md).
+- **Giả thuyết (chưa chứng minh):** heartbeat `JobQueue.touch` đang khóa document, còn `JobQueue.claim` dùng `SKIP LOCKED` nên được phép trả `None`; test giả định lần claim đầu luôn có job.
+- **Phạm vi:** chỉ sửa test (và helper test nếu cần), không đổi logic worker hay cleanup. Ví dụ: poll `run_once()` có timeout cho tới khi claim được job, hoặc chờ heartbeat nhả khóa trước khi claim.
+- **Test bắt buộc:** chạy test này 20 lần liên tiếp đều đạt; full backend 2 lần đều đạt. Nếu tìm thấy lỗi thật ở production code, dừng và đề xuất thay vì sửa trong task này.
+
 ## Không làm
 
 - Không refactor worker hay đổi thông số lease, heartbeat.
