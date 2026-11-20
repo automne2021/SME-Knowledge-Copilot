@@ -32,6 +32,7 @@ Hướng dẫn cho coding assistant trong repo **SME Knowledge Copilot**: ứng 
 - Bước 00–10 và 13 hoàn thành; Bước 11 đạt 6/7; Bước 12 đạt 4/6. `main` có UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini ([report](docs/ui-v2-20261113.md)); `release/m1` giữ bản chốt M1.
 - Phần còn lại của M1 do người dùng làm: video demo và phần đóng góp cá nhân (ngoài README).
 - **Sau M1:** việc mới theo [docs/roadmap/](docs/roadmap/README.md) (M2 → M4); mỗi task một đợt xác nhận; tiến độ roadmap báo **riêng** bên cạnh % M1.
+- **Roadmap 20/11/2026:** 00 và 03 xong; 01 chờ đóng gate T3 và người duyệt nhãn. Hàng đợi cho Codex ở mục 4.8 [roadmap README](docs/roadmap/README.md).
 - Nhật ký các đợt trước: [docs/history/plan-log-m1.md](docs/history/plan-log-m1.md) và các report trong `docs/`.
 
 **Môi trường:** đọc [runbook khôi phục](docs/workspace-restoration-20261105.md) trước khi setup. Python 3.12.1, Node 24.11.1/npm 11.6.2; cache ở `<repo>/.cache/` (đường dẫn tuyệt đối trong `.env`). Kết nối PostgreSQL/Qdrant dùng `127.0.0.1`, không dùng `localhost` (Docker chỉ mở cổng IPv4).
@@ -85,7 +86,7 @@ Mọi thay đổi runtime/dependencies/hạ tầng phải nằm trong phạm vi 
 - Mỗi tính năng có test cho cả trường hợp thành công và thất bại; chạy test và báo kết quả thật trước khi coi là xong.
 - Test DB chạy trên **PostgreSQL thật** (không SQLite) vì cần row locking và partial unique index.
 - Integration retrieval dùng Qdrant thật; unit test model dùng fake/stub có nhãn, real-model eval tách trong eval/.
-- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Số test hiện tại (13/11/2026): 316 backend, 277 eval tooling (cần `PYTHONPATH=backend`), 49 frontend. Software tests không thay browser E2E hoặc human-quality/held-out acceptance.
+- Nghiệm thu M1: **AT-R01–23** (spec 15.4); P1 tương ứng AT-R24–26. Số test hiện tại (20/11/2026, `main`): 418 backend, 79 frontend; eval tooling (cần `PYTHONPATH=backend`) gần nhất 464 trên nhánh `feat/01-eval-v2` (18/11). Software tests không thay browser E2E hoặc human-quality/held-out acceptance.
 - `test_worker.py::test_heartbeat_runs_during_inference_without_document_lock` có thể chập chờn khi máy bận (đã ghi trong roadmap 00-T1); chạy lại riêng trước khi kết luận là lỗi thật.
 - Trước pytest, xác minh TEST_DATABASE_URL là DB test riêng trên endpoint được phép, khác DB development. Fixture hiện có tự tạo/migrate DB; không chạy với URL chưa kiểm tra.
 - Baseline bị chặn thì ghi đúng nguyên nhân và command, không coi kiểm tra chưa chạy là pass. Report raw outputs/config đủ tái lập theo spec 14 và eval/README.md.

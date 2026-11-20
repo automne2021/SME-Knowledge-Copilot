@@ -39,11 +39,12 @@ Theo yêu cầu người dùng ngày 02/11/2026, **mỗi phản hồi cuối ph�
 - Thứ tự triển khai M1: [PLAN.md](PLAN.md). Việc sau M1: [docs/roadmap/](docs/roadmap/README.md). Không tự triển khai cả kế hoạch khi người dùng chỉ yêu cầu một phần.
 - Ngân sách model: **free tier, tối đa 0 USD**. Không bật billing hay fallback trả phí. Key chỉ nằm trong `.env`; chỉ gọi LLM thật trong đợt được xác nhận, kèm dự toán số lần gọi. Hai cờ free tier trong cấu hình là xác nhận thủ công, không phải giới hạn chi phí phía Google.
 
-## Trạng thái hiện tại (13/11/2026)
+## Trạng thái hiện tại (20/11/2026)
 
 - **M1: 97,4% / 100%** (PLAN v1.32). Bước 00–10 và 13 xong; Bước 11 đạt 6/7; Bước 12 đạt 4/6. Phần còn lại (video demo, đóng góp cá nhân) do người dùng làm.
 - `main` chứa UI v2, quản lý phiên, logout thật, phân loại lỗi Gemini ([report](docs/ui-v2-20261113.md)). `release/m1` là bản chốt M1, không sửa.
-- Test: 316 backend, 277 eval tooling, 49 frontend. Kết nối DB/Qdrant dùng `127.0.0.1`.
+- Roadmap: 00 (dọn nợ) và 03 (thư mục) xong; 01 (eval v2) đang chờ đóng gate T3 và người duyệt nhãn. **Việc tiếp theo: xem mục 4.8 [roadmap README](docs/roadmap/README.md).** Migration head `20261118_folders`.
+- Test (20/11, `main`): 418 backend, 79 frontend; eval full gần nhất 464 trên nhánh `feat/01-eval-v2` (18/11). Kết nối DB/Qdrant dùng `127.0.0.1`.
 - Nhật ký các đợt trước: [docs/history/plan-log-m1.md](docs/history/plan-log-m1.md).
 
 ## Làm việc theo roadmap (dành cho Codex và các assistant)

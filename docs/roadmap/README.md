@@ -154,6 +154,26 @@ Lưu ý môi trường:
 - Multi-tenant thật, SSO, billing.
 - Đưa lại STT/meeting/proposal của hướng Operations cũ.
 
+### 4.8. Hàng đợi hiện tại (cập nhật 20/11/2026)
+
+Người lập plan sửa mục này khi thứ tự thay đổi. Codex đọc mục này ở mọi task và **không tự nhảy sang việc kế tiếp**.
+
+1. **01-T3: chỉ đóng gate backend.**
+   - Gate fail trước đây do `test_late_upsert_after_delete_is_not_published_and_is_reconciled`, đã sửa ở 00-T5 trên `main` (`7113e2c`).
+   - Nhánh `feat/01-eval-v2` (`96e0a11`, chưa push) đi sau `main`. Merge `main` vào nhánh, giải xung đột ở bảng trạng thái mục 5 và `KNOWLEDGE.md` (giữ cả hai phía).
+   - Chạy lại backend full và eval full, cập nhật [report draft](../eval-v2-draft-20261118.md) và bảng trạng thái (01 = 5/7).
+   - Không sửa câu hỏi, worksheet hay phiếu duyệt.
+2. **Người dùng duyệt nhãn** (Nhân: `reviewer-a.csv`, Vy: `reviewer-b.csv`, độc lập).
+   - **Codex không điền, không gợi ý đáp án vào phiếu**, không chạy T4 khi phiếu còn `pending`.
+3. **01-T4 → 01-T5 → 02-T1 … 02-T5**, mỗi task một đợt xác nhận.
+4. **Dọn legacy** (nhóm C/A/B trong [kiểm kê](../legacy-inventory-20261120.md)): chỉ làm khi người dùng giao rõ; chưa có mã task.
+
+**Lưu ý chung:**
+- Mã KNOWLEDGE tiếp theo: **K-123**.
+  - `main` đã dùng tới K-122 (trống K-114). Nhánh eval dùng K-114, nên khi merge giữ nguyên, không đánh số lại.
+- Hộp xác nhận phá hủy (xóa) mới phải truyền `initialFocus` vào nút **Hủy** của `Dialog` (00-T2, K-121); hộp nhập liệu giữ mặc định.
+- Số test trên `main` 20/11: backend 418, frontend 79. Eval full gần nhất 464 trên nhánh eval (18/11).
+
 ## 5. Bảng trạng thái
 
 Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính riêng, **không** trộn vào % của M1 trong PLAN.
