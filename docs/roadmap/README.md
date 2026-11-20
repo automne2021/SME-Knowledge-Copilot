@@ -160,7 +160,7 @@ Codex cập nhật bảng này ở cuối mỗi task. Tiến độ roadmap tính
 
 | # | Tính năng | Task xong / tổng | Trạng thái | Nhánh | Report |
 |---|---|---|---|---|---|
-| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 3/5 | T1, T4, T5 xong; T2, T3 chưa bắt đầu | `feat/00-housekeeping` | [00-T1 — Heartbeat](../housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat), [00-T4 — GIF demo](../housekeeping-20261115.md) |
+| 00 | [Dọn nợ kỹ thuật](00-housekeeping.md) | 5/5 | Xong (T1–T5); dọn legacy theo [kiểm kê](../legacy-inventory-20261120.md) chờ người dùng quyết | `feat/00-housekeeping` | [00-T1 — Heartbeat](../housekeeping-20261115.md#00-t1--ổn-định-test-heartbeat), [00-T4 — GIF demo](../housekeeping-20261115.md) |
 | 01 | [Mở rộng eval](01-eval-expansion.md) ([spec corpus](01-corpus-v2-spec.md)) | 4/7 | T1, T2a, T2b, T2c xong; T3–T5 chưa bắt đầu | `feat/01-eval-v2` | [01-T1 — Schema v2](../eval-v2-20261115.md), [01-T2a — Corpus](../corpus-v2-20261115.md), [01-T2b — Văn bản dài và Markdown](../corpus-v2-20261115.md#01-t2b--d01-d06-d07-d08), [01-T2c — Chốt 14 tài liệu](../corpus-v2-20261115.md#01-t2c--d09d14-chốt-corpus) |
 | 02 | [Hybrid search](02-hybrid-search-reranker.md) | 0/5 | Chưa bắt đầu | — | — |
 | 03 | [Thư mục](03-folders-scoped-qa.md) | 4/4 | Xong. T1–T4 kiểm chứng tự động; người dùng kiểm tra UI trên trình duyệt 20/11 (tạm ổn); DB development đã migrate lên `20261118_folders` | `feat/03-folders` | [03-T1 — Schema và API](../folders-20261118.md), [03-T2 — Gán tài liệu](../folders-20261119.md), [03-T3 — Search/chat scope](../folders-20261119.md#03-t3--lọc-theo-thư-mục-khi-search-và-chat), [03-T4 — UI](../folders-20261119.md#03-t4--ui-thư-mục-tài-liệu-và-phạm-vi-hỏi-đáp) |

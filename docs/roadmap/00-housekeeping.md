@@ -43,6 +43,10 @@ Bộ test ổn định là điều kiện để tin các số đo trước và s
 
 - **Phạm vi:** không sửa code. Lập bảng mọi bảng, model, router và test còn thuộc hướng Operations, kèm: còn được import ở đâu, có dữ liệu không, rủi ro nếu xóa.
 - **Đầu ra:** `docs/legacy-inventory-<date>.md` với đề xuất (giữ / xóa bằng migration / để sau). Việc xóa là một đợt riêng do người dùng quyết.
+- **Kết quả (20/11/2026, xong):** [legacy-inventory-20261120.md](../legacy-inventory-20261120.md).
+  - Router, service, frontend không còn code Operations. 8 bảng legacy (meetings, transcript_segments, action_items, task_proposals, tasks, projects, project_members, audit_events) đều 0 dòng trên DB development, chỉ còn model và `test_schema_constraints.py` dùng.
+  - Đề xuất ba nhóm: C (code chết: 2 package placeholder, `stt_model`, extra `[stt]`), A (drop 8 bảng bằng một migration có kiểm số dòng), B (siết `processing_jobs` và role cũ, để sau vì chạm worker).
+  - Không sửa code, không chạy migration.
 
 ### T4 — GIF demo cho README
 

@@ -520,3 +520,12 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
   - **Phương án khác chưa chọn:** tìm phần tử có `autofocus` trong DOM (ngầm, khó đọc); focus bằng `setTimeout` (chập chờn, có thể nháy focus).
 - **Phạm vi:** chỉ các hộp phá hủy (xóa tài liệu, phiên, thư mục). Hộp nhập liệu (upload, đổi tên, tạo) giữ hành vi mặc định.
 - **Kiểm chứng:** test giả lập `showModal()` focus phần tử đầu như trình duyệt; bỏ dòng sửa thì test fail. Frontend 79/79. Chưa kiểm tra trên trình duyệt thật.
+
+### K-122 — Kiểm kê legacy Operations: giữ, xóa hay để sau
+
+20/11/2026 · schema, nợ kỹ thuật · đề xuất (00-T3), chưa triển khai.
+- **Đo được:** 8 bảng legacy đều 0 dòng trên DB development; không router, service hay frontend nào dùng. Chúng còn trong `models/__init__.py` vì Alembic autogenerate sẽ đề xuất DROP nếu bỏ model mà không có migration chủ đích.
+- **Đề xuất:** dọn theo ba nhóm rủi ro tăng dần: C (code chết, không đụng DB) → A (migration drop 8 bảng, dừng nếu có dữ liệu, có downgrade) → B (siết `processing_jobs`/role, chạm worker).
+  - **Vì sao không drop ngay:** quy tắc repo cấm tự drop dữ liệu legacy; máy khác có thể còn dữ liệu; bảng job là phần nhạy nhất về đồng thời.
+  - **Vì sao không giữ mãi:** schema dư làm khó giải thích kiến trúc khi phỏng vấn và dễ gây nhầm khi viết migration mới.
+- **Kiểm chứng:** `grep` theo tên model và đếm dòng `READ ONLY`; giới hạn ghi trong [báo cáo](docs/legacy-inventory-20261120.md).
