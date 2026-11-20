@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ReactNode, type RefObject } from "react";
 import { X } from "lucide-react";
 interface Props {
   title: string;
@@ -6,16 +6,29 @@ interface Props {
   onClose: () => void;
   busy?: boolean;
   className?: string;
+  /** Element to focus after opening, e.g. the safe "Hủy" button of a destructive dialog. */
+  initialFocus?: RefObject<HTMLElement | null>;
 }
-export function Dialog({ title, children, onClose, busy = false, className = "" }: Props) {
+export function Dialog({
+  title,
+  children,
+  onClose,
+  busy = false,
+  className = "",
+  initialFocus,
+}: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   const close = useRef(onClose);
   close.current = onClose;
+  const focusTarget = useRef(initialFocus);
+  focusTarget.current = initialFocus;
   useEffect(() => {
     const dialog = ref.current!;
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialog.showModal();
+    // showModal() focuses the first focusable element (the close button); move focus afterwards.
+    focusTarget.current?.current?.focus();
     // A close event from an earlier close() is queued, not synchronous. Under React StrictMode the
     // effect re-runs and reopens the dialog before that stale event fires, so ignore it while open.
     const closed = () => {

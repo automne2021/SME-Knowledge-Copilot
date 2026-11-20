@@ -88,6 +88,7 @@ export function DeleteSessionDialog({
 }) {
   const { user } = useAuth();
   const { busy, error, run } = useAction();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const remove = () =>
     void run(async (signal) => {
       await api.deleteSession(session.id, signal);
@@ -96,7 +97,7 @@ export function DeleteSessionDialog({
       onDone(session);
     });
   return (
-    <Dialog title="Xóa cuộc trò chuyện?" onClose={onClose} busy={busy}>
+    <Dialog title="Xóa cuộc trò chuyện?" onClose={onClose} busy={busy} initialFocus={cancelRef}>
       <p className="selected-file">{session.title}</p>
       <ul className="consequences">
         <li>Toàn bộ câu hỏi, câu trả lời và trích dẫn trong cuộc trò chuyện sẽ bị xóa.</li>
@@ -104,7 +105,7 @@ export function DeleteSessionDialog({
       </ul>
       {error !== null && <ErrorFeedback error={error} />}
       <div className="dialog-actions">
-        <button type="button" className="button" onClick={onClose} disabled={busy} autoFocus>
+        <button ref={cancelRef} type="button" className="button" onClick={onClose} disabled={busy}>
           Hủy
         </button>
         <button

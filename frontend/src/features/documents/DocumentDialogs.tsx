@@ -147,6 +147,7 @@ export function DeleteDialog({
     [busy, setBusy] = useState(false),
     [error, setError] = useState<unknown>(null);
   const controller = useRef<AbortController | null>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
   useEffect(() => () => controller.current?.abort(), []);
   const remove = async (e: FormEvent) => {
     e.preventDefault();
@@ -168,7 +169,7 @@ export function DeleteDialog({
     }
   };
   return (
-    <Dialog title="Xóa tài liệu?" onClose={onClose} busy={busy}>
+    <Dialog title="Xóa tài liệu?" onClose={onClose} busy={busy} initialFocus={cancelRef}>
       <p className="muted">
         Tài liệu sẽ ngừng được dùng để trả lời. Nội dung liên quan trong lịch sử sẽ không còn khả
         dụng.
@@ -186,7 +187,13 @@ export function DeleteDialog({
         </label>
         {error !== null && <ErrorFeedback error={error} />}
         <div className="dialog-actions">
-          <button type="button" className="button" onClick={onClose} disabled={busy}>
+          <button
+            ref={cancelRef}
+            type="button"
+            className="button"
+            onClick={onClose}
+            disabled={busy}
+          >
             Hủy
           </button>
           <button className="button button-destructive" disabled={busy || name !== doc.filename}>

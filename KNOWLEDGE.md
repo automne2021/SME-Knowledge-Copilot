@@ -511,3 +511,12 @@ Mỗi mục: **K-số — tiêu đề** · ngày · loại · 2–5 dòng (quy�
   - Full backend 2 lượt đều 418/418.
   - Nguyên nhân gốc vẫn là suy luận từ code, chưa có probe khóa.
 - **Xem lại khi:** test này fail lại với thông báo "Cleanup job was never claimed". Khi đó cần probe `pg_locks` lúc fail, vì đó có thể là lỗi production.
+
+### K-121 — Hộp xác nhận xóa focus vào nút Hủy
+
+20/11/2026 · frontend, accessibility · đã triển khai (00-T2).
+- **Vấn đề:** `<dialog>.showModal()` tự focus phần tử focus được đầu tiên (nút đóng X). Thuộc tính React `autoFocus` chạy lúc commit, **trước** `useEffect` gọi `showModal()`, nên bị ghi đè. Hộp xóa phiên đã có `autoFocus` nhưng thực tế không có tác dụng.
+- **Chọn:** prop `initialFocus` (ref) trên `Dialog`, gọi `focus()` ngay sau `showModal()`. Ref được giữ trong một ref khác để effect vẫn chỉ chạy một lần, không phá guard StrictMode.
+  - **Phương án khác chưa chọn:** tìm phần tử có `autofocus` trong DOM (ngầm, khó đọc); focus bằng `setTimeout` (chập chờn, có thể nháy focus).
+- **Phạm vi:** chỉ các hộp phá hủy (xóa tài liệu, phiên, thư mục). Hộp nhập liệu (upload, đổi tên, tạo) giữ hành vi mặc định.
+- **Kiểm chứng:** test giả lập `showModal()` focus phần tử đầu như trình duyệt; bỏ dòng sửa thì test fail. Frontend 79/79. Chưa kiểm tra trên trình duyệt thật.

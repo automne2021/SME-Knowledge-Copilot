@@ -68,3 +68,8 @@ it("omits folder_id for an unclassified upload", async () => {
   await waitFor(() => expect(done).toHaveBeenCalledOnce());
   expect((fetcher.mock.calls[0][1]!.body as FormData).has("folder_id")).toBe(false);
 });
+it("focuses the safe cancel button when the delete dialog opens", () => {
+  storeSession(token, 3600);
+  render(<DeleteDialog document={doc} onClose={vi.fn()} onDone={vi.fn()} />);
+  expect(document.activeElement).toBe(screen.getByRole("button", { name: "Hủy" }));
+});

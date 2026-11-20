@@ -30,6 +30,14 @@ Bộ test ổn định là điều kiện để tin các số đo trước và s
 - **Phạm vi (UI, cần xác nhận UI):** `Dialog.tsx` nhận prop `initialFocus` (ref), hoặc tôn trọng `autoFocus` của phần tử con; `DeleteDialog` và `DeleteSessionDialog` focus vào **Hủy**.
 - **Lưu ý:** `showModal()` tự focus phần tử đầu tiên, nên phải focus lại sau khi mở. Giữ nguyên guard chống sự kiện `close` đến muộn dưới StrictMode (KNOWLEDGE, mục Frontend; test `Dialog.test.tsx`).
 - **Test bắt buộc:** test frontend kiểm tra `document.activeElement` là nút Hủy sau khi mở; Escape vẫn đóng; focus trả lại phần tử đã mở dialog.
+- **Kết quả (20/11/2026, xong):**
+  - `Dialog.tsx` có prop `initialFocus` (ref), focus lại sau `showModal()`. Guard sự kiện `close` đến muộn và việc trả focus khi đóng giữ nguyên.
+  - Ba hộp xóa focus vào **Hủy**: `DeleteDialog` (tài liệu), `DeleteSessionDialog`, `FolderDialog` ở chế độ xóa (thêm ngoài mô tả gốc vì có từ 03-T4).
+  - `DeleteSessionDialog` trước đây dùng `autoFocus`, nhưng `showModal()` chạy sau nên focus bị kéo về nút đóng; đã thay bằng `initialFocus`.
+  - Test:
+    - `Dialog.test.tsx` giả lập `showModal()` focus phần tử đầu như trình duyệt, kiểm tra focus ở Hủy, Escape gọi `onClose`, đóng xong focus trở về nút mở. Đã thử bỏ dòng focus thì test fail.
+    - Thêm test focus cho ba hộp xóa và một test xác nhận hộp đổi tên thư mục không bị kéo focus.
+  - Lint, build đạt; frontend **79/79** đạt. Chưa kiểm tra bằng trình duyệt thật.
 
 ### T3 — Kiểm kê schema và code cũ (chỉ đọc, ra báo cáo)
 

@@ -21,6 +21,7 @@ export function FolderDialog({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const controller = useRef<AbortController | null>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
   useEffect(() => () => controller.current?.abort(), []);
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -55,7 +56,12 @@ export function FolderDialog({
         ? "Đổi tên thư mục"
         : "Xóa thư mục?";
   return (
-    <Dialog title={title} onClose={onClose} busy={busy}>
+    <Dialog
+      title={title}
+      onClose={onClose}
+      busy={busy}
+      initialFocus={action.kind === "delete" ? cancelRef : undefined}
+    >
       <form onSubmit={submit}>
         {action.kind === "delete" ? (
           <>
@@ -85,7 +91,13 @@ export function FolderDialog({
         )}
         {error !== null && <ErrorFeedback error={error} />}
         <div className="dialog-actions">
-          <button type="button" className="button" onClick={onClose} disabled={busy}>
+          <button
+            ref={cancelRef}
+            type="button"
+            className="button"
+            onClick={onClose}
+            disabled={busy}
+          >
             Hủy
           </button>
           <button
